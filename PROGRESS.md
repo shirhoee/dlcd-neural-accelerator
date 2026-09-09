@@ -21,8 +21,12 @@
 - Built `systolic_array_l1.v` — 16×100 grid (1,600 PEs) elaborates clean
 - Tagged `M2`
 
-## M3 — Array Golden Model + Array Testbench (In Progress)
-- Created `array_golden_model.py` — generates 16×100 weight matrix + 100-element input + 16 expected outputs
-- Uses sequential Q4.12 MAC (not numpy.dot) to match hardware rounding
-- Exported test vectors to `verilog_src/array_*.hex`
-- Next: build `tb_systolic_array_l1.v` with analytical wait-cycle checking
+## M3 — Array Golden Model + Array Testbench (Complete)
+- Built `tb_systolic_array_l1.v` with 100-cycle weight load phase, instrumented watch window, and staggered per-row check using formula `wait_cycles = r + COLS + 1`
+- Found and fixed a weight-loading order bug: shift-register loading means the last-presented column ends up leftmost, so the golden model's column-0-first ordering must be fed in reverse (99 down to 0) during the hardware load phase
+- Verified output stability: `acc_out_right` holds steady across multiple cycles once weights and inputs are held constant, confirming weight-stationary behavior with no strobe/valid signal needed at this stage
+- All 16 rows pass, tagged `M3`
+
+## M4 — ReLU Integration on Layer 1 Output (In Progress)
+- Wrapping `systolic_array_l1.v` output with 16 instances of `relu_q4_12.v`
+- Next: verify all 16 post-ReLU values against the Python golden model

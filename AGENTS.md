@@ -35,11 +35,14 @@ Hardware neural network accelerator implementing a 3-layer MLP (100→16→10) u
 | **M0** | Python golden model (fixed_point_math.py) | ✅ Done |
 | **M1** | MAC + ReLU hardware, self-checking testbench, 100% pass | ✅ Done |
 | **M2** | systolic_pe.v cycle-accurate single-PE testbench 100/100 pass, systolic_array_l1.v 16×100 grid elaborates clean | ✅ Done |
-| **M3** | Array golden model + tb_systolic_array_l1.v with analytical wait-cycle checking | 🔄 In Progress |
+| **M3** | Array golden model + tb_systolic_array_l1.v with analytical wait-cycle checking | ✅ Done |
+| **M4** | ReLU wrapper on Layer 1 output | 🔄 In Progress |
 
 ## Known Bugs Already Fixed
 
 - **systolic_pe.v load/compute race**: The `load_weight` and compute logic were not mutually exclusive, causing garbage data to corrupt the accumulator during load phase. Fixed by making load and compute branches mutually exclusive in the same `always @(posedge clk)` block.
+
+- **Weight-loading order in systolic arrays**: Shift-register-style weight loading means the last-presented value ends up leftmost, not the first. Any testbench feeding a systolic array's weight columns must present them in reverse order (COLS-1 down to 0) to match the golden model's natural column ordering. Caught in M3; will resurface in any array built by hand rather than reusing `systolic_array_l1.v`.
 
 ## Toolchain
 
