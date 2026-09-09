@@ -80,11 +80,15 @@ A Verilog-based systolic array neural network accelerator designed to classify 1
 - Hardware logits **identical** to golden model recomputed from hex files (Digit 8)
 - Tagged `M10`
 
-## M11 — Model Training (In Progress)
-- PyTorch script to train the 100->16->6->10 network with bias=False, weight decay
-- Extract Q4.12 weights with strict overflow monitoring and clipping warnings
-- Export test vectors and PyTorch's own prediction on a test image
-- Hardware must match PyTorch's prediction, not dataset ground truth
+## M11 — Model Training (Complete)
+- PyTorch script `train_model.py` trains 100->16->6->10 network (bias=False, weight_decay=1e-4)
+- 150 epochs, 88.33% test accuracy on MNIST digits (8x8 padded to 10x10, binarized)
+- Q4.12 weight export with strict overflow monitoring (0 weights clipped)
+- Quantized forward pass replicates exact hardware MAC behavior (per-step 16-bit truncation)
+- Exports `e2e_w1.hex`, `e2e_w2.hex`, `e2e_w3.hex`, `e2e_input.hex`, `e2e_true_label.txt`
+- PyTorch quantized prediction: Digit 0 | Verilog prediction: Digit 0 → **MATCH**
+- Fully reproducible with SEED=42
+- Tagged `M11`
 
 ## M12 — Hardware Integration (Planned)
 - Arduino C++ code and Python Serial bridge for live drawing classification
