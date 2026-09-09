@@ -18,6 +18,8 @@ Hardware neural network accelerator implementing a 3-layer MLP (100→16→10) u
 
 6. **Systolic arrays are built from one reusable parameterized module** (`systolic_array.v`, parameters ROWS/COLS) — never hand-write a new array module per layer. This avoids re-introducing the weight-loading-order bug found in M3. Layer 1 = (16,100), Layer 2 = (6,16), Output layer = (10,6).
 
+7. **ReLU layers are built from one reusable parameterized module** (`layer_relu.v`, parameter ROWS). Layer 1 = 16, Layer 2 = 6.
+
 ## Directory / File Map
 
 ```
@@ -39,7 +41,8 @@ Hardware neural network accelerator implementing a 3-layer MLP (100→16→10) u
 | **M2** | systolic_pe.v cycle-accurate single-PE testbench 100/100 pass, systolic_array_l1.v 16×100 grid elaborates clean | ✅ Done |
 | **M3** | Array golden model + tb_systolic_array_l1.v with analytical wait-cycle checking | ✅ Done |
 | **M4** | ReLU wrapper on Layer 1 output | ✅ Done |
-| **M5** | Refactor to parameterized systolic_array.v; Layer 2 (16->6) | 🔄 In Progress |
+| **M5** | Refactor to parameterized systolic_array.v; Layer 2 (16->6) | ✅ Done |
+| **M6** | Layer 2 ReLU wrapper (refactor layer_relu.v) | 🔄 In Progress |
 
 ## Known Bugs Already Fixed
 

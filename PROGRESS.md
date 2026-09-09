@@ -34,7 +34,13 @@
 - All 16 post-ReLU values match golden model exactly — negative values zeroed, positive values passed through unchanged
 - Tagged `M4`
 
-## M5 — Layer 2 Array (16 -> 6) (In Progress)
-- Refactoring `systolic_array_l1.v` into a reusable parameterized `systolic_array.v` (ROWS, COLS as parameters) so Layer 1, Layer 2, and the output layer all instantiate the same verified module instead of triplicating hand-written arrays
-- Layer 2: ROWS=6, COLS=16
-- Reusing the already-solved weight-loading order fix and `wait_cycles = r + COLS + 1` timing formula — no new derivation needed
+## M5 — Layer 2 Array (16 -> 6) (Complete)
+- Built `tb_systolic_array_l2.v` for 6×16 array (96 PEs), reusing `systolic_array.v`, weight-loading reversal fix, and analytical wait-cycle formula (`r + COLS + 1` with elapsed tracking)
+- Generated `layer2_golden_model.py` chaining L1 ReLU output (`relu_l1_expected_outs.hex`) as input (no new random data)
+- All 6 rows pass perfectly against golden model
+- Tagged `M5`
+
+## M6 — Layer 2 ReLU (In Progress)
+- Refactoring `layer1_relu.v` into a reusable parameterized `layer_relu.v` (parameter ROWS) to prevent code duplication
+- Layer 2 uses ROWS=6
+- Next: verify 6 post-ReLU values against Python golden model
