@@ -66,12 +66,19 @@ A Verilog-based systolic array neural network accelerator designed to classify 1
 - Correctly selected Digit 1 (logit 174f > 0fcc > 0d7a > all negatives)
 - Tagged `M8`
 
-## M9 — Top-Level Integration (In Progress)
-- Building `accelerator_top.v` using a Master Cycle Controller to orchestrate staggered dataflow between layers
-- Pipeline registers (l1_buffer, l2_buffer, l3_buffer) capture outputs at mathematically precise cycle counts
-- L1 captured at cycles 102-117, L2 at 135-140, L3 at 148-157, Argmax at 158, valid_out at 159
+## M9 — Top-Level Integration (Complete)
+- Built `accelerator_top.v` with Master Cycle Controller (cycle counter + staggered capture)
+- Pipeline registers `l1_buffer` (cycles 102-117), `l2_buffer` (135-140), `l3_buffer` (148-157)
+- Argmax at cycle 158, `valid_out` pulse at 159
+- Parallel weight loading for all 3 layers (100 cycles) prevents pre-compute zeros
+- Tagged `M9`
 
-## Future Milestones (Roadmap)
-* **M9 — Top-Level Integration:** Wiring L1, L1_ReLU, L2, L2_ReLU, L3, and Argmax into a single wrapper (`accelerator_top.v`).
-* **M10 — End-to-End Verification:** Python script to take a full image, pass it through the Verilog top-module, and verify the final digit prediction.
-* **M11 — Hardware Integration:** Arduino C++ code and Python Serial bridge to allow live drawing classification.
+## M10 — End-to-End Verification (Complete)
+- Created `generate_e2e_test.py` generating fresh 100-pixel image + 3-layer weights
+- Exported `e2e_input.hex`, `e2e_w1.hex`, `e2e_w2.hex`, `e2e_w3.hex`
+- Built `tb_accelerator_top.v` with parallel weight loading, input apply, start pulse
+- Hardware logits **identical** to golden model recomputed from hex files (Digit 8)
+- Tagged `M10`
+
+## M11 — Hardware Integration (Planned)
+- Arduino C++ code and Python Serial bridge for live drawing classification
