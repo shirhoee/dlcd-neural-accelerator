@@ -4,6 +4,11 @@
 
 Hardware neural network accelerator implementing a 3-layer MLP (100→16→10) using Q4.12 fixed-point arithmetic. Systolic-array MAC architecture with weight-stationary dataflow. XOR-encrypted weight ROM for IP protection. UART interface for host communication. Built in Verilog, verified with Icarus Verilog and GTKWave.
 
+## System Architecture
+
+- **Topology:** 100 inputs (10x10 image) → 16 hidden neurons (L1) → 6 hidden neurons (L2) → 10 output neurons (L3).
+- **Top-Level Goal:** Fully parameterized Verilog design capable of live hardware-in-the-loop inference with an Arduino Uno frontend.
+
 ## Architecture Rules (Must Not Be Violated)
 
 1. **Python is pure math ground truth only** — Never a cycle-accurate simulator. Verilog testbenches prove their own timing analytically (compute expected wait cycles, then check), not by mirroring hardware state in Python.
@@ -42,7 +47,12 @@ Hardware neural network accelerator implementing a 3-layer MLP (100→16→10) u
 | **M3** | Array golden model + tb_systolic_array_l1.v with analytical wait-cycle checking | ✅ Done |
 | **M4** | ReLU wrapper on Layer 1 output | ✅ Done |
 | **M5** | Refactor to parameterized systolic_array.v; Layer 2 (16->6) | ✅ Done |
-| **M6** | Layer 2 ReLU wrapper (refactor layer_relu.v) | 🔄 In Progress |
+| **M6** | Layer 2 ReLU wrapper (refactor layer_relu.v) | ✅ Done |
+| **M7** | Layer 3 Array (6->10) | 🔄 In Progress |
+| **M8** | Argmax & Classification | 📅 Planned |
+| **M9** | Top-Level Integration (accelerator_top.v) | 📅 Planned |
+| **M10** | End-to-End Image Inference | 📅 Planned |
+| **M11** | Arduino Uno PC-in-the-Loop Integration | 📅 Planned |
 
 ## Known Bugs Already Fixed
 

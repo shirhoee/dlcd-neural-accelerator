@@ -1,3 +1,10 @@
+# Project Overview: DLCD Neural Accelerator
+A Verilog-based systolic array neural network accelerator designed to classify 10x10 pixel hand-drawn digits (0-9).
+- **Architecture:** 3-Layer Multilayer Perceptron (100 -> 16 -> 6 -> 10).
+- **Math:** Q4.12 Fixed-Point (2's complement).
+- **Dataflow:** Weight-stationary systolic arrays with sequential staggered evaluation.
+- **End Goal:** PC-in-the-loop hardware integration where an Arduino Uno captures drawn digits on a touchscreen, streams them to the PC via USB Serial, and the Verilog simulation returns the classification.
+
 # PROGRESS.md — Living Changelog for DLCD Neural Accelerator
 
 ## M0 — Python Golden Model (Complete)
@@ -40,7 +47,20 @@
 - All 6 rows pass perfectly against golden model
 - Tagged `M5`
 
-## M6 — Layer 2 ReLU (In Progress)
-- Refactoring `layer1_relu.v` into a reusable parameterized `layer_relu.v` (parameter ROWS) to prevent code duplication
-- Layer 2 uses ROWS=6
-- Next: verify 6 post-ReLU values against Python golden model
+## M6 — Layer 2 ReLU (Complete)
+- Refactored `layer1_relu.v` into parameterized `layer_relu.v` (parameter ROWS)
+- Syntax clean, `ROWS=6` elaboration verified
+- Generated `generate_relu_l2_tests.py`, chaining M5's verified `layer2_expected_outs.hex` as input
+- All 6 post-ReLU values match golden model exactly — 3 negative values zeroed, 3 positive values passed through
+- Tagged `M6`
+
+## M7 — Layer 3 Array (6 -> 10) (In Progress)
+- The final classification layer, reusing `systolic_array.v` with ROWS=10, COLS=6
+- Reusing the already-solved weight-loading order fix and wait_cycles formula — no new derivation needed
+
+## Future Milestones (Roadmap)
+* **M7 — Layer 3 Array (6 -> 10):** The final classification layer.
+* **M8 — Argmax Logic:** Combinational logic to find the highest value among the 10 outputs to determine the predicted digit.
+* **M9 — Top-Level Integration:** Wiring L1, L1_ReLU, L2, L2_ReLU, L3, and Argmax into a single wrapper (`accelerator_top.v`).
+* **M10 — End-to-End Verification:** Python script to take a full image, pass it through the Verilog top-module, and verify the final digit prediction.
+* **M11 — Hardware Integration:** Arduino C++ code and Python Serial bridge to allow live drawing classification.
