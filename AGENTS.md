@@ -25,6 +25,8 @@ Hardware neural network accelerator implementing a 3-layer MLP (100→16→10) u
 
 7. **ReLU layers are built from one reusable parameterized module** (`layer_relu.v`, parameter ROWS). Layer 1 = 16, Layer 2 = 6.
 
+8. **Global Pipeline Controller**: Data between arrays is captured in pipeline registers (`l1_buffer`, `l2_buffer`, `l3_buffer`) at mathematically precise cycle counts to prevent staggered output corruption.
+
 ## Directory / File Map
 
 ```
@@ -49,8 +51,8 @@ Hardware neural network accelerator implementing a 3-layer MLP (100→16→10) u
 | **M5** | Refactor to parameterized systolic_array.v; Layer 2 (16->6) | ✅ Done |
 | **M6** | Layer 2 ReLU wrapper (refactor layer_relu.v) | ✅ Done |
 | **M7** | Layer 3 Array (6->10) | ✅ Done |
-| **M8** | Argmax & Classification | 🔄 In Progress |
-| **M9** | Top-Level Integration (accelerator_top.v) | 📅 Planned |
+| **M8** | Argmax & Classification | ✅ Done |
+| **M9** | Top-Level Integration (accelerator_top.v) | 🔄 In Progress |
 | **M10** | End-to-End Image Inference | 📅 Planned |
 | **M11** | Arduino Uno PC-in-the-Loop Integration | 📅 Planned |
 

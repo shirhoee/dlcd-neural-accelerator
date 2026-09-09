@@ -60,13 +60,18 @@ A Verilog-based systolic array neural network accelerator designed to classify 1
 - All 10 rows pass perfectly against golden model — 10 logits produced
 - Tagged `M7`
 
-## M8 — Argmax Logic (In Progress)
-- Combinational logic to find the highest value among the 10 logits to determine the predicted digit
-- Explicit signed comparison to avoid 2's complement signed/unsigned trap
-- Must correctly select digit 1 from M7's output (only positive logits: 1=174f, 4=0d7a, 7=0fcc)
+## M8 — Argmax Logic (Complete)
+- Built `argmax.v` with explicit `signed` comparison to avoid 2's complement trap
+- Built `tb_argmax.v` loading Layer 3's 10 verified logits
+- Correctly selected Digit 1 (logit 174f > 0fcc > 0d7a > all negatives)
+- Tagged `M8`
+
+## M9 — Top-Level Integration (In Progress)
+- Building `accelerator_top.v` using a Master Cycle Controller to orchestrate staggered dataflow between layers
+- Pipeline registers (l1_buffer, l2_buffer, l3_buffer) capture outputs at mathematically precise cycle counts
+- L1 captured at cycles 102-117, L2 at 135-140, L3 at 148-157, Argmax at 158, valid_out at 159
 
 ## Future Milestones (Roadmap)
-* **M8 — Argmax Logic:** Combinational logic to find the highest value among the 10 outputs to determine the predicted digit.
 * **M9 — Top-Level Integration:** Wiring L1, L1_ReLU, L2, L2_ReLU, L3, and Argmax into a single wrapper (`accelerator_top.v`).
 * **M10 — End-to-End Verification:** Python script to take a full image, pass it through the Verilog top-module, and verify the final digit prediction.
 * **M11 — Hardware Integration:** Arduino C++ code and Python Serial bridge to allow live drawing classification.
