@@ -27,6 +27,14 @@
 - Verified output stability: `acc_out_right` holds steady across multiple cycles once weights and inputs are held constant, confirming weight-stationary behavior with no strobe/valid signal needed at this stage
 - All 16 rows pass, tagged `M3`
 
-## M4 — ReLU Integration on Layer 1 Output (In Progress)
-- Wrapping `systolic_array_l1.v` output with 16 instances of `relu_q4_12.v`
-- Next: verify all 16 post-ReLU values against the Python golden model
+## M4 — ReLU Integration on Layer 1 Output (Complete)
+- Built `layer1_relu.v` wrapping 16 instances of the verified `relu_q4_12.v`
+- Confirmed port names (`in_val`/`out_val`) against actual source before wiring
+- Generated `generate_relu_l1_tests.py`, chaining M3's verified `array_expected_outs.hex` directly as input (not new random data)
+- All 16 post-ReLU values match golden model exactly — negative values zeroed, positive values passed through unchanged
+- Tagged `M4`
+
+## M5 — Layer 2 Array (16 -> 6) (In Progress)
+- Refactoring `systolic_array_l1.v` into a reusable parameterized `systolic_array.v` (ROWS, COLS as parameters) so Layer 1, Layer 2, and the output layer all instantiate the same verified module instead of triplicating hand-written arrays
+- Layer 2: ROWS=6, COLS=16
+- Reusing the already-solved weight-loading order fix and `wait_cycles = r + COLS + 1` timing formula — no new derivation needed
