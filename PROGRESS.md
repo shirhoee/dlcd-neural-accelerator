@@ -54,12 +54,18 @@ A Verilog-based systolic array neural network accelerator designed to classify 1
 - All 6 post-ReLU values match golden model exactly — 3 negative values zeroed, 3 positive values passed through
 - Tagged `M6`
 
-## M7 — Layer 3 Array (6 -> 10) (In Progress)
-- The final classification layer, reusing `systolic_array.v` with ROWS=10, COLS=6
-- Reusing the already-solved weight-loading order fix and wait_cycles formula — no new derivation needed
+## M7 — Layer 3 Array (6 -> 10) (Complete)
+- Built `tb_systolic_array_l3.v` for 10×6 array (60 PEs), reusing `systolic_array.v`, weight-loading reversal fix, and analytical wait-cycle formula (`r + COLS + 1` with elapsed tracking)
+- Generated `layer3_golden_model.py` chaining L2 ReLU output (`relu_l2_expected_outs.hex`) as input (no new random data)
+- All 10 rows pass perfectly against golden model — 10 logits produced
+- Tagged `M7`
+
+## M8 — Argmax Logic (In Progress)
+- Combinational logic to find the highest value among the 10 logits to determine the predicted digit
+- Explicit signed comparison to avoid 2's complement signed/unsigned trap
+- Must correctly select digit 1 from M7's output (only positive logits: 1=174f, 4=0d7a, 7=0fcc)
 
 ## Future Milestones (Roadmap)
-* **M7 — Layer 3 Array (6 -> 10):** The final classification layer.
 * **M8 — Argmax Logic:** Combinational logic to find the highest value among the 10 outputs to determine the predicted digit.
 * **M9 — Top-Level Integration:** Wiring L1, L1_ReLU, L2, L2_ReLU, L3, and Argmax into a single wrapper (`accelerator_top.v`).
 * **M10 — End-to-End Verification:** Python script to take a full image, pass it through the Verilog top-module, and verify the final digit prediction.

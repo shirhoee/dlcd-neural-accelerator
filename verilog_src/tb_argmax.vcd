@@ -1,0 +1,38 @@
+$date
+	Wed Sep  9 23:19:32 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module tb_argmax $end
+$var wire 4 ! out_digit [3:0] $end
+$var reg 160 " in_bus [159:0] $end
+$var integer 32 # i [31:0] $end
+$scope module u_argmax $end
+$var wire 160 $ in_bus [159:0] $end
+$var reg 16 % current_val [15:0] $end
+$var reg 16 & max_val [15:0] $end
+$var reg 4 ' out_digit [3:0] $end
+$var integer 32 ( i [31:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+b1010 (
+b1 '
+b1011101001111 &
+b1111000111110111 %
+b1111000111110111110101101111011000001111110011001000100001100100100010111100111000001101011110101100111110111111111110001010110000010111010011111101001100101101 $
+b1010 #
+b1111000111110111110101101111011000001111110011001000100001100100100010111100111000001101011110101100111110111111111110001010110000010111010011111101001100101101 "
+b1 !
+$end
+#10000
+b1010 #

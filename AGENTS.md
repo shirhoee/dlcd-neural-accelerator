@@ -48,8 +48,8 @@ Hardware neural network accelerator implementing a 3-layer MLP (100→16→10) u
 | **M4** | ReLU wrapper on Layer 1 output | ✅ Done |
 | **M5** | Refactor to parameterized systolic_array.v; Layer 2 (16->6) | ✅ Done |
 | **M6** | Layer 2 ReLU wrapper (refactor layer_relu.v) | ✅ Done |
-| **M7** | Layer 3 Array (6->10) | 🔄 In Progress |
-| **M8** | Argmax & Classification | 📅 Planned |
+| **M7** | Layer 3 Array (6->10) | ✅ Done |
+| **M8** | Argmax & Classification | 🔄 In Progress |
 | **M9** | Top-Level Integration (accelerator_top.v) | 📅 Planned |
 | **M10** | End-to-End Image Inference | 📅 Planned |
 | **M11** | Arduino Uno PC-in-the-Loop Integration | 📅 Planned |
