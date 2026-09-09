@@ -40,15 +40,15 @@ module accelerator_top (
     );
     layer_relu #(.ROWS(16)) relu1 (.acc_in(l1_array_out), .relu_out(l1_relu_out));
 
-    integer r1;
-    always @(posedge clk) begin
-        if (rst) l1_buffer <= 0;
-        else begin
-            for (r1 = 0; r1 < 16; r1 = r1 + 1) begin
-                if (cycle == r1 + 102) l1_buffer[(r1*16) +: 16] <= l1_relu_out[(r1*16) +: 16];
+    genvar r1;
+    generate
+        for (r1 = 0; r1 < 16; r1 = r1 + 1) begin : gen_l1_capture
+            always @(posedge clk) begin
+                if (rst) l1_buffer[(r1*16) +: 16] <= 0;
+                else if (cycle == r1 + 102) l1_buffer[(r1*16) +: 16] <= l1_relu_out[(r1*16) +: 16];
             end
         end
-    end
+    endgenerate
 
     systolic_array #(.ROWS(6), .COLS(16)) layer2 (
         .clk(clk), .rst(rst), .load_weight(load_weight_l2),
@@ -57,15 +57,15 @@ module accelerator_top (
     );
     layer_relu #(.ROWS(6)) relu2 (.acc_in(l2_array_out), .relu_out(l2_relu_out));
 
-    integer r2;
-    always @(posedge clk) begin
-        if (rst) l2_buffer <= 0;
-        else begin
-            for (r2 = 0; r2 < 6; r2 = r2 + 1) begin
-                if (cycle == r2 + 135) l2_buffer[(r2*16) +: 16] <= l2_relu_out[(r2*16) +: 16];
+    genvar r2;
+    generate
+        for (r2 = 0; r2 < 6; r2 = r2 + 1) begin : gen_l2_capture
+            always @(posedge clk) begin
+                if (rst) l2_buffer[(r2*16) +: 16] <= 0;
+                else if (cycle == r2 + 135) l2_buffer[(r2*16) +: 16] <= l2_relu_out[(r2*16) +: 16];
             end
         end
-    end
+    endgenerate
 
     systolic_array #(.ROWS(10), .COLS(6)) layer3 (
         .clk(clk), .rst(rst), .load_weight(load_weight_l3),
@@ -73,15 +73,15 @@ module accelerator_top (
         .acc_out_right(l3_array_out)
     );
 
-    integer r3;
-    always @(posedge clk) begin
-        if (rst) l3_buffer <= 0;
-        else begin
-            for (r3 = 0; r3 < 10; r3 = r3 + 1) begin
-                if (cycle == r3 + 148) l3_buffer[(r3*16) +: 16] <= l3_array_out[(r3*16) +: 16];
+    genvar r3;
+    generate
+        for (r3 = 0; r3 < 10; r3 = r3 + 1) begin : gen_l3_capture
+            always @(posedge clk) begin
+                if (rst) l3_buffer[(r3*16) +: 16] <= 0;
+                else if (cycle == r3 + 148) l3_buffer[(r3*16) +: 16] <= l3_array_out[(r3*16) +: 16];
             end
         end
-    end
+    endgenerate
 
     argmax argmax_inst (
         .in_bus(l3_buffer),
