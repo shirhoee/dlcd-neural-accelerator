@@ -54,7 +54,8 @@ Hardware neural network accelerator implementing a 3-layer MLP (100→16→10) u
 | **M8** | Argmax & Classification | ✅ Done |
 | **M9** | Top-Level Integration (accelerator_top.v) | ✅ Done |
 | **M10** | End-to-End Image Inference | ✅ Done |
-| **M11** | Arduino Uno PC-in-the-Loop Integration | 📅 Planned |
+| **M11** | Model Training: PyTorch 100->16->6->10 with Q4.12 export | 🔄 In Progress |
+| **M12** | Arduino Uno PC-in-the-Loop Integration | 📅 Planned |
 
 ## Known Bugs Already Fixed
 
