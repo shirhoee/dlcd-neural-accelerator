@@ -90,5 +90,9 @@ A Verilog-based systolic array neural network accelerator designed to classify 1
 - Fully reproducible with SEED=42
 - Tagged `M11`
 
-## M12 — Hardware Integration (Planned)
-- Arduino C++ code and Python Serial bridge for live drawing classification
+## M12 — Accuracy Improvement: Grayscale Input + Extended Training (Complete)
+- Removed hard binarization; inputs now use normalized grayscale `[0.0, 1.0]` instead of binary `[0, 1]`.
+- Extended training from 150 to 300 epochs, utilizing `CosineAnnealingLR` scheduler.
+- New test accuracy achieved: **93.06%**.
+- Max absolute logit across the test set: **32.47** (Safely within the Q7.8 headroom limit of ±127.99).
+- Hardware re-verified end-to-end after input encoding change: **MATCH YES** (PyTorch Float Prediction: Digit 6, Verilog Prediction: Digit 6).
