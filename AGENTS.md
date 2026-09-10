@@ -55,7 +55,7 @@ Hardware neural network accelerator implementing a 3-layer MLP (100→16→10) u
 | **M9** | Top-Level Integration (accelerator_top.v) | ✅ Done |
 | **M10** | End-to-End Image Inference | ✅ Done |
 | **M11** | Model Training: PyTorch 100->16->6->10 with Q4.12 export | ✅ Done |
-| **M12** | Arduino Uno PC-in-the-Loop Integration | ✅ Complete |
+| **M12** | Software Optimization Limits & Reversion | ✅ Done |
 
 ## Known Bugs Already Fixed
 
@@ -71,3 +71,5 @@ Hardware neural network accelerator implementing a 3-layer MLP (100→16→10) u
 - **Shell**: Windows PowerShell
 - **Vector loading**: `$readmemh` for hex files
 - **Waveforms**: `$dumpfile` / `$dumpvars` for GTKWave debugging
+
+Software optimization phase concluded. The train_model.py baseline is locked at 93.06%. Preparing to test zero-effort tweaks (Seed Hunting, Label Smoothing) before moving to M13: Arduino PC-in-the-Loop Integration.

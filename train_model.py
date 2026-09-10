@@ -15,6 +15,7 @@ digits = load_digits()
 X = digits.images 
 y = digits.target
 
+# Pad 8x8 to 10x10
 X_padded = np.pad(X, ((0,0), (1,1), (1,1)), mode='constant', constant_values=0)
 X_flat = X_padded.reshape(len(X), 100)
 X_flat = (X_flat / 16.0).astype(np.float32)
@@ -24,7 +25,7 @@ y_tensor = torch.tensor(y, dtype=torch.long)
 
 X_train, X_test, y_train, y_test = train_test_split(X_tensor, y_tensor, test_size=0.2, random_state=SEED)
 
-# 2. Define Model
+# 2. Define Pure VerilogNet (100 -> 16 -> 6 -> 10, No Bias, No Dropout)
 class VerilogNet(nn.Module):
     def __init__(self):
         super().__init__()
@@ -41,13 +42,14 @@ class VerilogNet(nn.Module):
 
 model = VerilogNet()
 
-# 3. Train Model (300 Epochs, Cosine Annealing, 5e-5 weight decay)
+# 3. Train Model (300 Epochs, Cosine Annealing)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-5)
 scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=300)
 
-print("Training 100 -> 16 -> 6 -> 10 Verilog Model...")
+print("Training peak 93% baseline model...")
 for epoch in range(300):
+    model.train()
     optimizer.zero_grad()
     outputs = model(X_train)
     loss = criterion(outputs, y_train)
@@ -56,6 +58,7 @@ for epoch in range(300):
     scheduler.step()
 
     if (epoch+1) % 50 == 0:
+        model.eval()
         with torch.no_grad():
             test_out = model(X_test)
             _, predicted = torch.max(test_out, 1)
