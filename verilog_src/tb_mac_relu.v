@@ -25,7 +25,7 @@ module tb_mac_relu;
     integer errors = 0;
 
     // Instantiate MAC
-    mac_q4_12 u_mac (
+    mac_q6_9 u_mac (
         .weight(weight),
         .in_val(in_val),
         .acc_in(acc_in),

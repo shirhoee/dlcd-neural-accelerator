@@ -1,4 +1,4 @@
-module mac_q4_12 (
+module mac_q7_8 (
     input wire signed [15:0] weight,
     input wire signed [15:0] in_val,
     input wire signed [15:0] acc_in,
@@ -9,7 +9,7 @@ module mac_q4_12 (
 
     assign product = weight * in_val;
     always @(*) begin
-        acc_out = acc_in + product[27:12];
+        acc_out = acc_in + product[23:8];
     end
 
 endmodule

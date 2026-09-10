@@ -16,7 +16,7 @@ module systolic_pe (
     reg signed [15:0] stationary_weight;
     wire signed [15:0] mac_result;
 
-    mac_q4_12 core_mac (
+    mac_q7_8 core_mac (
         .weight(stationary_weight),
         .in_val(in_val_in),
         .acc_in(acc_in),
