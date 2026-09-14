@@ -3,7 +3,7 @@ import random
 def mul(a, b):
     a_s = a - 65536 if (a & 0x8000) else a
     b_s = b - 65536 if (b & 0x8000) else b
-    return ((a_s * b_s) >> 12) & 0xFFFF
+    return ((a_s * b_s) >> 8) & 0xFFFF
 
 def add(a, b):
     a_s = a - 65536 if (a & 0x8000) else a
@@ -19,10 +19,10 @@ def mac_1d(inputs, weights):
         acc = add(acc, mul(i, w))
     return acc
 
-# 1. Generate 100 inputs (0 or 4096 representing 0.0 or 1.0)
-inputs = [random.choice([0, 4096]) for _ in range(100)]
+# 1. Generate 100 inputs (0 or 256 representing 0.0 or 1.0 in Q7.8)
+inputs = [random.choice([0, 256]) for _ in range(100)]
 
-# 2. Generate random weights
+# 2. Generate random weights (Q7.8 range: -8.0 to +8.0 = -2048 to +2048 raw)
 w1 = [[random.randint(-2048, 2048) for _ in range(100)] for _ in range(16)]
 w2 = [[random.randint(-2048, 2048) for _ in range(16)] for _ in range(6)]
 w3 = [[random.randint(-2048, 2048) for _ in range(6)] for _ in range(10)]

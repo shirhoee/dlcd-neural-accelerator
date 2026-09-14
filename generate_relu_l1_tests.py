@@ -1,7 +1,7 @@
 import sys
 sys.path.append('python_golden_model')
 
-from fixed_point_math import relu_q4_12
+from fixed_point_math import relu_q7_8
 
 def main():
     # Read pre-ReLU outputs from M3
@@ -11,7 +11,7 @@ def main():
     print(f"Read {len(pre_relu)} pre-ReLU values")
 
     # Apply ReLU
-    post_relu = [relu_q4_12(val) for val in pre_relu]
+    post_relu = [relu_q7_8(val) for val in pre_relu]
 
     # Export
     with open('verilog_src/relu_l1_expected_outs.hex', 'w') as f:

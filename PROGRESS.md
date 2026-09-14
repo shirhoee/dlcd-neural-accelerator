@@ -1,7 +1,7 @@
 # Project Overview: DLCD Neural Accelerator
 A Verilog-based systolic array neural network accelerator designed to classify 10x10 pixel hand-drawn digits (0-9).
 - **Architecture:** 3-Layer Multilayer Perceptron (100 -> 16 -> 6 -> 10).
-- **Math:** Q4.12 Fixed-Point (2's complement).
+- **Math:** Q7.8 Fixed-Point (2's complement).
 - **Dataflow:** Weight-stationary systolic arrays with sequential staggered evaluation.
 - **End Goal:** PC-in-the-loop hardware integration where an Arduino Uno captures drawn digits on a touchscreen, streams them to the PC via USB Serial, and the Verilog simulation returns the classification.
 

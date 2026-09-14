@@ -45,14 +45,14 @@ for epoch in range(150):
 
 model.eval()
 sample_img = X_test[0]
-sample_img_q = (sample_img * 4096).round().to(torch.int32)
+sample_img_q = (sample_img * 256).round().to(torch.int32)
 
-w1_q = torch.round(model.fc1.weight * 4096).to(torch.int32)
-w2_q = torch.round(model.fc2.weight * 4096).to(torch.int32)
-w3_q = torch.round(model.fc3.weight * 4096).to(torch.int32)
+w1_q = torch.round(model.fc1.weight * 256).to(torch.int32)
+w2_q = torch.round(model.fc2.weight * 256).to(torch.int32)
+w3_q = torch.round(model.fc3.weight * 256).to(torch.int32)
 
 def mac_step(acc, x_val, w_val):
-    prod = ((x_val * w_val) >> 12) & 0xFFFF
+    prod = ((x_val * w_val) >> 8) & 0xFFFF
     return (acc + prod) & 0xFFFF
 
 # L1

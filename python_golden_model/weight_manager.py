@@ -1,7 +1,7 @@
 import random
 import math
 import os
-from fixed_point_math import to_q4_12, MAX_VAL, MIN_VAL
+from fixed_point_math import to_q7_8, MAX_VAL, MIN_VAL
 
 
 XOR_KEY = 0xA5A5
@@ -18,10 +18,10 @@ def generate_weights():
     l2_w_floats = xavier_init(HIDDEN_SIZE, OUTPUT_SIZE)
     l2_b_floats = xavier_init(1, OUTPUT_SIZE)
 
-    l1_weights = [[to_q4_12(l1_w_floats[i * INPUT_SIZE + j]) for j in range(INPUT_SIZE)] for i in range(HIDDEN_SIZE)]
-    l1_biases = [to_q4_12(l1_b_floats[i]) for i in range(HIDDEN_SIZE)]
-    l2_weights = [[to_q4_12(l2_w_floats[i * HIDDEN_SIZE + j]) for j in range(HIDDEN_SIZE)] for i in range(OUTPUT_SIZE)]
-    l2_biases = [to_q4_12(l2_b_floats[i]) for i in range(OUTPUT_SIZE)]
+    l1_weights = [[to_q7_8(l1_w_floats[i * INPUT_SIZE + j]) for j in range(INPUT_SIZE)] for i in range(HIDDEN_SIZE)]
+    l1_biases = [to_q7_8(l1_b_floats[i]) for i in range(HIDDEN_SIZE)]
+    l2_weights = [[to_q7_8(l2_w_floats[i * HIDDEN_SIZE + j]) for j in range(HIDDEN_SIZE)] for i in range(OUTPUT_SIZE)]
+    l2_biases = [to_q7_8(l2_b_floats[i]) for i in range(OUTPUT_SIZE)]
 
     return l1_weights, l1_biases, l2_weights, l2_biases
 

@@ -2,7 +2,7 @@
 
 ## Project Summary
 
-Hardware neural network accelerator implementing a 3-layer MLP (100→16→10) using Q4.12 fixed-point arithmetic. Systolic-array MAC architecture with weight-stationary dataflow. XOR-encrypted weight ROM for IP protection. UART interface for host communication. Built in Verilog, verified with Icarus Verilog and GTKWave.
+Hardware neural network accelerator implementing a 3-layer MLP (100→16→10) using Q7.8 fixed-point arithmetic. Systolic-array MAC architecture with weight-stationary dataflow. XOR-encrypted weight ROM for IP protection. UART interface for host communication. Built in Verilog, verified with Icarus Verilog and GTKWave.
 
 ## System Architecture
 
@@ -13,7 +13,7 @@ Hardware neural network accelerator implementing a 3-layer MLP (100→16→10) u
 
 1. **Python is pure math ground truth only** — Never a cycle-accurate simulator. Verilog testbenches prove their own timing analytically (compute expected wait cycles, then check), not by mirroring hardware state in Python.
 
-2. **Q4.12 MAC must be sequential multiply-accumulate with truncation at each step**, matching hardware — never a single wide-accumulation matrix op (e.g. `numpy.dot`), since that drifts from real hardware rounding.
+2. **Q7.8 MAC must be sequential multiply-accumulate with truncation at each step**, matching hardware — never a single wide-accumulation matrix op (e.g. `numpy.dot`), since that drifts from real hardware rounding.
 
 3. **Dataflow is weight-stationary**: Weights load once and stay in PE registers; inputs stream through.
 

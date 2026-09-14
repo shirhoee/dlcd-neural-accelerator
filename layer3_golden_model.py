@@ -2,7 +2,7 @@ import sys
 sys.path.append('python_golden_model')
 
 import random
-from fixed_point_math import to_q4_12, mul_q4_12, add_q4_12
+from fixed_point_math import to_q7_8, mul_q7_8, add_q7_8
 
 def main():
     random.seed(42)
@@ -20,8 +20,8 @@ def main():
     for _ in range(ROWS):
         row = []
         for _ in range(COLS):
-            val = random.uniform(-8.0, 8.0 - (1/4096))
-            row.append(to_q4_12(val))
+            val = random.uniform(-8.0, 8.0 - (1/256))
+            row.append(to_q7_8(val))
         weight_matrix.append(row)
 
     # Compute expected outputs (10 neurons) using sequential MAC with truncation
@@ -29,8 +29,8 @@ def main():
     for r in range(ROWS):
         acc = 0
         for c in range(COLS):
-            product = mul_q4_12(weight_matrix[r][c], input_vector[c])
-            acc = add_q4_12(acc, product)
+            product = mul_q7_8(weight_matrix[r][c], input_vector[c])
+            acc = add_q7_8(acc, product)
         expected_outputs.append(acc)
 
     # Export weights (row-major: 10 rows x 6 cols = 60 values)

@@ -10,7 +10,7 @@ module layer1_relu #(
     genvar r;
     generate
         for (r = 0; r < ROWS; r = r + 1) begin : gen_relu
-            relu_q4_12 relu_inst (
+            relu_q7_8 relu_inst (
                 .in_val(acc_in[(r*16) +: 16]),
                 .out_val(relu_out[(r*16) +: 16])
             );

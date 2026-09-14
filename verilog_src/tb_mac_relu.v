@@ -25,7 +25,7 @@ module tb_mac_relu;
     integer errors = 0;
 
     // Instantiate MAC
-    mac_q6_9 u_mac (
+    mac_q7_8 u_mac (
         .weight(weight),
         .in_val(in_val),
         .acc_in(acc_in),
@@ -33,7 +33,7 @@ module tb_mac_relu;
     );
 
     // Instantiate ReLU connected to MAC output
-    relu_q4_12 u_relu (
+    relu_q7_8 u_relu (
         .in_val(mac_out),
         .out_val(relu_out)
     );

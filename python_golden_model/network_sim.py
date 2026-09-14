@@ -1,6 +1,6 @@
 import math
 from fixed_point_math import (
-    to_q4_12, from_q4_12, add_q4_12, mul_q4_12, relu_q4_12,
+    to_q7_8, from_q7_8, add_q7_8, mul_q7_8, relu_q7_8,
     TOTAL_BITS, FRAC_BITS, SCALE, MASK
 )
 
@@ -10,8 +10,8 @@ HIDDEN_SIZE = 16
 OUTPUT_SIZE = 10
 
 
-def mac_q4_12(acc, weight, input_val):
-    return add_q4_12(acc, mul_q4_12(weight, input_val))
+def mac_q7_8(acc, weight, input_val):
+    return add_q7_8(acc, mul_q7_8(weight, input_val))
 
 
 def layer_forward(inputs, weights, biases):
@@ -19,13 +19,13 @@ def layer_forward(inputs, weights, biases):
     for i in range(len(weights)):
         acc = biases[i]
         for j in range(len(inputs)):
-            acc = mac_q4_12(acc, weights[i][j], inputs[j])
+            acc = mac_q7_8(acc, weights[i][j], inputs[j])
         outputs.append(acc)
     return outputs
 
 
 def relu_layer(outputs):
-    return [relu_q4_12(x) for x in outputs]
+    return [relu_q7_8(x) for x in outputs]
 
 
 def argmax_with_confidence(outputs):
@@ -48,11 +48,11 @@ def argmax_with_confidence(outputs):
 
     max_signed = max_val if not (max_val & (1 << (TOTAL_BITS - 1))) else max_val - (1 << TOTAL_BITS)
     confidence = max_signed - second_max
-    return max_idx, to_q4_12(confidence)
+    return max_idx, to_q7_8(confidence)
 
 
 def forward_pass(input_bits, l1_weights, l1_biases, l2_weights, l2_biases):
-    inputs_q = [to_q4_12(bit * SCALE) for bit in input_bits]
+    inputs_q = [to_q7_8(bit * SCALE) for bit in input_bits]
 
     l1_out = layer_forward(inputs_q, l1_weights, l1_biases)
     l1_relu = relu_layer(l1_out)

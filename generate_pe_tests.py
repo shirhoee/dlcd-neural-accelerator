@@ -2,7 +2,7 @@ import sys
 sys.path.append('python_golden_model')
 
 import random
-from fixed_point_math import to_q4_12, mul_q4_12
+from fixed_point_math import to_q7_8, mul_q7_8
 
 def main():
     random.seed(42)
@@ -13,16 +13,16 @@ def main():
     expected_outs = []
 
     for _ in range(num_tests):
-        w_float = random.uniform(-8.0, 8.0 - (1/4096))
-        i_float = random.uniform(-8.0, 8.0 - (1/4096))
+        w_float = random.uniform(-8.0, 8.0 - (1/256))
+        i_float = random.uniform(-8.0, 8.0 - (1/256))
 
-        w_q = to_q4_12(w_float)
-        i_q = to_q4_12(i_float)
+        w_q = to_q7_8(w_float)
+        i_q = to_q7_8(i_float)
 
         weights.append(w_q)
         in_vals.append(i_q)
 
-        mac_result = mul_q4_12(w_q, i_q)
+        mac_result = mul_q7_8(w_q, i_q)
         expected_outs.append(mac_result)
 
     with open('verilog_src/pe_weights.hex', 'w') as f:

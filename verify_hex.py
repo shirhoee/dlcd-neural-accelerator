@@ -6,7 +6,7 @@ def read_hex(fn):
 def to_signed(v): return v - 65536 if (v & 0x8000) else v
 def mul(a, b):
     a_s = to_signed(a); b_s = to_signed(b)
-    return ((a_s * b_s) >> 12) & 0xFFFF
+    return ((a_s * b_s) >> 8) & 0xFFFF
 def add(a, b):
     a_s = to_signed(a); b_s = to_signed(b)
     return (a_s + b_s) & 0xFFFF

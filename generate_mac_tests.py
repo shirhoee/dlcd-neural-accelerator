@@ -5,10 +5,10 @@ import importlib
 sys.path.insert(0, 'python_golden_model')
 import fixed_point_math
 importlib.reload(fixed_point_math)
-from fixed_point_math import to_q4_12, mul_q4_12, add_q4_12, relu_q4_12
+from fixed_point_math import to_q7_8, mul_q7_8, add_q7_8, relu_q7_8
 
 
-def generate_random_q4_12():
+def generate_random_q7_8():
     return random.randint(-32768, 32767)
 
 
@@ -23,12 +23,12 @@ def main():
     expected_relu = []
 
     for _ in range(num_tests):
-        w = generate_random_q4_12() & 0xFFFF
-        i = generate_random_q4_12() & 0xFFFF
-        a = generate_random_q4_12() & 0xFFFF
+        w = generate_random_q7_8() & 0xFFFF
+        i = generate_random_q7_8() & 0xFFFF
+        a = generate_random_q7_8() & 0xFFFF
 
-        mac_result = add_q4_12(a, mul_q4_12(w, i))
-        relu_result = relu_q4_12(mac_result)
+        mac_result = add_q7_8(a, mul_q7_8(w, i))
+        relu_result = relu_q7_8(mac_result)
 
         weights.append(w)
         in_vals.append(i)
