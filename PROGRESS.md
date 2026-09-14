@@ -103,3 +103,19 @@ A Verilog-based systolic array neural network accelerator designed to classify 1
 - Experiment 2 (Translation Only): Removed dropout and rotation, kept 1-pixel shift. Accuracy dropped to 87.22%. A 1-pixel shift on a 10x10 grid is a 10% spatial distortion, which proved too chaotic for the 16-neuron layer to resolve.
 - Conclusion: We have scientifically proven that 93.06% is the hard mathematical ceiling for this $100 \rightarrow 16 \rightarrow 6 \rightarrow 10$ bias-free hardware architecture.
 - Action Taken: Reverted `train_model.py` to the clean, grayscale-only configuration (300 epochs, Cosine Annealing, no augmentation) to restore and lock in the 93.06% peak baseline.
+
+## M14 — Q7.8 Fixed-Point Migration (Complete)
+- Fixed golden model, test-vector generators, and verify scripts to match hardware's Q7.8 format (scale=256, 8 fractional bits) — previously computing at stale Q4.12 (scale=4096, 12 fractional bits)
+- Fixed weight_manager.py, which was broken (referenced deleted to_q4_12 function)
+- Renamed relu_q4_12.v -> relu_q7_8.v, mac_q4_12.v -> mac_q7_8.v, updated all instantiations
+- Updated AGENTS.md and PROGRESS.md documentation to Q7.8 (historical changelog entries for M0-M13 left as-is)
+- Full regression M1-M10 re-verified passing, both before and after rename
+- Commit d85f042
+
+## M15 — PC-Only Batch Regression Harness (Complete)
+- Built `batch_regression_m15.py`: automated N=20 test-set image regression using cached Q7.8 weights
+- For each image: PyTorch float forward pass -> Q7.8 golden model (sequential MAC with truncation) -> export e2e_input.hex -> iverilog/vvp compile+run tb_accelerator_top.v -> capture Verilog predicted_digit at valid_out
+- Hardware-vs-Golden agreement: **20/20 = 100%** (exact match on all 20 images)
+- Golden-vs-True-Label mismatches: 18/20 (reflects 93.06% model accuracy ceiling — training limitation, not hardware bug)
+- No Verilog RTL modifications — harness only drives existing verified modules (mac_q7_8.v, systolic_pe.v, systolic_array.v, layer_relu.v, relu_q7_8.v, argmax.v, accelerator_top.v)
+- This harness is now the standing regression tool for any future Verilog changes

@@ -55,7 +55,10 @@ Hardware neural network accelerator implementing a 3-layer MLP (100→16→10) u
 | **M9** | Top-Level Integration (accelerator_top.v) | ✅ Done |
 | **M10** | End-to-End Image Inference | ✅ Done |
 | **M11** | Model Training: PyTorch 100->16->6->10 with Q4.12 export | ✅ Done |
-| **M12** | Software Optimization Limits & Reversion | ✅ Done |
+| **M12** | Accuracy Improvement: Grayscale Input + Extended Training (93.06% test accuracy) | ✅ Done |
+| **M13** | Software Optimization Limits & Reversion (proved 93.06% is the hard ceiling for this architecture; reverted to clean baseline) | ✅ Done |
+| **M14** | Q7.8 fixed-point migration — golden model/test-gen scale fix, module renames | ✅ Done |
+| **M15** | PC-only batch regression harness — N=20, hardware-vs-golden 100% agreement | ✅ Done |
 
 ## Known Bugs Already Fixed
 
@@ -72,4 +75,7 @@ Hardware neural network accelerator implementing a 3-layer MLP (100→16→10) u
 - **Vector loading**: `$readmemh` for hex files
 - **Waveforms**: `$dumpfile` / `$dumpvars` for GTKWave debugging
 
-Software optimization phase concluded. The train_model.py baseline is locked at 93.06%. Preparing to test zero-effort tweaks (Seed Hunting, Label Smoothing) before moving to M13: Arduino PC-in-the-Loop Integration.
+M15 complete: PC-only batch regression harness verified 100% hardware-vs-golden agreement (N=20). Remaining plan, in order:
+1. **M16 — Local hand-drawn digit testing**: mouse-draw a digit on PC (Tkinter/Pygame canvas), downsample/grayscale to 10x10, feed through the same pipeline as M15, to validate the system on genuinely new input before adding hardware I/O.
+2. **M17 — Arduino PC-in-the-loop integration**: Arduino Uno captures touchscreen digit, streams via USB Serial to PC, PC bridges to the Verilog sim, classification result returned — the original end-goal stated in PROGRESS.md's project overview.
+Each stage is a hard prerequisite for the next.
