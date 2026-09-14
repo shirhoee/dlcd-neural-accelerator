@@ -122,12 +122,12 @@ A Verilog-based systolic array neural network accelerator designed to classify 1
 - Note: Initial run showed 18/20 mismatches due to stale weights in e2e_w*.hex (old failed training run); re-running train_model.py regenerated correct 93.06% baseline weights
 
 ## M16 — Local Hand-Drawn Digit Testing (Complete)
-- Built `hand_drawn_m16.py`: pygame-based drawing canvas (280×280, click-drag to draw, Clear/Predict/Quit buttons)
-- **Fixed critical preprocessing bugs**: (1) pygame→numpy axis transpose (W,H vs H,W), (2) tight bounding box diluted thin strokes — fixed with square crop + max-pooling resize
-- Preprocessing pipeline: bounding-box crop → square crop (centered, like sklearn digits) → max-pooling resize to 8×8 → pad to 10×10 → normalize to [0.0, 1.0]
+- Built **two UIs**: `hand_drawn_m16.py` (pygame, initial) and `hand_drawn_m16_tk.py` (Tkinter, polished — 400×400 canvas, modern buttons, live 10×10 preview with values, large prediction display)
+- **Fixed critical preprocessing bugs**: (1) pygame/PIL→numpy axis transpose (W,H vs H,W), (2) tight bounding box diluted thin strokes, (3) max-pooling oversaturated thick mouse strokes — fixed with **square crop (centered, like sklearn digits) + average-pooling resize**
+- Preprocessing pipeline: bounding-box crop → square crop (centered) → **average-pooling** resize to 8×8 → pad to 10×10 → normalize to [0.0, 1.0] (matches sklearn antialiased stroke distribution)
 - On Predict: downsample → export e2e_input.hex (Q7.8) → PyTorch golden forward pass → iverilog/vvp compile+run tb_accelerator_top.v → capture Verilog predicted_digit
 - Q7.8 headroom check: max |logit| ≤ 48 (well within ±127.99 limit; no overflow risk for hand-drawn input)
-- Golden-vs-Hardware agreement: **100%** (verified on 6 synthetic digits: 0,1,2,3,7,8 + interactive testing)
+- Golden-vs-Hardware agreement: **100%** (verified on 6 synthetic digits + interactive testing)
+- Model accuracy on hand-drawn digits: **~20%** (2/10 correct on clear digits 0-9) — **domain shift**: model trained on sklearn 8×8 antialiased scans, not thick mouse strokes; this is a model limitation, not a hardware bug
 - No Verilog RTL modifications — harness only drives existing verified modules with new input
-- Model accuracy on hand-drawn digits is lower than clean test set (domain shift: stroke style, thickness); this is a model limitation, not a hardware bug
 - M17 (Arduino PC-in-the-loop) is now the final remaining milestone

@@ -161,7 +161,7 @@ def downsample_to_10x10(surface, debug=False):
             line = ''.join([' ' if v < 10 else str(min(9, int(v/25.5))) for v in row])
             print(f"  {line}")
     
-    # Resize to 8x8 using block MAX pooling (preserves thin strokes better than averaging)
+    # Resize to 8x8 using block AVERAGE pooling (matches sklearn antialiased stroke distribution)
     h, w = cropped.shape
     out_h, out_w = 8, 8
     resized = np.zeros((out_h, out_w), dtype=np.float32)
@@ -173,7 +173,7 @@ def downsample_to_10x10(surface, debug=False):
             c_end = int((j + 1) * w / out_w)
             block = cropped[r_start:r_end, c_start:c_end]
             if block.size > 0:
-                resized[i, j] = block.max()
+                resized[i, j] = block.mean()
     
     if debug:
         print(f"DEBUG: resized 8x8 shape = {resized.shape}")
@@ -336,7 +336,7 @@ def main():
                 mx, my = event.pos
                 if mx < CANVAS_SIZE and my < CANVAS_SIZE:
                     if last_pos:
-                        pygame.draw.line(canvas, BLACK, last_pos, (mx, my), 28)
+                        pygame.draw.line(canvas, BLACK, last_pos, (mx, my), 36)
                     last_pos = (mx, my)
         
         # Render

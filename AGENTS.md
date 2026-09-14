@@ -59,7 +59,7 @@ Hardware neural network accelerator implementing a 3-layer MLP (100→16→10) u
 | **M13** | Software Optimization Limits & Reversion (proved 93.06% is the hard ceiling for this architecture; reverted to clean baseline) | ✅ Done |
 | **M14** | Q7.8 fixed-point migration — golden model/test-gen scale fix, module renames | ✅ Done |
 | **M15** | PC-only batch regression harness — N=20, hardware-vs-golden 100% agreement | ✅ Done |
-| **M16** | Local hand-drawn digit testing — pygame canvas, preprocessing, 100% HW-golden agreement | ✅ Done |
+| **M16** | Local hand-drawn digit testing — Tkinter UI, avg-pooling preprocessing, 100% HW-golden agreement | ✅ Done |
 
 ## Known Bugs Already Fixed
 
@@ -76,5 +76,5 @@ Hardware neural network accelerator implementing a 3-layer MLP (100→16→10) u
 - **Vector loading**: `$readmemh` for hex files
 - **Waveforms**: `$dumpfile` / `$dumpvars` for GTKWave debugging
 
-M16 complete: Local hand-drawn digit testing verified 100% hardware-vs-golden agreement on new/unseen input (pygame canvas, bounding-box crop + 8×8 resize + 10×10 pad preprocessing, Q7.8 headroom confirmed ≤48). Remaining plan:
+M16 complete: Local hand-drawn digit testing verified 100% hardware-vs-golden agreement on new/unseen input (Tkinter canvas 400×400, square crop + average-pooling resize to 8×8 → 10×10, Q7.8 headroom confirmed ≤48). Model accuracy on hand-drawn ~20% (domain shift: thick mouse strokes vs sklearn antialiased scans) — model limitation, not hardware bug. Remaining plan:
 1. **M17 — Arduino PC-in-the-loop integration**: Arduino Uno captures touchscreen digit, streams via USB Serial to PC, PC bridges to the Verilog sim, classification result returned — the original end-goal stated in PROGRESS.md's project overview.
