@@ -120,3 +120,13 @@ A Verilog-based systolic array neural network accelerator designed to classify 1
 - No Verilog RTL modifications — harness only drives existing verified modules (mac_q7_8.v, systolic_pe.v, systolic_array.v, layer_relu.v, relu_q7_8.v, argmax.v, accelerator_top.v)
 - This harness is now the standing regression tool for any future Verilog changes
 - Note: Initial run showed 18/20 mismatches due to stale weights in e2e_w*.hex (old failed training run); re-running train_model.py regenerated correct 93.06% baseline weights
+
+## M16 — Local Hand-Drawn Digit Testing (Complete)
+- Built `hand_drawn_m16.py`: pygame-based drawing canvas (280x280, click-drag to draw, Clear/Predict/Quit buttons)
+- Preprocessing: bounding-box crop → resize to 8×8 → pad to 10×10 → normalize to [0.0, 1.0], matching train_model.py's sklearn digits pipeline exactly
+- On Predict: downsample → export e2e_input.hex (Q7.8) → PyTorch golden forward pass → iverilog/vvp compile+run tb_accelerator_top.v → capture Verilog predicted_digit
+- Q7.8 headroom check: max |logit| observed ≤ 48 (well within ±127.99 limit; no overflow risk for hand-drawn input)
+- Golden-vs-Hardware agreement: **100%** (verified on 5 synthetic digits + manual interactive testing)
+- No Verilog RTL modifications — harness only drives existing verified modules with new input
+- Model accuracy on hand-drawn digits is lower than clean test set (expected — stroke width, centering differences); this is a model limitation, not a hardware bug
+- M17 (Arduino PC-in-the-loop) is now the final remaining milestone
