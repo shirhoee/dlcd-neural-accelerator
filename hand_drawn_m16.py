@@ -76,41 +76,93 @@ def load_model():
     model.eval()
     return model
 
-def downsample_to_10x10(surface):
+def downsample_to_10x10(surface, debug=False):
     """
     Downsample drawn canvas to 10x10 grayscale [0.0, 1.0].
     Preprocessing to match train_model.py:
     1. Find bounding box of non-white pixels
-    2. Crop to content, resize to 8x8
-    3. Pad to 10x10 with 1px border
-    4. Normalize to [0.0, 1.0] (divide by max, since sklearn digits are 0-16)
+    2. Make crop square by expanding smaller dimension (centered), like sklearn digits
+    3. Resize to 8x8
+    4. Pad to 10x10 with 1px border
+    5. Normalize to [0.0, 1.0]
     """
     # Get pixel array (280x280)
     arr = pygame.surfarray.array3d(surface)  # (W, H, 3)
+    # FIX: transpose to (H, W, 3) for standard numpy image convention
+    arr = arr.transpose(1, 0, 2)  # Now (H, W, 3) = (280, 280, 3)
+    
     # Convert to grayscale (average RGB)
-    gray = arr.mean(axis=2).astype(np.float32)  # (280, 280)
+    gray = arr.mean(axis=2).astype(np.float32)  # (H, W) = (280, 280)
     
     # Invert: drawing is black on white, but model expects digit=high, background=low
     # So: white(255) -> 0.0, black(0) -> 1.0
     gray = 255.0 - gray
     
+    if debug:
+        print(f"DEBUG: gray shape = {gray.shape}, min={gray.min():.1f}, max={gray.max():.1f}")
+    
     # Find bounding box of non-zero pixels
-    rows = np.any(gray > 10, axis=1)  # threshold to ignore noise
-    cols = np.any(gray > 10, axis=0)
+    rows = np.any(gray > 10, axis=1)  # axis=1 = along width (columns)
+    cols = np.any(gray > 10, axis=0)  # axis=0 = along height (rows)
+    
+    if debug:
+        print(f"DEBUG: rows any = {np.any(rows)}, cols any = {np.any(cols)}")
     
     if not np.any(rows) or not np.any(cols):
         # Empty canvas
+        if debug:
+            print("DEBUG: Empty canvas")
         return np.zeros((10, 10), dtype=np.float32)
     
     rmin, rmax = np.where(rows)[0][[0, -1]]
     cmin, cmax = np.where(cols)[0][[0, -1]]
     
-    # Crop to bounding box
-    cropped = gray[rmin:rmax+1, cmin:cmax+1]
+    if debug:
+        print(f"DEBUG: raw bounding box: rows [{rmin}:{rmax+1}] (h={rmax-rmin+1}), cols [{cmin}:{cmax+1}] (w={cmax-cmin+1})")
     
-    # Resize to 8x8 using simple averaging (matching sklearn 8x8)
+    # Make crop square by expanding smaller dimension (centered)
+    # This mimics sklearn digits which are centered in 8x8
+    h = rmax - rmin + 1
+    w = cmax - cmin + 1
+    size = max(h, w)
+    
+    # Center the square crop
+    r_center = (rmin + rmax) // 2
+    c_center = (cmin + cmax) // 2
+    half = size // 2
+    
+    rmin_sq = max(0, r_center - half)
+    rmax_sq = min(gray.shape[0] - 1, r_center + half)
+    cmin_sq = max(0, c_center - half)
+    cmax_sq = min(gray.shape[1] - 1, c_center + half)
+    
+    # Adjust if we hit boundaries
+    if rmax_sq - rmin_sq + 1 < size:
+        if rmin_sq == 0:
+            rmax_sq = min(gray.shape[0] - 1, rmin_sq + size - 1)
+        elif rmax_sq == gray.shape[0] - 1:
+            rmin_sq = max(0, rmax_sq - size + 1)
+    if cmax_sq - cmin_sq + 1 < size:
+        if cmin_sq == 0:
+            cmax_sq = min(gray.shape[1] - 1, cmin_sq + size - 1)
+        elif cmax_sq == gray.shape[1] - 1:
+            cmin_sq = max(0, cmax_sq - size + 1)
+    
+    if debug:
+        print(f"DEBUG: square crop: rows [{rmin_sq}:{rmax_sq+1}], cols [{cmin_sq}:{cmax_sq+1}], size={rmax_sq-rmin_sq+1}x{cmax_sq-cmin_sq+1}")
+    
+    # Crop to square bounding box
+    cropped = gray[rmin_sq:rmax_sq+1, cmin_sq:cmax_sq+1]
+    
+    if debug:
+        print(f"DEBUG: cropped shape = {cropped.shape}")
+        print("DEBUG: cropped values (scaled to 0-9 for display):")
+        for row in cropped:
+            line = ''.join([' ' if v < 10 else str(min(9, int(v/25.5))) for v in row])
+            print(f"  {line}")
+    
+    # Resize to 8x8 using block MAX pooling (preserves thin strokes better than averaging)
     h, w = cropped.shape
-    # Simple resize via block averaging
     out_h, out_w = 8, 8
     resized = np.zeros((out_h, out_w), dtype=np.float32)
     for i in range(out_h):
@@ -121,17 +173,34 @@ def downsample_to_10x10(surface):
             c_end = int((j + 1) * w / out_w)
             block = cropped[r_start:r_end, c_start:c_end]
             if block.size > 0:
-                resized[i, j] = block.mean()
+                resized[i, j] = block.max()
+    
+    if debug:
+        print(f"DEBUG: resized 8x8 shape = {resized.shape}")
+        print("DEBUG: resized 8x8 values:")
+        for row in resized:
+            line = ''.join([f'{v:5.1f}' for v in row])
+            print(f"  {line}")
     
     # Pad to 10x10 with 1px border (matching train_model.py)
     padded = np.pad(resized, ((1, 1), (1, 1)), mode='constant', constant_values=0)
     
-    # Normalize to [0.0, 1.0] — sklearn digits are 0-16, so divide by 16
-    # But our values are 0-255, so we need to scale appropriately
-    # The training used: (X_padded / 16.0) where X_padded was 0-16
-    # Our padded is 0-255, so: padded / 255.0 * 16.0 / 16.0 = padded / 255.0
-    # Actually simpler: just normalize to [0,1] since model learned on [0,1] range
+    if debug:
+        print(f"DEBUG: padded 10x10 shape = {padded.shape}")
+        print("DEBUG: padded 10x10 values:")
+        for row in padded:
+            line = ''.join([f'{v:5.1f}' for v in row])
+            print(f"  {line}")
+    
+    # Normalize to [0.0, 1.0] - training used /16.0 on 0-16 data, so [0,1]
+    # Our canvas is 0-255, so /255.0 gives [0,1] range
     normalized = padded / 255.0
+    
+    if debug:
+        print("DEBUG: final normalized 10x10 (0.0-1.0):")
+        for row in normalized:
+            line = ''.join([f'{v:.3f}' for v in row])
+            print(f"  {line}")
     
     return normalized
 
@@ -234,8 +303,8 @@ def main():
                     max_logit = 0.0
                     last_img_10x10 = None
                 elif btn_predict.collidepoint(mx, my):
-                    # Downsample
-                    img_10x10 = downsample_to_10x10(canvas)
+                    # Downsample (with debug output to console)
+                    img_10x10 = downsample_to_10x10(canvas, debug=True)
                     last_img_10x10 = img_10x10
                     
                     # Write input hex
@@ -267,7 +336,7 @@ def main():
                 mx, my = event.pos
                 if mx < CANVAS_SIZE and my < CANVAS_SIZE:
                     if last_pos:
-                        pygame.draw.line(canvas, BLACK, last_pos, (mx, my), 12)
+                        pygame.draw.line(canvas, BLACK, last_pos, (mx, my), 28)
                     last_pos = (mx, my)
         
         # Render
