@@ -116,6 +116,7 @@ A Verilog-based systolic array neural network accelerator designed to classify 1
 - Built `batch_regression_m15.py`: automated N=20 test-set image regression using cached Q7.8 weights
 - For each image: PyTorch float forward pass -> Q7.8 golden model (sequential MAC with truncation) -> export e2e_input.hex -> iverilog/vvp compile+run tb_accelerator_top.v -> capture Verilog predicted_digit at valid_out
 - Hardware-vs-Golden agreement: **20/20 = 100%** (exact match on all 20 images)
-- Golden-vs-True-Label mismatches: 18/20 (reflects 93.06% model accuracy ceiling — training limitation, not hardware bug)
+- Golden-vs-True-Label mismatches: **3/20** (consistent with 93.06% model accuracy; 15% observed error rate within normal sampling variance of N=20)
 - No Verilog RTL modifications — harness only drives existing verified modules (mac_q7_8.v, systolic_pe.v, systolic_array.v, layer_relu.v, relu_q7_8.v, argmax.v, accelerator_top.v)
 - This harness is now the standing regression tool for any future Verilog changes
+- Note: Initial run showed 18/20 mismatches due to stale weights in e2e_w*.hex (old failed training run); re-running train_model.py regenerated correct 93.06% baseline weights
