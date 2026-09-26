@@ -28,10 +28,10 @@ module conv_pe (
     
     // Reusing V1's verified Q7.8 MAC
     mac_q7_8 mac_inst (
-        .a(pixel_in),
-        .b(current_weight),
-        .c(acc_in),
-        .out(mac_result)
+        .in_val(pixel_in),
+        .weight(current_weight),
+        .acc_in(acc_in),
+        .acc_out(mac_result)
     );
 
     always @(posedge clk) begin
