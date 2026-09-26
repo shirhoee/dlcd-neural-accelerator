@@ -240,11 +240,21 @@ def main():
         # 1. Golden model prediction (Q7.8 fixed-point, matches hardware)
         golden_pred = golden_predict_q7_8(img, w1, w2, w3)
         
+        # 1b. PyTorch Float32 model prediction (to catch hidden overflows)
+        model.eval()
+        with torch.no_grad():
+            logits = model(img.unsqueeze(0))
+            max_logit = logits.abs().max().item()
+        
         # 2. Export input as Q7.8 hex
         write_input_hex(img, os.path.join(VERILOG_SRC, "e2e_input.hex"))
         
         # 3. Run Verilog simulation
         hw_pred = run_verilog_sim()
+        
+        overflow_warn = ""
+        if max_logit > 127.99:
+            overflow_warn = f" [WARNING: PyTorch Max Logit {max_logit:.2f} > 127.99 (OVERFLOW RISK)]"
         
         if hw_pred is None:
             hw_vs_golden_fail += 1
@@ -272,7 +282,7 @@ def main():
         
         status = "PASS" if match else "FAIL"
         true_match = "OK" if golden_pred == true_label else "XX"
-        print(f"Image {idx:2d}: True={true_label} ({true_match}), Golden={golden_pred}, HW={hw_pred} -> {status}")
+        print(f"Image {idx:2d}: True={true_label} ({true_match}), Golden={golden_pred}, HW={hw_pred} -> {status}{overflow_warn}")
     
     # Summary
     total = hw_vs_golden_pass + hw_vs_golden_fail

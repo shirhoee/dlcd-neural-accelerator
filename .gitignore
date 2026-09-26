@@ -1,0 +1,12 @@
+# Simulation artifacts
+*.out
+*.vcd
+*.vvp
+
+# Python cache
+__pycache__/
+*.pyc
+
+# IDE
+.vscode/
+.idea/

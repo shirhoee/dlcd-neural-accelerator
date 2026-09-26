@@ -344,6 +344,10 @@ class HandDrawnApp:
         rmin, rmax = np.where(rows)[0][[0, -1]]
         cmin, cmax = np.where(cols)[0][[0, -1]]
         
+        import scipy.ndimage as ndimage
+        gray = ndimage.binary_erosion(gray > 10, iterations=10).astype(np.float32) * 255.0
+        gray = ndimage.gaussian_filter(gray, sigma=1.0)
+        
         # Square crop (centered, like sklearn digits)
         h = rmax - rmin + 1
         w = cmax - cmin + 1

@@ -1,8 +1,9 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from sklearn.datasets import load_digits
-from sklearn.model_selection import train_test_split
+import torchvision.datasets as datasets
+import torchvision.transforms as transforms
+from torch.utils.data import DataLoader
 import numpy as np
 
 # 0. Reproducibility
@@ -11,19 +12,31 @@ torch.manual_seed(SEED)
 np.random.seed(SEED)
 
 # 1. Load and Normalize Dataset (GRAYSCALE 0.0 to 1.0)
-digits = load_digits()
-X = digits.images 
-y = digits.target
+transform = transforms.Compose([
+    transforms.Resize((10, 10)),
+    transforms.ToTensor()
+])
 
-# Pad 8x8 to 10x10
-X_padded = np.pad(X, ((0,0), (1,1), (1,1)), mode='constant', constant_values=0)
-X_flat = X_padded.reshape(len(X), 100)
-X_flat = (X_flat / 16.0).astype(np.float32)
+train_dataset = datasets.MNIST(root='./data', train=True, download=True, transform=transform)
+test_dataset = datasets.MNIST(root='./data', train=False, download=True, transform=transform)
 
-X_tensor = torch.tensor(X_flat)
-y_tensor = torch.tensor(y, dtype=torch.long)
+print("Pre-processing datasets into memory...", flush=True)
+X_train_list, y_train_list = [], []
+for images, labels in DataLoader(train_dataset, batch_size=1024):
+    X_train_list.append(images)
+    y_train_list.append(labels)
+X_train = torch.cat(X_train_list)
+y_train = torch.cat(y_train_list)
 
-X_train, X_test, y_train, y_test = train_test_split(X_tensor, y_tensor, test_size=0.2, random_state=SEED)
+X_test_list, y_test_list = [], []
+for images, labels in DataLoader(test_dataset, batch_size=1024):
+    X_test_list.append(images)
+    y_test_list.append(labels)
+X_test = torch.cat(X_test_list)
+y_test = torch.cat(y_test_list)
+
+train_loader = DataLoader(torch.utils.data.TensorDataset(X_train, y_train), batch_size=1024, shuffle=True)
+test_loader = DataLoader(torch.utils.data.TensorDataset(X_test, y_test), batch_size=1024, shuffle=False)
 
 # 2. Define Pure VerilogNet (100 -> 16 -> 6 -> 10, No Bias, No Dropout)
 class VerilogNet(nn.Module):
@@ -47,23 +60,39 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-5)
 scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=300)
 
-print("Training peak 93% baseline model...")
+print("Training MNIST model...")
 for epoch in range(300):
     model.train()
-    optimizer.zero_grad()
-    outputs = model(X_train)
-    loss = criterion(outputs, y_train)
-    loss.backward()
-    optimizer.step()
+    for images, labels in train_loader:
+        images = images.view(-1, 100)
+        optimizer.zero_grad()
+        outputs = model(images)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
     scheduler.step()
 
     if (epoch+1) % 50 == 0:
         model.eval()
         with torch.no_grad():
-            test_out = model(X_test)
-            _, predicted = torch.max(test_out, 1)
-            acc = (predicted == y_test).float().mean().item() * 100
+            correct = 0
+            total = 0
+            for images, labels in test_loader:
+                images = images.view(-1, 100)
+                test_out = model(images)
+                _, predicted = torch.max(test_out, 1)
+                total += labels.size(0)
+                correct += (predicted == labels).sum().item()
+            acc = correct / total * 100
             print(f"Epoch {epoch+1}/300 - Loss: {loss.item():.4f} - Test Acc: {acc:.2f}%")
+
+X_test = []
+y_test = []
+for images, labels in test_loader:
+    X_test.append(images.view(-1, 100))
+    y_test.append(labels)
+X_test = torch.cat(X_test)
+y_test = torch.cat(y_test)
 
 # Check max logit headroom for Q7.8 (+/- 127.99)
 model.eval()

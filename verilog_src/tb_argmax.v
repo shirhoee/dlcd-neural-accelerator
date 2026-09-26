@@ -34,14 +34,24 @@ module tb_argmax;
         end
         $display("----------------------------------------");
         
-        // From our manual check of M7:
-        // Neuron 1 has 174f (+5967), Neuron 4 has 0d7a (+3450), Neuron 7 has 0fcc (+4044).
-        // All others are negative (MSB=1). 
-        // Therefore, Argmax MUST pick digit 1.
-        if (out_digit === 4'd1) begin
-            $display("PASS: Argmax correctly selected digit %0d!", out_digit);
-        end else begin
-            $display("FAIL: Argmax selected digit %0d, expected 1", out_digit);
+        // Compute expected argmax from the loaded logits (signed comparison)
+        begin : expected_calc
+            reg signed [15:0] exp_max_val;
+            reg [3:0] exp_digit;
+            integer j;
+            exp_max_val = logits[0];
+            exp_digit = 0;
+            for (j = 1; j < 10; j = j + 1) begin
+                if ($signed(logits[j]) > $signed(exp_max_val)) begin
+                    exp_max_val = logits[j];
+                    exp_digit = j[3:0];
+                end
+            end
+            if (out_digit === exp_digit) begin
+                $display("PASS: Argmax correctly selected digit %0d!", out_digit);
+            end else begin
+                $display("FAIL: Argmax selected digit %0d, expected %0d", out_digit, exp_digit);
+            end
         end
         $display("----------------------------------------");
         $finish;
