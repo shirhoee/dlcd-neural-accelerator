@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 
 const GRID_SIZE = 28;
 
@@ -14,7 +14,6 @@ function App() {
     setDrawing(prev => {
       const newD = prev.map(row => [...row]);
       newD[r][c] = 1.0;
-      // Add a little brush radius for better lines
       if (r > 0) newD[r-1][c] = Math.max(newD[r-1][c], 0.6);
       if (r < GRID_SIZE-1) newD[r+1][c] = Math.max(newD[r+1][c], 0.6);
       if (c > 0) newD[r][c-1] = Math.max(newD[r][c-1], 0.6);
@@ -47,12 +46,12 @@ function App() {
     const maxVal = Math.max(0.01, ...data.flat().map(v => Math.abs(v)));
     
     return (
-      <div className="grid gap-px bg-gray-700 p-px" style={{ gridTemplateColumns: \epeat(\, minmax(0, 1fr))\ }}>
+      <div className="grid gap-px bg-gray-700 p-px" style={{ gridTemplateColumns: `repeat(${w}, minmax(0, 1fr))` }}>
         {data.map((row, i) =>
           row.map((val, j) => {
             const op = Math.max(0, val / maxVal);
             return (
-              <div key={\\-\\} className={\w-2 h-2 sm:w-3 sm:h-3 \\} style={{ opacity: op }} />
+              <div key={`${i}-${j}`} className={`w-2 h-2 sm:w-3 sm:h-3 ${colorClass}`} style={{ opacity: op }} />
             );
           })
         )}
@@ -71,7 +70,7 @@ function App() {
           <h2 className="text-xl mb-4 text-gray-300">Input Digit (28x28)</h2>
           <div 
             className="grid bg-gray-900 border border-gray-600 touch-none"
-            style={{ gridTemplateColumns: \epeat(\, 12px)\ }}
+            style={{ gridTemplateColumns: `repeat(${GRID_SIZE}, 12px)` }}
             onMouseLeave={() => setIsDrawing(false)}
             onMouseUp={() => setIsDrawing(false)}
             onMouseDown={() => setIsDrawing(true)}
@@ -79,9 +78,9 @@ function App() {
             {drawing.map((row, r) =>
               row.map((val, c) => (
                 <div 
-                  key={\\-\\} 
+                  key={`${r}-${c}`} 
                   className="w-[12px] h-[12px]" 
-                  style={{ backgroundColor: \gba(255, 255, 255, \)\ }}
+                  style={{ backgroundColor: `rgba(255, 255, 255, ${val})` }}
                   onMouseDown={() => drawPixel(r, c)}
                   onMouseEnter={() => isDrawing && drawPixel(r, c)}
                 />
@@ -132,10 +131,10 @@ function App() {
                       <div key={idx} className="flex-1 flex flex-col items-center justify-end gap-2 group">
                         <span className="text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity">{val.toFixed(1)}</span>
                         <div 
-                          className={\w-full rounded-t-sm \\} 
-                          style={{ height: \\%\ }}
+                          className={`w-full rounded-t-sm ${isMax ? 'bg-blue-500' : 'bg-gray-600'}`} 
+                          style={{ height: `${h}%` }}
                         />
-                        <span className={\ont-mono \\}>{idx}</span>
+                        <span className={`font-mono ${isMax ? 'text-blue-400 font-bold' : 'text-gray-400'}`}>{idx}</span>
                       </div>
                     )
                   })}
