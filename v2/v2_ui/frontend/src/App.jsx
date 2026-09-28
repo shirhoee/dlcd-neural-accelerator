@@ -239,7 +239,7 @@ function App() {
                 <h3 className={styles.sectionTitle}>MaxPool1 Channels (4x10x10)</h3>
                 <div className={styles.featureMaps}>
                   {result.mp1.map((ch, i) => (
-                    <FeatureGrid key={i} data={ch} colorHex="34, 197, 94" />
+                    <FeatureGrid key={i} data={ch} colorHex="16, 185, 129" />
                   ))}
                 </div>
               </div>
@@ -249,7 +249,7 @@ function App() {
                 <h3 className={styles.sectionTitle}>MaxPool2 Channels (8x5x5)</h3>
                 <div className={styles.featureMaps}>
                   {result.mp2.map((ch, i) => (
-                    <FeatureGrid key={i} data={ch} colorHex="168, 85, 247" />
+                    <FeatureGrid key={i} data={ch} colorHex="16, 185, 129" />
                   ))}
                 </div>
               </div>
