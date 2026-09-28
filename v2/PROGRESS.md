@@ -77,3 +77,10 @@ elu_q7_8.v, layer_relu.v) from V1.
 - Built dense_pe.v with 8 combinational multipliers and an adder tree for real-time dense inference.
 - Built dense_array.v utilizing 10 PEs (80 multipliers total) and a synchronous gap-resistant state counter.
 - Evaluated isolated vectors in tb_dense_array.v verifying a 10/10 exact bit-match on final output logits.
+
+## N8: Argmax Layer Subsystem
+- **Status:** Completed
+- Built argmax.v utilizing a purely combinational 4-stage binary comparison tree.
+- Implemented robust signed logic and pairing to track the winning index dynamically.
+- Deployed a 1-cycle pipeline register buffering the final prediction exactly when valid_out pulses.
+- Validated via tb_argmax.v with 5 extreme-edge synthetic datasets, verifying exact deterministic tie-breaking.
