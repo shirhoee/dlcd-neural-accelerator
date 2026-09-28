@@ -130,19 +130,26 @@ function App() {
               <div>
                 <h3 className={styles.sectionTitle}>Raw Logits (Dense -&gt; Argmax)</h3>
                 <div className={styles.logitChart}>
-                  {result.logits.map((val, idx) => {
-                    const isMax = idx === result.prediction;
-                    const ht = Math.max(5, (val / Math.max(...result.logits.map(Math.abs))) * 100);
-                    return (
-                      <div key={idx} className={styles.logitBarContainer}>
-                        <div 
-                          className={`${styles.logitBar} ${isMax ? styles.barActive : styles.barInactive}`} 
-                          style={{ height: `${ht}%` }}
-                        />
-                        <span className={`${styles.logitLabel} ${isMax ? styles.labelActive : ''}`}>{idx}</span>
-                      </div>
-                    )
-                  })}
+                  {(() => {
+                    const maxLogit = Math.max(...result.logits);
+                    const exps = result.logits.map(l => Math.exp(l - maxLogit));
+                    const sumExps = exps.reduce((a, b) => a + b, 0);
+                    const probs = exps.map(e => e / sumExps);
+                    
+                    return result.logits.map((val, idx) => {
+                      const isMax = idx === result.prediction;
+                      const ht = Math.max(2, probs[idx] * 100); // 2% min height for visibility
+                      return (
+                        <div key={idx} className={styles.logitBarContainer}>
+                          <div 
+                            className={`${styles.logitBar} ${isMax ? styles.barActive : styles.barInactive}`} 
+                            style={{ height: `${ht}%` }}
+                          />
+                          <span className={`${styles.logitLabel} ${isMax ? styles.labelActive : ''}`}>{idx}</span>
+                        </div>
+                      )
+                    });
+                  })()}
                 </div>
               </div>
 

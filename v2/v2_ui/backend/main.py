@@ -42,7 +42,8 @@ async def predict(request: Request):
     with open(txt_path, "w") as f:
         for row in image_20:
             for val in row:
-                q_val = int(round(val * 256.0))
+                norm_val = (val - 0.1307) / 0.3081
+                q_val = int(round(norm_val * 256.0))
                 if q_val > 32767: q_val = 32767
                 if q_val < -32768: q_val = -32768
                 f.write(hex16(q_val) + "\n")
