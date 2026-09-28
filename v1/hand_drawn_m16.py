@@ -248,25 +248,53 @@ def run_verilog_sim():
                 pass
     return None, "No prediction in output"
 
+
+# UI Colors (Modern Dark Theme)
+BG_COLOR = (30, 30, 46)
+PANEL_COLOR = (24, 24, 37)
+TEXT_COLOR = (205, 214, 244)
+ACCENT_COLOR = (137, 180, 250)
+GREEN_COLOR = (166, 227, 161)
+RED_COLOR = (243, 139, 168)
+BTN_COLOR = (49, 50, 68)
+BTN_HOVER = (69, 71, 90)
+
+RENDER_SCALE = 2
+VISUAL_SIZE = CANVAS_SIZE * RENDER_SCALE # 560
+
 def draw_10x10_preview(screen, img_10x10, x, y, scale=20):
     """Draw a 10x10 preview of the downsampled input."""
     for i in range(10):
         for j in range(10):
             val = int(img_10x10[i, j] * 255)
+            # Invert for dark theme visualization (higher value = brighter)
             color = (val, val, val)
             rect = pygame.Rect(x + j*scale, y + i*scale, scale, scale)
             pygame.draw.rect(screen, color, rect)
-            pygame.draw.rect(screen, GRAY, rect, 1)
+            pygame.draw.rect(screen, PANEL_COLOR, rect, 1)
+
+def draw_button(screen, font, rect, text, is_hover, color=BTN_COLOR):
+    import pygame
+    bg = BTN_HOVER if is_hover else color
+    pygame.draw.rect(screen, bg, rect, border_radius=8)
+    pygame.draw.rect(screen, (88, 91, 112), rect, 2, border_radius=8)
+    surf = font.render(text, True, TEXT_COLOR)
+    tr = surf.get_rect(center=rect.center)
+    screen.blit(surf, tr)
 
 def main():
+    import pygame
     pygame.init()
-    screen = pygame.display.set_mode((CANVAS_SIZE + 320, CANVAS_SIZE + 100))
-    pygame.display.set_caption("M16: Hand-Drawn Digit Test — Draw, then press PREDICT")
+    screen = pygame.display.set_mode((VISUAL_SIZE + 400, VISUAL_SIZE))
+    pygame.display.set_caption("V1 Neural Accelerator: Hardware Digit Classification")
     clock = pygame.time.Clock()
-    font = pygame.font.Font(None, 24)
-    font_small = pygame.font.Font(None, 18)
     
-    # Drawing surface (white background)
+    font_large = pygame.font.SysFont('segoeui,arial', 32, bold=True)
+    font = pygame.font.SysFont('segoeui,arial', 20)
+    font_small = pygame.font.SysFont('segoeui,arial', 16)
+    font_huge = pygame.font.SysFont('segoeui,arial', 120, bold=True)
+    
+    # Mathematical drawing surface (STRICTLY 280x280, white bg, black stroke)
     canvas = pygame.Surface((CANVAS_SIZE, CANVAS_SIZE))
     canvas.fill(WHITE)
     
@@ -277,97 +305,117 @@ def main():
     
     drawing = False
     last_pos = None
-    prediction_text = "Draw a digit and click PREDICT"
+    status_text = "Draw a digit and click Predict"
     golden_pred = None
     hw_pred = None
     max_logit = 0.0
     last_img_10x10 = None
     
     # Buttons
-    btn_clear = pygame.Rect(CANVAS_SIZE + 20, 20, 120, 40)
-    btn_predict = pygame.Rect(CANVAS_SIZE + 20, 80, 120, 40)
-    btn_quit = pygame.Rect(CANVAS_SIZE + 20, 140, 120, 40)
+    btn_predict = pygame.Rect(VISUAL_SIZE + 40, VISUAL_SIZE - 120, 150, 50)
+    btn_clear = pygame.Rect(VISUAL_SIZE + 210, VISUAL_SIZE - 120, 150, 50)
     
     running = True
     while running:
+        mx, my = pygame.mouse.get_pos()
+        hover_predict = btn_predict.collidepoint(mx, my)
+        hover_clear = btn_clear.collidepoint(mx, my)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                mx, my = event.pos
-                if btn_clear.collidepoint(mx, my):
+                if hover_clear:
                     canvas.fill(WHITE)
-                    prediction_text = "Cleared. Draw a digit and click PREDICT"
+                    status_text = "Cleared. Draw a digit."
                     golden_pred = hw_pred = None
                     max_logit = 0.0
                     last_img_10x10 = None
-                elif btn_predict.collidepoint(mx, my):
-                    # Downsample (with debug output to console)
-                    img_10x10 = downsample_to_10x10(canvas, debug=True)
+                elif hover_predict:
+                    img_10x10 = downsample_to_10x10(canvas, debug=False)
                     last_img_10x10 = img_10x10
                     
-                    # Write input hex
+                    import os
                     write_input_hex(img_10x10, os.path.join(VERILOG_SRC, "e2e_input.hex"))
                     
-                    # Golden prediction
                     golden_pred, max_logit = golden_predict_q7_8(model, img_10x10)
-                    
-                    # Verilog simulation
                     hw_pred, err = run_verilog_sim()
+                    
                     if err:
-                        prediction_text = f"Error: {err}"
+                        status_text = f"Error: {err}"
                         hw_pred = None
                     else:
-                        match = "✓ MATCH" if golden_pred == hw_pred else "✗ MISMATCH"
-                        prediction_text = f"Golden: {golden_pred} | HW: {hw_pred} | {match}"
+                        match = "MATCH" if golden_pred == hw_pred else "MISMATCH"
+                        status_text = f"Prediction complete ({match})"
                 
-                elif btn_quit.collidepoint(mx, my):
-                    running = False
-                elif mx < CANVAS_SIZE and my < CANVAS_SIZE:
+                elif mx < VISUAL_SIZE and my < VISUAL_SIZE:
                     drawing = True
-                    last_pos = (mx, my)
+                    last_pos = (mx // RENDER_SCALE, my // RENDER_SCALE)
             
             elif event.type == pygame.MOUSEBUTTONUP:
                 drawing = False
                 last_pos = None
             
             elif event.type == pygame.MOUSEMOTION and drawing:
-                mx, my = event.pos
-                if mx < CANVAS_SIZE and my < CANVAS_SIZE:
+                if mx < VISUAL_SIZE and my < VISUAL_SIZE:
+                    curr_pos = (mx // RENDER_SCALE, my // RENDER_SCALE)
                     if last_pos:
-                        pygame.draw.line(canvas, BLACK, last_pos, (mx, my), 36)
-                    last_pos = (mx, my)
+                        pygame.draw.line(canvas, BLACK, last_pos, curr_pos, 36)
+                    last_pos = curr_pos
         
-        # Render
-        screen.fill(WHITE)
+        # Render App Background
+        screen.fill(BG_COLOR)
         
-        # Draw canvas
-        screen.blit(canvas, (0, 0))
-        pygame.draw.rect(screen, DARK_GRAY, (0, 0, CANVAS_SIZE, CANVAS_SIZE), 2)
+        # Invert canvas for dark mode display
+        display_surf = pygame.transform.scale(canvas, (VISUAL_SIZE, VISUAL_SIZE))
+        inv = pygame.Surface((VISUAL_SIZE, VISUAL_SIZE))
+        inv.fill((255, 255, 255))
+        inv.blit(display_surf, (0, 0), special_flags=pygame.BLEND_RGB_SUB)
+        screen.blit(inv, (0, 0))
         
-        # Draw buttons
-        for btn, label, color in [(btn_clear, "CLEAR", GRAY), (btn_predict, "PREDICT", BLUE), (btn_quit, "QUIT", RED)]:
-            pygame.draw.rect(screen, color, btn)
-            pygame.draw.rect(screen, DARK_GRAY, btn, 2)
-            text = font.render(label, True, WHITE if label != "CLEAR" else BLACK)
-            screen.blit(text, (btn.x + 15, btn.y + 8))
+        # Divider Line
+        pygame.draw.line(screen, PANEL_COLOR, (VISUAL_SIZE, 0), (VISUAL_SIZE, VISUAL_SIZE), 4)
         
-        # Draw prediction text
-        pred_surf = font.render(prediction_text, True, BLACK)
-        screen.blit(pred_surf, (CANVAS_SIZE + 20, 200))
+        # UI Panel
+        panel_x = VISUAL_SIZE + 40
+        title_surf = font_large.render("V1 Neural Accelerator", True, TEXT_COLOR)
+        screen.blit(title_surf, (panel_x, 30))
         
-        # Draw 10x10 preview
-        if last_img_10x10 is not None:
-            prev_label = font.render("10x10 Downsampled Preview:", True, BLACK)
-            screen.blit(prev_label, (CANVAS_SIZE + 20, 240))
-            draw_10x10_preview(screen, last_img_10x10, CANVAS_SIZE + 20, 270, scale=18)
+        status_surf = font.render(status_text, True, ACCENT_COLOR)
+        screen.blit(status_surf, (panel_x, 80))
+        
+        # Hardware Prediction Display
+        if hw_pred is not None:
+            pred_color = GREEN_COLOR if hw_pred == golden_pred else RED_COLOR
+            # Box
+            pygame.draw.rect(screen, PANEL_COLOR, (panel_x, 120, 320, 160), border_radius=12)
+            lbl = font_small.render("Hardware Prediction", True, (166, 173, 200))
+            screen.blit(lbl, (panel_x + 20, 130))
             
-            # Logit info
-            logit_text = f"Max |logit|: {max_logit:.2f} (Q7.8 limit: 127.99)"
-            logit_color = GREEN if max_logit < 100 else RED if max_logit > 127 else (200, 150, 0)
-            logit_surf = font_small.render(logit_text, True, logit_color)
-            screen.blit(logit_surf, (CANVAS_SIZE + 20, 460))
+            huge = font_huge.render(str(hw_pred), True, pred_color)
+            hr = huge.get_rect(center=(panel_x + 160, 200))
+            screen.blit(huge, hr)
+            
+            # Sub-info
+            match_txt = "Bit-Exact Match" if hw_pred == golden_pred else "Mismatch w/ PyTorch"
+            sub = font_small.render(match_txt, True, pred_color)
+            screen.blit(sub, (panel_x + 20, 250))
+        
+        # 10x10 Downsampled Preview
+        if last_img_10x10 is not None:
+            lbl = font_small.render("Model Input Space (10x10)", True, (166, 173, 200))
+            screen.blit(lbl, (panel_x, 300))
+            draw_10x10_preview(screen, last_img_10x10, panel_x, 325, scale=18)
+            
+            # Logits
+            logit_color = GREEN_COLOR if max_logit < 100 else RED_COLOR if max_logit > 127 else (249, 226, 175)
+            logit_text = font_small.render(f"Max Logit: {max_logit:.2f} (Q7.8 max: 127.99)", True, logit_color)
+            screen.blit(logit_text, (panel_x, 515))
+        
+        # Draw Buttons
+        draw_button(screen, font, btn_predict, "Predict", hover_predict, (69, 71, 90) if not hover_predict else (88, 91, 112))
+        draw_button(screen, font, btn_clear, "Clear", hover_clear, (243, 139, 168) if hover_clear else (69, 71, 90))
         
         pygame.display.flip()
         clock.tick(60)
