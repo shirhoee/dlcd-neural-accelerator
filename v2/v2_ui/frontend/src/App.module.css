@@ -47,15 +47,16 @@
   color: #d1d5db;
   margin-bottom: 1rem;
 }
-.drawingBoard {
-  display: grid;
-  background-color: #111827;
+.drawingBoardWrapper {
   border: 1px solid #4b5563;
-  touch-action: none;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: black;
 }
-.drawPixel {
-  width: 12px;
-  height: 12px;
+.smoothCanvas {
+  display: block;
+  touch-action: none;
+  cursor: crosshair;
 }
 .controls {
   display: flex;
