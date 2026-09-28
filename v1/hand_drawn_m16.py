@@ -296,11 +296,9 @@ def main():
     
     # Mathematical drawing surface (STRICTLY 280x280, white bg, black stroke)
     math_canvas = pygame.Surface((CANVAS_SIZE, CANVAS_SIZE))
-    math_math_canvas.fill(WHITE)
-                    ui_canvas.fill(WHITE)
+    math_canvas.fill(WHITE)
     ui_canvas = pygame.Surface((CANVAS_SIZE, CANVAS_SIZE))
-    ui_math_canvas.fill(WHITE)
-                    ui_canvas.fill(WHITE)
+    ui_canvas.fill(WHITE)
     
     # Load model
     model = load_model()
