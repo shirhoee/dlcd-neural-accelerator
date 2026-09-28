@@ -50,3 +50,13 @@ elu_q7_8.v, layer_relu.v) from V1.
 - Verified seamlessly in chain test (400/400) and standalone shift-register leak tests (1600/1600).
 - Verified negative edge cases and mutated paths.
 
+
+## N5: Conv2 Subsystem
+- **Status:** Completed
+- Built conv2_window_gen.v line buffers for a 10x10 streaming grid supporting padding=1 internally.
+- Built conv2_pe.v with 4x parallel mac_q7_8.v feeding a combinational adder tree.
+- Built conv2_array.v with a 100-word input buffer for all 4 channels to handle stream gaps from N4.
+- Employed an explicitly pipelined FSM to fetch, mac (over 9 cycles), and shift.
+- Wrote gen_conv2_vectors.py generating golden data directly from isolated MaxPool outputs.
+- Testbench tb_conv2_array.v completely decoupled from earlier layers.
+- Passed 800/800 output vector assertions perfectly.
