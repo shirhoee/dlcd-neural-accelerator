@@ -132,7 +132,9 @@ function App() {
                 <div className={styles.logitChart}>
                   {(() => {
                     const maxLogit = Math.max(...result.logits);
-                    const exps = result.logits.map(l => Math.exp(l - maxLogit));
+                    const range = Math.max(1, maxLogit - Math.min(...result.logits));
+                    const temp = range / 5.0; // Dynamic temperature scaling
+                    const exps = result.logits.map(l => Math.exp((l - maxLogit) / temp));
                     const sumExps = exps.reduce((a, b) => a + b, 0);
                     const probs = exps.map(e => e / sumExps);
                     
