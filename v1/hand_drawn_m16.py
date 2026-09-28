@@ -295,8 +295,12 @@ def main():
     font_huge = pygame.font.SysFont('segoeui,arial', 120, bold=True)
     
     # Mathematical drawing surface (STRICTLY 280x280, white bg, black stroke)
-    canvas = pygame.Surface((CANVAS_SIZE, CANVAS_SIZE))
-    canvas.fill(WHITE)
+    math_canvas = pygame.Surface((CANVAS_SIZE, CANVAS_SIZE))
+    math_math_canvas.fill(WHITE)
+                    ui_canvas.fill(WHITE)
+    ui_canvas = pygame.Surface((CANVAS_SIZE, CANVAS_SIZE))
+    ui_math_canvas.fill(WHITE)
+                    ui_canvas.fill(WHITE)
     
     # Load model
     model = load_model()
@@ -327,13 +331,14 @@ def main():
             
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if hover_clear:
-                    canvas.fill(WHITE)
+                    math_canvas.fill(WHITE)
+                    ui_canvas.fill(WHITE)
                     status_text = "Cleared. Draw a digit."
                     golden_pred = hw_pred = None
                     max_logit = 0.0
                     last_img_10x10 = None
                 elif hover_predict:
-                    img_10x10 = downsample_to_10x10(canvas, debug=False)
+                    img_10x10 = downsample_to_10x10(math_canvas, debug=False)
                     last_img_10x10 = img_10x10
                     
                     import os
@@ -361,14 +366,15 @@ def main():
                 if mx < VISUAL_SIZE and my < VISUAL_SIZE:
                     curr_pos = (mx // RENDER_SCALE, my // RENDER_SCALE)
                     if last_pos:
-                        pygame.draw.line(canvas, BLACK, last_pos, curr_pos, 36)
+                        pygame.draw.line(math_canvas, BLACK, last_pos, curr_pos, 36)
+                        pygame.draw.line(ui_canvas, BLACK, last_pos, curr_pos, 12)
                     last_pos = curr_pos
         
         # Render App Background
         screen.fill(BG_COLOR)
         
         # Invert canvas for dark mode display
-        display_surf = pygame.transform.scale(canvas, (VISUAL_SIZE, VISUAL_SIZE))
+        display_surf = pygame.transform.scale(ui_canvas, (VISUAL_SIZE, VISUAL_SIZE))
         inv = pygame.Surface((VISUAL_SIZE, VISUAL_SIZE))
         inv.fill((255, 255, 255))
         inv.blit(display_surf, (0, 0), special_flags=pygame.BLEND_RGB_SUB)
