@@ -53,8 +53,14 @@ async def predict(request: Request):
     def read_hex_log(filename):
         path = os.path.join("logs", filename)
         if not os.path.exists(path): return []
+        tokens = []
         with open(path, "r") as f:
-            return [parse_signed_hex(l.strip()) / 256.0 for l in f if l.strip()]
+            for line in f:
+                line = line.split("//")[0]
+                for token in line.split():
+                    if token.startswith('@'): continue
+                    tokens.append(token)
+        return [parse_signed_hex(t) / 256.0 for t in tokens]
 
     mp1_raw = read_hex_log("mp1_cap.txt")
     mp2_raw = read_hex_log("mp2_cap.txt")
