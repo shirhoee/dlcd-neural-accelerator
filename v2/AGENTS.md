@@ -61,3 +61,4 @@ elu_q7_8.v / layer_relu.v (parameterized ReLU)
 - **Argmax Combinational Tree**: argmax.v employs a 4-stage signed binary comparison tree. It outputs a 4-bit prediction representing digits 0-9.
 - **Argmax 1-Cycle Pipeline Contract**: A 1-cycle pipeline delay exists between valid_in and valid_out to break the critical path of the comparator tree. The internal prediction register is safely overwritten ONLY when valid_in is strictly high.
 - **Argmax Tie-Breaker**: The hardware tie-breaker deterministically guarantees that the lower numerical index wins in the event of an identical logit score.
+- **Top-Level Weight Distribution Contract**: v2_top.v guarantees that all Conv weights are perfectly flattened in a layout identical to PyTorch's native C,H,W permutation (with oc as the outermost loop). The module manages all ROM fetching and presents purely combinational constant signals to the downstream datapath instances.

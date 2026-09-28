@@ -84,3 +84,10 @@ elu_q7_8.v, layer_relu.v) from V1.
 - Implemented robust signed logic and pairing to track the winning index dynamically.
 - Deployed a 1-cycle pipeline register buffering the final prediction exactly when valid_out pulses.
 - Validated via tb_argmax.v with 5 extreme-edge synthetic datasets, verifying exact deterministic tie-breaking.
+
+## N9: Top-Level Wrapper
+- **Status:** Completed
+- Built v2_top.v abstracting the entire 6-layer CNN network behind a standard control interface (clk, reset, start, pixel_in, prediction, done).
+- Hard-coded weight extraction by instantiating ROMs internal to v2_top.v and flattening them combinationally into the massive 576-bit and 4608-bit busses required by the Conv array instances.
+- Datapath successfully interlocked from end-to-end utilizing zero-latency handshake strobes.
+- Tested against a full digit (7) in tb_v2_top.v. Passed instantly without logic snags. Architecture is complete.
