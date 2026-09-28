@@ -1,6 +1,43 @@
 # V2 PROGRESS.md — Living Changelog for CNN Upgrade
 
 ## Initialization
-- Initialized isolated `v2/` working directory for the CNN architecture upgrade.
-- Explicitly scoped the architectural inheritance: keeping base verified components (`systolic_array.v`, `mac_q7_8.v`, `relu_q7_8.v`, `layer_relu.v`) from V1.
+- Initialized isolated 2/ working directory for the CNN architecture upgrade.
+- Explicitly scoped the architectural inheritance: keeping base verified components (systolic_array.v, mac_q7_8.v, 
+elu_q7_8.v, layer_relu.v) from V1.
 - Staged development plan for new V2 components: convolutions, pooling, line buffers, and an expanded MLP head.
+
+## N0: PyTorch Golden Model
+- **Status:** Completed
+- Built 	rain_v2_n0.py defining the baseline CNN+MLP model in pure PyTorch.
+- Implemented morphological augmentations (dilation/erosion) and achieved 97.93% accuracy.
+- Conducted the mandatory max|logit| sweep (peaked at 36.55, well below the 127.99 Q7.8 ceiling limit).
+
+## N1: Conv1 PE
+- **Status:** Completed
+- Copied mac_q7_8.v and ixed_point_math.py to 2/ to ensure standalone compilation.
+- Designed conv_pe.v (9-tap sequential MAC, weight-stationary).
+- Verified via 	b_conv_pe.v and python golden model conv1_golden_model.py.
+
+## N2: MaxPool PE
+- **Status:** Completed
+- Designed maxpool_pe.v as a purely combinational block taking 4 parallel inputs.
+- Ensured strictly signed Q7.8 16-bit comparisons matching V1's rgmax.v pattern to prevent 2's-complement comparison bugs.
+- Verified against python golden model maxpool2d_golden_model.py.
+
+## N3a: Sliding-Window Generator
+- **Status:** Completed
+- Designed window_gen.v to separate addressing/buffering from mathematical operations.
+- Implemented a 47-element shift register line buffer mapped to a 22x22 virtual padded grid, outputting a parallel 3x3 window combinationally.
+- Established rigorous interface contracts requiring zero-latency combinational reads for downstream modules.
+
+## N3b: Full Conv1 Array
+- **Status:** Completed
+- Designed conv1_array.v with a master state machine wrapping window_gen.v and 4 instances of conv_pe.v.
+- Documented a strict bit-slicing convention for delivering flat weights to all 4 channels.
+- Validated 1600/1600 output pixels bit-for-bit against python golden model outputs.
+
+## N4a: MaxPool Sliding-Window Memory Router
+- **Status:** Completed
+- Designed pool_window_gen.v memory router to form 2x2 windows with a stride of 2 without complex FSM logic (relies on odd/even coordinate parity).
+- Utilized a 21-stage shift register to buffer the incoming streaming rows correctly.
+- Validated 100/100 matching windows against Python golden outputs, handling sporadic valid pulses effectively.
