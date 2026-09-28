@@ -60,3 +60,12 @@ elu_q7_8.v, layer_relu.v) from V1.
 - Wrote gen_conv2_vectors.py generating golden data directly from isolated MaxPool outputs.
 - Testbench tb_conv2_array.v completely decoupled from earlier layers.
 - Passed 800/800 output vector assertions perfectly.
+
+## N6: MaxPool2 Subsystem
+- **Status:** Completed
+- Built pool2_window_gen.v line buffers mapping the 10x10 input stream to 2x2 windows with an 11-stage shift register.
+- Clock-enable explicitly gated by valid_in to seamlessly handle multi-cycle gaps from the N5 Conv2 PE outputs.
+- Built maxpool2_array.v instantiating 8 window generators and 8 maxpool_pe cores natively in parallel.
+- Applied ReLU(Max(x)) hardware optimization, situating the ReLU immediately after the downsampled maxpool output.
+- Isolated testbench tb_maxpool2_array.v injects random gap latency into the stream.
+- Verified 200/200 exact vector matches against PyTorch golden models.
