@@ -1,7 +1,7 @@
 # V2 PROGRESS.md — Living Changelog for CNN Upgrade
 
 ## Initialization
-- Initialized isolated 2/ working directory for the CNN architecture upgrade.
+- Initialized isolated v2/ working directory for the CNN architecture upgrade.
 - Explicitly scoped the architectural inheritance: keeping base verified components (systolic_array.v, mac_q7_8.v, 
 elu_q7_8.v, layer_relu.v) from V1.
 - Staged development plan for new V2 components: convolutions, pooling, line buffers, and an expanded MLP head.
@@ -14,9 +14,9 @@ elu_q7_8.v, layer_relu.v) from V1.
 
 ## N1: Conv1 PE
 - **Status:** Completed
-- Copied mac_q7_8.v and ixed_point_math.py to 2/ to ensure standalone compilation.
+- Copied mac_q7_8.v and ixed_point_math.py to v2/ to ensure standalone compilation.
 - Designed conv_pe.v (9-tap sequential MAC, weight-stationary).
-- Verified via 	b_conv_pe.v and python golden model conv1_golden_model.py.
+- Verified via 	b_conv_pe.v and python golden model conv1_layer_golden_model.py.
 
 ## N2: MaxPool PE
 - **Status:** Completed
@@ -41,3 +41,12 @@ elu_q7_8.v, layer_relu.v) from V1.
 - Designed pool_window_gen.v memory router to form 2x2 windows with a stride of 2 without complex FSM logic (relies on odd/even coordinate parity).
 - Utilized a 21-stage shift register to buffer the incoming streaming rows correctly.
 - Validated 100/100 matching windows against Python golden outputs, handling sporadic valid pulses effectively.
+
+## N4b: Full MaxPool Array Integration
+- **Status:** Completed
+- Built maxpool_array.v by chaining 4 pool_window_gen and 4 maxpool_pe units.
+- Copied relu_q7_8.v from v1/ and applied it after pooling for mathematical equivalence (relu(max(x)) == max(relu(x))) saving 75% ReLU ops.
+- Generated expected output using python gen_maxpool_array_vectors.py ensuring non-vacuous tests.
+- Verified seamlessly in chain test (400/400) and standalone shift-register leak tests (1600/1600).
+- Verified negative edge cases and mutated paths.
+

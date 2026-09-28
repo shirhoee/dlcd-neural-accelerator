@@ -40,15 +40,18 @@ elu_q7_8.v / layer_relu.v (parameterized ReLU)
 - **N3a [COMPLETED]**: Sliding-Window Generator (window_gen.v) for 3x3 convolutions + testbench
 - **N3b [COMPLETED]**: Full Conv1 array hardware (conv1_array.v) + Master FSM + testbench
 - **N4a [COMPLETED]**: MaxPool sliding-window memory router (pool_window_gen.v) + testbench
-- **N4b [TODO]**: Full MaxPool array integration
+- **N4b [COMPLETED]**: Full MaxPool array integration
 - **N5 [TODO]**: Conv2 Array implementation
 - **N6 [TODO]**: Post-conv MLP head systolic arrays & Full pipeline integration + regression harness
 - **N7 [TODO]**: Train on MNIST-with-augmentation, headroom sweep, hex export
 - **N8 [TODO]**: Live Tkinter/Pygame demo — the real final-stage test
 
 ## Known Tradeoffs
-- **Duplicated Base Modules**: mac_q7_8.v and ixed_point_math.py have been physically copied from 1/ into 2/ to ensure absolute standalone compilation of V2. If V1's originals are ever modified, the V2 copies will NOT automatically stay in sync. This is a deliberate tradeoff to prevent V2 iterations from silently breaking the frozen V1 architecture.
+- **Duplicated Base Modules**: mac_q7_8.v, relu_q7_8.v, and ixed_point_math.py have been physically copied from 1/ into 2/ to ensure absolute standalone compilation of V2. If V1's originals are ever modified, the V2 copies will NOT automatically stay in sync. This is a deliberate tradeoff to prevent V2 iterations from silently breaking the frozen V1 architecture.
 
 ## Interface Contracts
 - **Sliding-Window Generator (window_gen.v) Memory Contract**: The window_gen.v module outputs pixel_addr (0-399) and expects the upstream image-storage source to return the corresponding pixel value on pixel_in **COMBINATIONALLY** (same cycle, zero latency). There must be no clocked or registered read delay in the RAM/storage providing this data. This is a locked contract. If a 1-cycle read latency block (like a standard BRAM) is used in the future, a combinational bypass or explicit pre-fetch wrapper must be added, otherwise the pipeline's timing and padding logic will break silently.
 - **Address Generation Timing**: window_gen.v drives pixel_addr continuously based on its internal state. The address updates immediately on the clock edge following any cycle where the dvance signal is asserted. It sweeps linearly across the 22x22 virtual padded grid without pausing for specific 'windowing phases'. If dvance is held low, pixel_addr is held perfectly stable. If the current virtual coordinate falls in the zero-padding boundary, the module ignores pixel_in and handles padding internally, but pixel_addr will default to 0 during these cycles.
+
+- **MaxPool Array Latency Contract**: maxpool_array.v processes pixels with completely zero latency relative to valid_in. The pool_window_gen buffers lines perfectly and computes maxpool outputs combinationally in the exact cycle that the bottom-right pixel of the 2x2 stride-2 window arrives (which happens when valid_in pulses on odd row/col). There is no pipelined delay in maxpool_pe or relu_q7_8; they are purely combinational. Downstream modules must consume out_ch0..3 immediately in the cycle valid_out goes high.
+
