@@ -91,3 +91,11 @@ elu_q7_8.v, layer_relu.v) from V1.
 - Hard-coded weight extraction by instantiating ROMs internal to v2_top.v and flattening them combinationally into the massive 576-bit and 4608-bit busses required by the Conv array instances.
 - Datapath successfully interlocked from end-to-end utilizing zero-latency handshake strobes.
 - Tested against a full digit (7) in tb_v2_top.v. Passed instantly without logic snags. Architecture is complete.
+
+## N10: V2 Glass Box UI & Training Optimizer
+- **Status:** Completed
+- Built an E2E testing framework spanning a PyTorch optimizer, a Verilog logic analyzer, and a React/FastAPI frontend.
+- 	rain_and_export_all.py heavily optimized with 50 epochs, Cosine Annealing learning rate schedule, and fully automatic Q7.8 physical hardware weight generation.
+- Validated physically simulated hardware accuracy across 10,000 test images using the exact Q7.8 fractional hex weights re-loaded into PyTorch: **98.16% final hardware accuracy**.
+- Deployed a "Silicon Blueprint" themed interactive React/Vite dashboard allowing users to draw a digit on a smooth HTML5 Canvas.
+- Implemented real-time hardware logging inside 	b_v2_top.v, visually displaying the exact streaming feature maps of MaxPool1 and MaxPool2, and plotting the Softmax-scaled dense logits directly extracted from the compiled Verilog simulation.

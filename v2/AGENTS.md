@@ -41,10 +41,12 @@ elu_q7_8.v / layer_relu.v (parameterized ReLU)
 - **N3b [COMPLETED]**: Full Conv1 array hardware (conv1_array.v) + Master FSM + testbench
 - **N4a [COMPLETED]**: MaxPool sliding-window memory router (pool_window_gen.v) + testbench
 - **N4b [COMPLETED]**: Full MaxPool array integration
-- **N5 [TODO]**: Conv2 Array implementation
-- **N6 [TODO]**: Post-conv MLP head systolic arrays & Full pipeline integration + regression harness
-- **N7 [TODO]**: Train on MNIST-with-augmentation, headroom sweep, hex export
-- **N8 [TODO]**: Live Tkinter/Pygame demo — the real final-stage test
+- **N5 [COMPLETED]: Conv2 Array implementation
+- **N6 [COMPLETED]: MaxPool2 Subsystem
+- **N7 [COMPLETED]: Dense Layer Subsystem (200 -> 10)
+- **N8 [COMPLETED]: Argmax Layer Subsystem
+- **N9 [COMPLETED]**: Top-Level Wrapper (v2_top.v)
+- **N10 [COMPLETED]**: Train 50-epoch optimal weights, hex export, and launch E2E interactive React/FastAPI Glass Box UI dashboard (Replaces legacy Tkinter plan)
 
 ## Known Tradeoffs
 - **Duplicated Base Modules**: mac_q7_8.v, relu_q7_8.v, and ixed_point_math.py have been physically copied from 1/ into 2/ to ensure absolute standalone compilation of V2. If V1's originals are ever modified, the V2 copies will NOT automatically stay in sync. This is a deliberate tradeoff to prevent V2 iterations from silently breaking the frozen V1 architecture.
