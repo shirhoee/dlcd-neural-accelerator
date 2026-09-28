@@ -69,3 +69,11 @@ elu_q7_8.v, layer_relu.v) from V1.
 - Applied ReLU(Max(x)) hardware optimization, situating the ReLU immediately after the downsampled maxpool output.
 - Isolated testbench tb_maxpool2_array.v injects random gap latency into the stream.
 - Verified 200/200 exact vector matches against PyTorch golden models.
+
+## N7: Dense Layer Subsystem
+- **Status:** Completed
+- Adjusted the V2 MLP PyTorch architecture head to evaluate the 200->10 dense topology.
+- Wrote gen_dense_vectors.py utilizing weight reshaping and axis permutation to solve the Flatten trap.
+- Built dense_pe.v with 8 combinational multipliers and an adder tree for real-time dense inference.
+- Built dense_array.v utilizing 10 PEs (80 multipliers total) and a synchronous gap-resistant state counter.
+- Evaluated isolated vectors in tb_dense_array.v verifying a 10/10 exact bit-match on final output logits.
