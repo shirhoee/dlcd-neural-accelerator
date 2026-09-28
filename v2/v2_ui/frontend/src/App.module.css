@@ -78,6 +78,8 @@
 }
 .smoothCanvas {
   display: block;
+  width: 280px;
+  height: 280px;
   touch-action: none;
   cursor: crosshair;
 }

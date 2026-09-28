@@ -24,12 +24,16 @@ function App() {
   const getCoordinates = (e) => {
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
-    // Support both mouse and touch events
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    
+    // Calculate scaling to perfectly align mouse with internal canvas resolution
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    
     return {
-      x: clientX - rect.left,
-      y: clientY - rect.top
+      x: (clientX - rect.left) * scaleX,
+      y: (clientY - rect.top) * scaleY
     };
   };
 
@@ -51,7 +55,7 @@ function App() {
     ctx.strokeStyle = 'white';
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    ctx.lineWidth = 20; // Fat brush for MNIST
+    ctx.lineWidth = 24; // Fat brush matches MNIST thickness
 
     ctx.beginPath();
     ctx.moveTo(lastPos.x, lastPos.y);
