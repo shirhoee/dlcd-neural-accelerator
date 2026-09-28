@@ -1,0 +1,162 @@
+.dashboard {
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: #111827;
+  color: #f3f4f6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+.title {
+  font-size: 1.875rem;
+  font-weight: bold;
+  color: #60a5fa;
+  margin-bottom: 2rem;
+}
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+  max-width: 80rem;
+}
+@media (min-width: 1280px) {
+  .layout { flex-direction: row; }
+}
+.panel {
+  background-color: #1f2937;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid #374151;
+}
+.leftPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+.rightPanel {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.panelTitle {
+  font-size: 1.25rem;
+  color: #d1d5db;
+  margin-bottom: 1rem;
+}
+.drawingBoard {
+  display: grid;
+  background-color: #111827;
+  border: 1px solid #4b5563;
+  touch-action: none;
+}
+.drawPixel {
+  width: 12px;
+  height: 12px;
+}
+.controls {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+.btnClear {
+  background-color: #374151;
+  color: white;
+}
+.btnClear:hover { background-color: #4b5563; }
+.btnRun {
+  background-color: #2563eb;
+  color: white;
+  box-shadow: 0 4px 6px rgba(30, 58, 138, 0.5);
+}
+.btnRun:hover { background-color: #1d4ed8; }
+.btnRun:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #374151;
+  padding-bottom: 1rem;
+}
+.prediction {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.predictionHighlight { color: #60a5fa; }
+.emptyState {
+  text-align: center;
+  color: #6b7280;
+  margin-top: 5rem;
+}
+.sectionTitle {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.logitChart {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+  height: 8rem;
+  border-bottom: 1px solid #374151;
+  padding-bottom: 0.5rem;
+}
+.logitBarContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+.logitBar {
+  width: 100%;
+  border-top-left-radius: 0.125rem;
+  border-top-right-radius: 0.125rem;
+}
+.barActive { background-color: #3b82f6; }
+.barInactive { background-color: #4b5563; }
+.logitLabel {
+  font-family: monospace;
+  color: #9ca3af;
+}
+.labelActive {
+  color: #60a5fa;
+  font-weight: bold;
+}
+.featureMaps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.featureGrid {
+  display: grid;
+  gap: 1px;
+  background-color: #374151;
+  padding: 1px;
+}
+.featureCell {
+  width: 8px;
+  height: 8px;
+}
+@media (min-width: 640px) {
+  .featureCell {
+    width: 12px;
+    height: 12px;
+  }
+}
