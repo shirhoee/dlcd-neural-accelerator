@@ -10,3 +10,6 @@ __pycache__/
 # IDE
 .vscode/
 .idea/
+# V2 compiled testbench binaries
+v2/verilog_src/*_test
+v2/python_golden_model/expected_windows.txt
