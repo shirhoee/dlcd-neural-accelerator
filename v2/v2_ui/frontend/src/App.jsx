@@ -122,7 +122,7 @@ function App() {
               
               {/* Logits */}
               <div>
-                <h3 className="text-sm text-gray-400 mb-2 uppercase tracking-wider font-semibold">Raw Logits (Dense -> Argmax)</h3>
+                <h3 className="text-sm text-gray-400 mb-2 uppercase tracking-wider font-semibold">Raw Logits (Dense -&gt; Argmax)</h3>
                 <div className="flex gap-2 items-end h-32 border-b border-gray-700 pb-2">
                   {result.logits.map((val, idx) => {
                     const isMax = idx === result.prediction;
