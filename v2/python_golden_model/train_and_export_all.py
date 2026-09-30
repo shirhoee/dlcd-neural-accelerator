@@ -5,7 +5,7 @@ from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 import os
 
-EPOCHS = 3
+EPOCHS = 50
 BATCH_SIZE = 128
 LR = 0.002
 
@@ -52,6 +52,7 @@ def main():
     
     model = ConvMLP_V2().to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=LR)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=EPOCHS)
     
     print("Training model...")
     model.train()
@@ -63,7 +64,8 @@ def main():
             loss = F.cross_entropy(output, target)
             loss.backward()
             optimizer.step()
-        print(f"Epoch {epoch} loss: {loss.item():.4f}")
+        scheduler.step()
+        print(f"Epoch {epoch} loss: {loss.item():.4f}, LR: {scheduler.get_last_lr()[0]:.6f}")
         
     model.cpu()
     

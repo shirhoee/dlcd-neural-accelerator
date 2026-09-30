@@ -6,10 +6,10 @@ const CANVAS_SIZE = 280; // 10x scale for smooth drawing
 
 function App() {
   const canvasRef = useRef(null);
-  const [isDrawing, setIsDrawing] = useState(false);
+  const isDrawing = useRef(false);
+  const lastPos = useRef({ x: 0, y: 0 });
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
 
   // Initialize canvas background to black
   useEffect(() => {
@@ -39,15 +39,15 @@ function App() {
 
   const startDrawing = (e) => {
     e.preventDefault();
-    setIsDrawing(true);
+    isDrawing.current = true;
     const pos = getCoordinates(e);
-    setLastPos(pos);
+    lastPos.current = pos;
     draw(e, pos); // Draw a dot immediately
   };
 
   const draw = (e, initialPos = null) => {
     e.preventDefault();
-    if (!isDrawing && !initialPos) return;
+    if (!isDrawing.current && !initialPos) return;
     
     const pos = initialPos || getCoordinates(e);
     const ctx = canvasRef.current.getContext('2d');
@@ -58,15 +58,15 @@ function App() {
     ctx.lineWidth = 24; // Fat brush matches MNIST thickness
 
     ctx.beginPath();
-    ctx.moveTo(lastPos.x, lastPos.y);
+    ctx.moveTo(lastPos.current.x, lastPos.current.y);
     ctx.lineTo(pos.x, pos.y);
     ctx.stroke();
 
-    setLastPos(pos);
+    lastPos.current = pos;
   };
 
   const stopDrawing = () => {
-    setIsDrawing(false);
+    isDrawing.current = false;
   };
 
   const clearCanvas = () => {
