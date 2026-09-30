@@ -132,3 +132,10 @@ relu_q7_8.v, layer_relu.v) from V1.
 - Designed mlp_head.v with a 2900-cycle time-multiplexed state machine that flawlessly hides latency in the 6139-cycle pipeline gap, routing features through dual ping-pong RAMs (am_A and am_B).
 - Successfully swapped mlp_head.v into 2_top.v without perturbing the external interfaces.
 - Verified 0 mismatches against the Python Q7.8 Emulator across images, completely verifying the entire V2 RTL logic chain.
+
+## N14.1: Python Golden Model Flattening Fix
+- **Status:** Completed
+- Discovered a PyTorch export bug where 
+n.Flatten() output weights in [Channel, Height, Width] order, whereas the hardware streaming pipeline (MaxPool2) naturally provides features in [Height, Width, Channel] order.
+- Created ix_export.py to correctly apply spatial permutations (permute(0, 2, 3, 1)) to the dense1 weights before exporting to dense1_q7_8.txt and mlp_rom.txt.
+- Re-ran the hardware emulator over 10,000 images and achieved 98.83% accuracy, matching Float32 exactly and bringing Hardware Accuracy into full alignment.
