@@ -107,3 +107,11 @@ relu_q7_8.v, layer_relu.v) from V1.
 - Corrected V1 inheritance and file maps in AGENTS.md.
 - Extended AUDIT_REPORT.md with verified testbench failures, full testbench lists, and identified that no full-network integer emulator exists.
 - Tagged N11 and pushed all docs repairs.
+
+## N12: Regression harness and baseline
+- **Status:** Completed
+- Built `v2/regression/harness.py` to evaluate the RTL dynamically on all 10,000 MNIST test images via parallel thread pools invoking `iverilog`.
+- Built an exact Q7.8 mathematical emulator (`int_emulator_v2.py`) that strictly mirrors RTL truncation and bit-slicing logic (0 RTL vs Emu mismatches over 10,000 images).
+- Introduced `tb_v2_top_fixed.v` as a hermetic standalone testbench explicitly untethered from the UI's dynamic test file.
+- Verified 98.11% true accuracy when proper PyTorch normalization (`(0.1307,), (0.3081,)`) is applied in emulation.
+- Established baseline 200->10 logic cycles: MP1: 4894, MP2: 1072. Total Pipeline: 6139 cycles.
