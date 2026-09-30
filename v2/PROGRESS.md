@@ -115,3 +115,11 @@ relu_q7_8.v, layer_relu.v) from V1.
 - Introduced `tb_v2_top_fixed.v` as a hermetic standalone testbench explicitly untethered from the UI's dynamic test file.
 - Verified 98.11% true accuracy when proper PyTorch normalization (`(0.1307,), (0.3081,)`) is applied in emulation.
 - Established baseline 200->10 logic cycles: MP1: 4894, MP2: 1072. Total Pipeline: 6139 cycles.
+
+## N13: True Spec PyTorch Model & Export
+- **Status:** Completed
+- Built train_mlp3.py implementing the true specification: 200 -> 64 -> 32 -> 10.
+- Trained with Cosine Annealing over 50 epochs on proper PyTorch normalization reaching 98.83% test accuracy.
+- Ran Headroom Gate checks dynamically during export, verifying a maximum absolute logit of 72.50.
+- Exported the three heavy weight matrices linearly flattened to dense1_q7_8.txt, dense2_q7_8.txt, and dense3_q7_8.txt.
+- Expanded int_emulator_v2.py to natively support the deep head simulation accurately.

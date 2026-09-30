@@ -11,11 +11,16 @@ def load_hex(path):
         return [int(line.strip(), 16) for line in f if line.strip()]
 
 class IntEmulatorV2:
-    def __init__(self, conv1_hex, conv2_hex, dense_hex, head_type="200->10"):
+    def __init__(self, conv1_hex, conv2_hex, dense_hex=None, dense1_hex=None, dense2_hex=None, dense3_hex=None, head_type="200->10"):
         self.conv1_w = load_hex(conv1_hex)
         self.conv2_w = load_hex(conv2_hex)
-        self.dense_w = load_hex(dense_hex)
         self.head_type = head_type
+        if head_type == "200->10":
+            self.dense_w = load_hex(dense_hex)
+        else:
+            self.dense1_w = load_hex(dense1_hex)
+            self.dense2_w = load_hex(dense2_hex)
+            self.dense3_w = load_hex(dense3_hex)
         
     def conv2d_q7_8(self, in_map, weight, in_ch, out_ch, h, w):
         # in_map: [in_ch, h, w]
@@ -93,7 +98,15 @@ class IntEmulatorV2:
         if self.head_type == "200->10":
             logits = self.dense_q7_8(flat, self.dense_w, 200, 10)
         else:
-            raise NotImplementedError("New head not implemented yet in emulator")
+            # 200 -> 64 -> 32 -> 10
+            # Note: PyTorch linear weights were flattened in [out, in] order
+            # The dense_q7_8 expects weights such that w_idx = of * in_features + inf
+            # This perfectly matches standard flattening of shape [out, in]!
+            d1 = self.dense_q7_8(flat, self.dense1_w, 200, 64)
+            d1_relu = np.array([relu_q7_8(v) for v in d1])
+            d2 = self.dense_q7_8(d1_relu, self.dense2_w, 64, 32)
+            d2_relu = np.array([relu_q7_8(v) for v in d2])
+            logits = self.dense_q7_8(d2_relu, self.dense3_w, 32, 10)
             
         pred = 0
         max_val = sign_ext(logits[0])
