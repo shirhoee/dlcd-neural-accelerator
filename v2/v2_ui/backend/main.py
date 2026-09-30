@@ -44,6 +44,7 @@ async def predict(request: Request):
     
     with tempfile.TemporaryDirectory() as tmpdir:
         txt_path = os.path.join(tmpdir, "test_image_q7_8.txt")
+        vvp_path = os.path.join(tmpdir, "vvp_out")
         with open(txt_path, "w") as f:
             for row in image_20:
                 for val in row:
@@ -58,7 +59,7 @@ async def predict(request: Request):
         
         # Compile
         compile_cmd = [
-            "C:\\iverilog\\bin\\iverilog.exe", "-o", "vvp_out", "-s", "tb_v2_top_fixed",
+            "C:\\iverilog\\bin\\iverilog.exe", "-o", vvp_path, "-s", "tb_v2_top_fixed",
             f'-DTEST_IMAGE_FILE="{txt_path.replace(os.sep, "/")}"',
             "tb_v2_top_fixed.v", "v2_top.v", "conv1_array.v", "window_gen.v", "conv_pe.v", 
             "mac_q7_8.v", "maxpool_array.v", "pool_window_gen.v", "maxpool_pe.v", 
@@ -74,7 +75,7 @@ async def predict(request: Request):
         )
         
         # Run
-        run_cmd = ["C:\\iverilog\\bin\\vvp.exe", "vvp_out"]
+        run_cmd = ["C:\\iverilog\\bin\\vvp.exe", vvp_path]
         process = subprocess.run(
             run_cmd,
             cwd=v_dir,
