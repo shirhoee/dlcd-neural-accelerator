@@ -258,6 +258,42 @@ function App() {
                 </div>
               </div>
               
+              {/* Dense1 */}
+              <div>
+                <h3 className={styles.sectionTitle}>Dense 1 (64 Neurons)</h3>
+                <div className={styles.featureMaps}>
+                  {(() => {
+                    const grid = [];
+                    if (result.dense1) {
+                      for (let i = 0; i < 8; i++) {
+                        const row = [];
+                        for (let j = 0; j < 8; j++) row.push(result.dense1[i * 8 + j] || 0);
+                        grid.push(row);
+                      }
+                    }
+                    return <FeatureGrid data={grid} colorHex="59, 130, 246" />;
+                  })()}
+                </div>
+              </div>
+              
+              {/* Dense2 */}
+              <div>
+                <h3 className={styles.sectionTitle}>Dense 2 (32 Neurons)</h3>
+                <div className={styles.featureMaps}>
+                  {(() => {
+                    const grid = [];
+                    if (result.dense2) {
+                      for (let i = 0; i < 4; i++) {
+                        const row = [];
+                        for (let j = 0; j < 8; j++) row.push(result.dense2[i * 8 + j] || 0);
+                        grid.push(row);
+                      }
+                    }
+                    return <FeatureGrid data={grid} colorHex="139, 92, 246" />;
+                  })()}
+                </div>
+              </div>
+              
             </div>
           )}
         </div>

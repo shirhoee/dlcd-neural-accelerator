@@ -135,7 +135,13 @@ relu_q7_8.v, layer_relu.v) from V1.
 
 ## N14.1: Python Golden Model Flattening Fix
 - **Status:** Completed
-- Discovered a PyTorch export bug where 
-n.Flatten() output weights in [Channel, Height, Width] order, whereas the hardware streaming pipeline (MaxPool2) naturally provides features in [Height, Width, Channel] order.
-- Created ix_export.py to correctly apply spatial permutations (permute(0, 2, 3, 1)) to the dense1 weights before exporting to dense1_q7_8.txt and mlp_rom.txt.
+- Discovered a PyTorch export bug where `nn.Flatten()` output weights in `[Channel, Height, Width]` order, whereas the hardware streaming pipeline (MaxPool2) naturally provides features in `[Height, Width, Channel]` order.
+- Created `fix_export.py` to correctly apply spatial permutations (`permute(0, 2, 3, 1)`) to the `dense1` weights before exporting to `dense1_q7_8.txt` and `mlp_rom.txt`.
 - Re-ran the hardware emulator over 10,000 images and achieved 98.83% accuracy, matching Float32 exactly and bringing Hardware Accuracy into full alignment.
+
+## N15: UI Wiring
+- **Status:** Completed
+- Updated `tb_v2_top_fixed.v` to stream `mp1`, `mp2`, `dense1`, and `dense2` directly to `stdout`.
+- Overhauled FastAPI backend (`main.py`) to safely isolate concurrent UI requests into `tempfile` directories, fully decoupling users from overriding each other's test images.
+- Implemented React UI components in `App.jsx` to dynamically render the new Dense 1 (64 neurons) and Dense 2 (32 neurons) intermediate states as 8x8 and 8x4 color grids.
+- Headless verification achieved via UI prediction endpoints.
