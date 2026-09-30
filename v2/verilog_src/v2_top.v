@@ -145,7 +145,7 @@ module v2_top (
         .out_ch7(mp2_to_d_ch7)
     );
     
-    dense_array dense_inst (
+    mlp_head dense_inst (
         .clk(clk),
         .reset(internal_reset),
         .valid_in(mp2_valid),

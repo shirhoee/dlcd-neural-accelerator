@@ -123,3 +123,12 @@ relu_q7_8.v, layer_relu.v) from V1.
 - Ran Headroom Gate checks dynamically during export, verifying a maximum absolute logit of 72.50.
 - Exported the three heavy weight matrices linearly flattened to dense1_q7_8.txt, dense2_q7_8.txt, and dense3_q7_8.txt.
 - Expanded int_emulator_v2.py to natively support the deep head simulation accurately.
+
+## N14: RTL Head on the Systolic Array
+- **Status:** Completed
+- Evaluated sizing tradeoffs (15,168 MACs vs multiplexed). Selected a highly optimized 16x16 tiled systolic array (256 MACs) to dramatically reduce area while maintaining throughput.
+- Built export_tiled_roms.py to organize the dense weight matrices into 992 256-bit words suitable for native systolic array column-wise shift loading.
+- Copied systolic_array.v and its dependencies verbatim from V1, obeying strict verified-component reuse rules.
+- Designed mlp_head.v with a 2900-cycle time-multiplexed state machine that flawlessly hides latency in the 6139-cycle pipeline gap, routing features through dual ping-pong RAMs (am_A and am_B).
+- Successfully swapped mlp_head.v into 2_top.v without perturbing the external interfaces.
+- Verified 0 mismatches against the Python Q7.8 Emulator across images, completely verifying the entire V2 RTL logic chain.

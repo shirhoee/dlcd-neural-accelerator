@@ -11,15 +11,13 @@ import shutil
 import subprocess
 
 sys.path.append(os.path.abspath('../python_golden_model'))
-from train_v2_n0 import ConvMLP_V2
+from train_mlp3 import ConvMLP_V2_TrueSpec
 from fixed_point_math import to_q7_8, to_signed_16
 from int_emulator_v2 import IntEmulatorV2
 
 print("Starting regression harness over 10,000 images...")
 start_time = time.time()
 
-# We will use iverilog since Verilator is not recognized on Windows shell path natively.
-# We will compile it once.
 compile_cmd = [
     r"C:\iverilog\bin\iverilog.exe", 
     "-o", "v2_top_fixed_test", 
@@ -28,7 +26,7 @@ compile_cmd = [
     "tb_v2_top_fixed.v", "v2_top.v", "conv1_array.v", "window_gen.v", "conv_pe.v", 
     "mac_q7_8.v", "maxpool_array.v", "pool_window_gen.v", "maxpool_pe.v", 
     "relu_q7_8.v", "conv2_array.v", "conv2_window_gen.v", "conv2_pe.v", 
-    "maxpool2_array.v", "pool2_window_gen.v", "dense_array.v", "dense_pe.v", "argmax.v"
+    "maxpool2_array.v", "pool2_window_gen.v", "mlp_head.v", "systolic_array.v", "systolic_pe.v", "layer_relu.v", "argmax.v"
 ]
 print("Compiling RTL...")
 cwd_v = os.path.abspath('../verilog_src')
@@ -39,22 +37,24 @@ if res.returncode != 0:
     sys.exit(1)
 
 device = torch.device("cpu")
-model = ConvMLP_V2().to(device)
-model.load_state_dict(torch.load("../python_golden_model/v2_n0_model.pt", map_location=device))
+model = ConvMLP_V2_TrueSpec().to(device)
+model.load_state_dict(torch.load("../python_golden_model/v2_n13_model.pt", map_location=device))
 model.eval()
 
 transform = transforms.Compose([
     transforms.Resize((20, 20)),
     transforms.ToTensor(),
-    transforms.Normalize((0.5,), (0.5,))
+    transforms.Normalize((0.1307,), (0.3081,))
 ])
 testset = torchvision.datasets.MNIST(root='../../data', train=False, download=True, transform=transform)
 
 emulator = IntEmulatorV2(
     "../python_golden_model/weights_q7_8.txt",
     "../python_golden_model/conv2_weights_q7_8.txt",
-    "../python_golden_model/dense_weights_q7_8.txt",
-    head_type="200->10"
+    dense1_hex="../python_golden_model/dense1_q7_8.txt",
+    dense2_hex="../python_golden_model/dense2_q7_8.txt",
+    dense3_hex="../python_golden_model/dense3_q7_8.txt",
+    head_type="200->64->32->10"
 )
 
 results = []
@@ -115,7 +115,7 @@ def run_one(i):
     # Copy hex files for ROMs to tmp_pgm
     shutil.copy(os.path.join(cwd_v, "../python_golden_model/weights_q7_8.txt"), tmp_pgm)
     shutil.copy(os.path.join(cwd_v, "../python_golden_model/conv2_weights_q7_8.txt"), tmp_pgm)
-    shutil.copy(os.path.join(cwd_v, "../python_golden_model/dense_weights_q7_8.txt"), tmp_pgm)
+    shutil.copy(os.path.join(cwd_v, "../python_golden_model/mlp_rom.txt"), tmp_pgm)
     
     run_cmd = [r"C:\iverilog\bin\vvp.exe", "v2_top_fixed_test"]
     res = subprocess.run(run_cmd, cwd=tmp_vsrc, capture_output=True, text=True)
