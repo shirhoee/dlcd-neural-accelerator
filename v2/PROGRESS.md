@@ -3,25 +3,25 @@
 ## Initialization
 - Initialized isolated v2/ working directory for the CNN architecture upgrade.
 - Explicitly scoped the architectural inheritance: keeping base verified components (systolic_array.v, mac_q7_8.v, 
-elu_q7_8.v, layer_relu.v) from V1.
+relu_q7_8.v, layer_relu.v) from V1.
 - Staged development plan for new V2 components: convolutions, pooling, line buffers, and an expanded MLP head.
 
 ## N0: PyTorch Golden Model
 - **Status:** Completed
-- Built 	rain_v2_n0.py defining the baseline CNN+MLP model in pure PyTorch.
+- Built train_v2_n0.py defining the baseline CNN+MLP model in pure PyTorch.
 - Implemented morphological augmentations (dilation/erosion) and achieved 97.93% accuracy.
 - Conducted the mandatory max|logit| sweep (peaked at 36.55, well below the 127.99 Q7.8 ceiling limit).
 
 ## N1: Conv1 PE
 - **Status:** Completed
-- Copied mac_q7_8.v and ixed_point_math.py to v2/ to ensure standalone compilation.
+- Copied mac_q7_8.v and fixed_point_math.py to v2/ to ensure standalone compilation.
 - Designed conv_pe.v (9-tap sequential MAC, weight-stationary).
-- Verified via 	b_conv_pe.v and python golden model conv1_layer_golden_model.py.
+- Verified via tb_conv_pe.v and python golden model conv1_layer_golden_model.py.
 
 ## N2: MaxPool PE
 - **Status:** Completed
 - Designed maxpool_pe.v as a purely combinational block taking 4 parallel inputs.
-- Ensured strictly signed Q7.8 16-bit comparisons matching V1's rgmax.v pattern to prevent 2's-complement comparison bugs.
+- Ensured strictly signed Q7.8 16-bit comparisons matching V1's aargmax.v pattern to prevent 2's-complement comparison bugs.
 - Verified against python golden model maxpool2d_golden_model.py.
 
 ## N3a: Sliding-Window Generator
@@ -80,10 +80,10 @@ elu_q7_8.v, layer_relu.v) from V1.
 
 ## N8: Argmax Layer Subsystem
 - **Status:** Completed
-- Built argmax.v utilizing a purely combinational 4-stage binary comparison tree.
+- Built aargmax.v utilizing a purely combinational 4-stage binary comparison tree.
 - Implemented robust signed logic and pairing to track the winning index dynamically.
 - Deployed a 1-cycle pipeline register buffering the final prediction exactly when valid_out pulses.
-- Validated via tb_argmax.v with 5 extreme-edge synthetic datasets, verifying exact deterministic tie-breaking.
+- Validated via tb_aargmax.v with 5 extreme-edge synthetic datasets, verifying exact deterministic tie-breaking.
 
 ## N9: Top-Level Wrapper
 - **Status:** Completed
@@ -95,7 +95,15 @@ elu_q7_8.v, layer_relu.v) from V1.
 ## N10: V2 Glass Box UI & Training Optimizer
 - **Status:** Completed
 - Built an E2E testing framework spanning a PyTorch optimizer, a Verilog logic analyzer, and a React/FastAPI frontend.
-- 	rain_and_export_all.py heavily optimized with 50 epochs, Cosine Annealing learning rate schedule, and fully automatic Q7.8 physical hardware weight generation.
+- train_and_export_all.py heavily optimized with 50 epochs, Cosine Annealing learning rate schedule, and fully automatic Q7.8 physical hardware weight generation.
 - Validated physically simulated hardware accuracy across 10,000 test images using the exact Q7.8 fractional hex weights re-loaded into PyTorch: **98.16% final hardware accuracy**.
 - Deployed a "Silicon Blueprint" themed interactive React/Vite dashboard allowing users to draw a digit on a smooth HTML5 Canvas.
-- Implemented real-time hardware logging inside 	b_v2_top.v, visually displaying the exact streaming feature maps of MaxPool1 and MaxPool2, and plotting the Softmax-scaled dense logits directly extracted from the compiled Verilog simulation.
+- Implemented real-time hardware logging inside tb_v2_top.v, visually displaying the exact streaming feature maps of MaxPool1 and MaxPool2, and plotting the Softmax-scaled dense logits directly extracted from the compiled Verilog simulation.
+
+## N11: Docs repair, spec record, audit gaps
+- **Status:** Completed
+- Repaired corrupted escape sequences in AGENTS.md and PROGRESS.md.
+- Documented the unrecorded architecture shift (200->10) at N7 and added the N13-N14 spec restoration.
+- Corrected V1 inheritance and file maps in AGENTS.md.
+- Extended AUDIT_REPORT.md with verified testbench failures, full testbench lists, and identified that no full-network integer emulator exists.
+- Tagged N11 and pushed all docs repairs.

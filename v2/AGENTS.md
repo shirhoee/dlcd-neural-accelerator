@@ -1,13 +1,23 @@
 # V2 Architecture Rules & Guidelines
 
 ## Project Summary
-Hardware neural network accelerator, V2. Adds a convolutional frontend (2x Conv+ReLU+MaxPool) ahead of an MLP head, targeting 20x20 input resolution, digits 0-9 only (MNIST). Q7.8 fixed-point arithmetic, bias-free throughout, reusing V1's verified systolic_array.v / mac_q7_8.v / relu_q7_8.v / layer_relu.v for the MLP portion.
+Hardware neural network accelerator, V2. Adds a convolutional frontend (2x Conv+ReLU+MaxPool) ahead of an MLP head, targeting 20x20 input resolution, digits 0-9 only (MNIST). Q7.8 fixed-point arithmetic, bias-free throughout, reusing V1's verified mac_q7_8.v / relu_q7_8.v for the MLP portion. 
+
+**MLP Head**: 200->10 (implemented, N7); 200->64->32->10 (target, N13-N14).
+
+## Spec Change Log
+- **Original Spec**: 200->64->32->10
+- **Implemented**: 200->10 from N7 (rationale not recorded at the time)
+- **Decision to Restore**: N13 model, N14 RTL.
+- **Accuracy Impact**: TBD (will be filled in at the end of N14)
+- **Alternative Not Taken**: Keep 200->10 (98.16% hardware accuracy).
 
 ## Inherited from V1 (reused as-is)
-- systolic_array.v (parameterized ROWS/COLS systolic MAC array)
-- mac_q7_8.v (Q7.8 sequential MAC with truncation)
-- 
-elu_q7_8.v / layer_relu.v (parameterized ReLU)
+- `mac_q7_8.v` (Q7.8 sequential MAC with truncation)
+- `relu_q7_8.v` (parameterized ReLU)
+- `fixed_point_math.py` (Q7.8 emulation)
+
+*(Note: `systolic_array.v` and `layer_relu.v` are currently not used in V2).*
 
 **Do not modify without strong reason — these are already verified.**
 
@@ -28,10 +38,19 @@ elu_q7_8.v / layer_relu.v (parameterized ReLU)
 9. Milestones are tagged in Git (N0, N1, N2...) representing verified working states — never tag with a known bug present (same discipline as V1's M-series).
 
 ## Directory / File Map
-- 2/verilog_src/
-- 2/python_golden_model/
-- 2/AGENTS.md
-- 2/PROGRESS.md
+### V2 Directory
+- `v2/verilog_src/`: RTL modules and top-level design.
+- `v2/python_golden_model/`: Golden models, integer emulators, hex generation, and regression scripts.
+- `v2/v2_ui/backend/`: FastAPI backend for the Glass Box UI.
+- `v2/v2_ui/frontend/`: React frontend for the Glass Box UI.
+- `v2/AGENTS.md`: Process rules and specs.
+- `v2/PROGRESS.md`: Milestones tracking.
+
+### V1 Reference Section
+- **Architecture**: 100->16->6->10 MLP.
+- **Key Modules**: `accelerator_top.v`, `systolic_array.v`, `systolic_pe.v`, `mac_q7_8.v`, `relu_q7_8.v`, `argmax.v`.
+- **Hex Files**: `e2e_w1.hex`, `e2e_w2.hex`, `e2e_w3.hex`.
+- **Final Accuracy**: 93.06% on 10,000 test set (achieved at M12, verified by hand-drawn generalization up to M17).
 
 ## Milestone Plan (Current Status)
 - **N0 [COMPLETED]**: PyTorch golden model - Conv+MLP architecture, MNIST digits, float32 validation only
@@ -41,26 +60,35 @@ elu_q7_8.v / layer_relu.v (parameterized ReLU)
 - **N3b [COMPLETED]**: Full Conv1 array hardware (conv1_array.v) + Master FSM + testbench
 - **N4a [COMPLETED]**: MaxPool sliding-window memory router (pool_window_gen.v) + testbench
 - **N4b [COMPLETED]**: Full MaxPool array integration
-- **N5 [COMPLETED]: Conv2 Array implementation
-- **N6 [COMPLETED]: MaxPool2 Subsystem
-- **N7 [COMPLETED]: Dense Layer Subsystem (200 -> 10)
-- **N8 [COMPLETED]: Argmax Layer Subsystem
+- **N5 [COMPLETED]**: Conv2 Array implementation
+- **N6 [COMPLETED]**: MaxPool2 Subsystem
+- **N7 [COMPLETED]**: Dense Layer Subsystem (200 -> 10 (implemented, N7); 200->64->32->10 (target, N13-N14))
+- **N8 [COMPLETED]**: Argmax Layer Subsystem
 - **N9 [COMPLETED]**: Top-Level Wrapper (v2_top.v)
 - **N10 [COMPLETED]**: Train 50-epoch optimal weights, hex export, and launch E2E interactive React/FastAPI Glass Box UI dashboard (Replaces legacy Tkinter plan)
+- **N11 [IN PROGRESS]**: Docs repair, spec record, audit gaps.
+- **N12 [TODO]**: Regression harness and baseline on the CURRENT 200->10 design.
+- **N13 [TODO]**: New model, hardware-faithful emulator, headroom gate, export.
+- **N14 [TODO]**: RTL head on the systolic array.
+- **N15 [TODO]**: UI wiring.
 
 ## Known Tradeoffs
-- **Duplicated Base Modules**: mac_q7_8.v, relu_q7_8.v, and ixed_point_math.py have been physically copied from 1/ into 2/ to ensure absolute standalone compilation of V2. If V1's originals are ever modified, the V2 copies will NOT automatically stay in sync. This is a deliberate tradeoff to prevent V2 iterations from silently breaking the frozen V1 architecture.
+- **Duplicated Base Modules**: `mac_q7_8.v`, `relu_q7_8.v`, and `fixed_point_math.py` have been physically copied from `v1/` into `v2/` to ensure absolute standalone compilation of V2. If V1's originals are ever modified, the V2 copies will NOT automatically stay in sync. This is a deliberate tradeoff to prevent V2 iterations from silently breaking the frozen V1 architecture.
+- **Cycle/Logic Costs (Estimates based on Code)**:
+  - **Conv1 sequential 9-tap MAC**: Uses a single MAC per channel per cycle. To compute 9 taps takes 9 cycles per window.
+  - **Conv2 sequential Cost**: Uses 4 multipliers and sequential unpipelined addition, leading to long combinational paths and multiple cycles per output pixel.
+  - **Old Dense Multiplier Count**: 10 PEs × 8 multipliers = 80 multipliers.
 
 ## Interface Contracts
-- **Sliding-Window Generator (window_gen.v) Memory Contract**: The window_gen.v module outputs pixel_addr (0-399) and expects the upstream image-storage source to return the corresponding pixel value on pixel_in **COMBINATIONALLY** (same cycle, zero latency). There must be no clocked or registered read delay in the RAM/storage providing this data. This is a locked contract. If a 1-cycle read latency block (like a standard BRAM) is used in the future, a combinational bypass or explicit pre-fetch wrapper must be added, otherwise the pipeline's timing and padding logic will break silently.
-- **Address Generation Timing**: window_gen.v drives pixel_addr continuously based on its internal state. The address updates immediately on the clock edge following any cycle where the dvance signal is asserted. It sweeps linearly across the 22x22 virtual padded grid without pausing for specific 'windowing phases'. If dvance is held low, pixel_addr is held perfectly stable. If the current virtual coordinate falls in the zero-padding boundary, the module ignores pixel_in and handles padding internally, but pixel_addr will default to 0 during these cycles.
+- **Sliding-Window Generator (window_gen.v) Memory Contract**: The `window_gen.v` module outputs `pixel_addr` (0-399) and expects the upstream image-storage source to return the corresponding pixel value on `pixel_in` **COMBINATIONALLY** (same cycle, zero latency). There must be no clocked or registered read delay in the RAM/storage providing this data. This is a locked contract. If a 1-cycle read latency block (like a standard BRAM) is used in the future, a combinational bypass or explicit pre-fetch wrapper must be added, otherwise the pipeline's timing and padding logic will break silently.
+- **Address Generation Timing**: `window_gen.v` drives `pixel_addr` continuously based on its internal state. The address updates immediately on the clock edge following any cycle where the `advance` signal is asserted. It sweeps linearly across the 22x22 virtual padded grid without pausing for specific 'windowing phases'. If `advance` is held low, `pixel_addr` is held perfectly stable. If the current virtual coordinate falls in the zero-padding boundary, the module ignores `pixel_in` and handles padding internally, but `pixel_addr` will default to 0 during these cycles.
 
-- **MaxPool Array Latency Contract**: maxpool_array.v processes pixels with completely zero latency relative to valid_in. The pool_window_gen buffers lines perfectly and computes maxpool outputs combinationally in the exact cycle that the bottom-right pixel of the 2x2 stride-2 window arrives (which happens when valid_in pulses on odd row/col). There is no pipelined delay in maxpool_pe or relu_q7_8; they are purely combinational. Downstream modules must consume out_ch0..3 immediately in the cycle valid_out goes high.
+- **MaxPool Array Latency Contract**: `maxpool_array.v` processes pixels with completely zero latency relative to `valid_in`. The `pool_window_gen` buffers lines perfectly and computes maxpool outputs combinationally in the exact cycle that the bottom-right pixel of the 2x2 stride-2 window arrives (which happens when `valid_in` pulses on odd row/col). There is no pipelined delay in `maxpool_pe` or `relu_q7_8`; they are purely combinational. Downstream modules must consume `out_ch0..3` immediately in the cycle `valid_out` goes high.
 
-- **Conv2 Unpipelined Architecture**: conv2_pe.v instantiates 4 multipliers and a 4-input adder tree sequentially without pipelining before the accumulation register. This heavily cascades the logic depth (multipliers -> adder stage 1 -> adder stage 2 -> accumulator). This design choice was made for simulation simplicity and state-machine compactness, at the expense of a severely degraded physical synthesis Fmax.
-- **MaxPool2 Array Gated Shift Contract**: pool2_window_gen.v utilizes valid_in as a strict clock-enable. Its internal 11-stage shift register and window logic are mathematically derived from a pure 10x10 stream. Because downstream Conv2 outputs valid tokens with an 8-cycle idle gap, pool2_window_gen strictly freezes all state when valid_in is low.
-- **Dense Array Accumulation**: dense_array.v processes spatial maps perfectly in sync with the MaxPool array output. No internal pipelining exists between the 8 multipliers and the final stage accumulator. The array inherently assumes exactly 25 valid input pulses per frame.
-- **Argmax Combinational Tree**: argmax.v employs a 4-stage signed binary comparison tree. It outputs a 4-bit prediction representing digits 0-9.
-- **Argmax 1-Cycle Pipeline Contract**: A 1-cycle pipeline delay exists between valid_in and valid_out to break the critical path of the comparator tree. The internal prediction register is safely overwritten ONLY when valid_in is strictly high.
+- **Conv2 Unpipelined Architecture**: `conv2_pe.v` instantiates 4 multipliers and a 4-input adder tree sequentially without pipelining before the accumulation register. This heavily cascades the logic depth (multipliers -> adder stage 1 -> adder stage 2 -> accumulator). This design choice was made for simulation simplicity and state-machine compactness, at the expense of a severely degraded physical synthesis Fmax.
+- **MaxPool2 Array Gated Shift Contract**: `pool2_window_gen.v` utilizes `valid_in` as a strict clock-enable. Its internal 11-stage shift register and window logic are mathematically derived from a pure 10x10 stream. Because downstream Conv2 outputs valid tokens with an 8-cycle idle gap, `pool2_window_gen` strictly freezes all state when `valid_in` is low.
+- **Dense Array Accumulation**: `dense_array.v` processes spatial maps perfectly in sync with the MaxPool array output. No internal pipelining exists between the 8 multipliers and the final stage accumulator. The array inherently assumes exactly 25 valid input pulses per frame.
+- **Argmax Combinational Tree**: `argmax.v` employs a 4-stage signed binary comparison tree. It outputs a 4-bit prediction representing digits 0-9.
+- **Argmax 1-Cycle Pipeline Contract**: A 1-cycle pipeline delay exists between `valid_in` and `valid_out` to break the critical path of the comparator tree. The internal prediction register is safely overwritten ONLY when `valid_in` is strictly high.
 - **Argmax Tie-Breaker**: The hardware tie-breaker deterministically guarantees that the lower numerical index wins in the event of an identical logit score.
-- **Top-Level Weight Distribution Contract**: v2_top.v guarantees that all Conv weights are perfectly flattened in a layout identical to PyTorch's native C,H,W permutation (with oc as the outermost loop). The module manages all ROM fetching and presents purely combinational constant signals to the downstream datapath instances.
+- **Top-Level Weight Distribution Contract**: `v2_top.v` guarantees that all Conv weights are perfectly flattened in a layout identical to PyTorch's native C,H,W permutation (with oc as the outermost loop). The module manages all ROM fetching and presents purely combinational constant signals to the downstream datapath instances.
