@@ -6,7 +6,7 @@ echo ==================================================
 echo.
 echo Starting FastAPI Backend...
 cd v2\v2_ui\backend
-start "DLCD Backend (FastAPI)" cmd /k "python -m uvicorn main:app --reload --host 127.0.0.1 --port 8000"
+start "DLCD Backend (FastAPI)" cmd /k "uvicorn main:app --reload --host 127.0.0.1 --port 8000"
 
 echo.
 echo Starting React Frontend...
