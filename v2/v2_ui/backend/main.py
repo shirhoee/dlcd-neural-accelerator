@@ -66,23 +66,22 @@ async def predict(request: Request):
             "maxpool2_array.v", "pool2_window_gen.v", "mlp_head.v", "systolic_array.v", "systolic_pe.v", "layer_relu.v", "argmax.v"
         ]
         
-        process = await asyncio.create_subprocess_exec(
-            *compile_cmd,
+        subprocess.run(
+            compile_cmd,
             cwd=v_dir,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
         )
-        await process.communicate()
         
         # Run
         run_cmd = ["C:\\iverilog\\bin\\vvp.exe", "vvp_out"]
-        process = await asyncio.create_subprocess_exec(
-            *run_cmd,
+        process = subprocess.run(
+            run_cmd,
             cwd=v_dir,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
         )
-        stdout, _ = await process.communicate()
+        stdout = process.stdout
         
         output = stdout.decode("utf-8")
         
