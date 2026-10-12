@@ -3,7 +3,7 @@
 **Course:** Digital Logic & Computer Design (DLCD)  
 **Project Title:** Hardware Neural Network Accelerator (DLCD Neural Accelerator)  
 **Selected Module:** Convolutional Processing Element (`conv_pe.v`) with Sequential Q7.8 MAC Unit (`mac_q7_8.v`)  
-**Design Team & SRN:**  
+**Team Members & SRN:**  
 - **Shreyansh Raj** — `PES2UG25CS516`  
 - **Sarthak Bhowmik** — `PES2UG25CS493`  
 - **Shaurya Singh** — `PES2UG25CS508`  

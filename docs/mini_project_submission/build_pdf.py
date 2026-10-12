@@ -178,7 +178,7 @@ html_content = f"""<!DOCTYPE html>
     <div><strong>Selected Module:</strong> Conv PE (<code>conv_pe.v</code>) with Q7.8 MAC (<code>mac_q7_8.v</code>)</div>
     <div><strong>Date:</strong> October 2026</div>
     <div style="grid-column: 1 / span 2;">
-      <strong>Design Team &amp; SRN:</strong> 
+      <strong>Team Members &amp; SRN:</strong> 
       Shreyansh Raj (<code>PES2UG25CS516</code>), 
       Sarthak Bhowmik (<code>PES2UG25CS493</code>), 
       Shaurya Singh (<code>PES2UG25CS508</code>), 

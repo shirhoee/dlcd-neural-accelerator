@@ -268,7 +268,7 @@ html_content = f"""<!DOCTYPE html>
             <div><strong>Arithmetic Format:</strong> Q7.8 Fixed-Point (16-bit signed 2's complement, Scale = 256)</div>
           </div>
           <div class="meta-col">
-            <strong>Design Team &amp; Roll Numbers:</strong>
+            <strong>Team Members &amp; SRN:</strong>
             <div class="team-grid">
               <div class="team-member"><span class="member-name">Shreyansh Raj</span><span class="member-srn">PES2UG25CS516</span></div>
               <div class="team-member"><span class="member-name">Sarthak Bhowmik</span><span class="member-srn">PES2UG25CS493</span></div>
