@@ -1,25 +1,35 @@
-# Simulation artifacts
+# Simulation & hardware synthesis artifacts
 *.out
 *.vcd
 *.vvp
+vvp_out
+v2/verilog_src/*_test
 
-# Python cache
+# Ephemeral testbench and runtime data
+*test_image_tmp.txt
+v2/python_golden_model/expected_windows.txt
+v2/v2_ui/backend/logs/*.txt
+
+# Python caches and bytecode
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.pytest_cache/
 
-# IDE
+# IDE, OS, and local workspace metadata
 .vscode/
 .idea/
+.DS_Store
+Thumbs.db
+*.log
 
-# V2 compiled testbench binaries
-v2/verilog_src/*_test
-v2/python_golden_model/expected_windows.txt
-
-# Node / Frontend build artifacts
+# Node & Frontend build artifacts
 node_modules/
 dist/
 .vite/
 
 # Archives & Shortcuts
 *.zip
+*.tar.gz
 *.lnk
