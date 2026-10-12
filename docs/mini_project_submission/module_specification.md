@@ -43,6 +43,9 @@ While a fully unrolled 2D convolution requires 9 parallel hardware multipliers p
 
 ## 3. Register Transfer Level (RTL) Datapath Schematic
 
+![Conv1 Processing Element Circuit Diagram](./conv_pe_circuit_diagram.png)
+
+### Datapath Logic Diagram:
 ```
                                       CONV_PE DATAPATH ARCHITECTURE
                                       
