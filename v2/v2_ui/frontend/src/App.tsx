@@ -1,57 +1,83 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './App.module.css';
+import type { Coordinate, PredictResponse, FeatureGridProps } from './types/api.ts';
 
 const GRID_SIZE = 28;
 const CANVAS_SIZE = 280; // 10x scale for smooth drawing
 
-function App() {
-  const canvasRef = useRef(null);
-  const isDrawing = useRef(false);
-  const lastPos = useRef({ x: 0, y: 0 });
-  const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false);
+const FeatureGrid: React.FC<FeatureGridProps> = ({ data, colorHex }) => {
+  if (!data || data.length === 0) return null;
+  const w = data[0].length;
+  const maxVal = Math.max(0.01, ...data.flat().map((v) => Math.abs(v)));
+
+  return (
+    <div className={styles.featureGrid} style={{ gridTemplateColumns: `repeat(${w}, minmax(0, 1fr))` }}>
+      {data.map((row, i) =>
+        row.map((val, j) => {
+          const op = Math.max(0, val / maxVal);
+          return (
+            <div
+              key={`${i}-${j}`}
+              className={styles.featureCell}
+              style={{ backgroundColor: `rgba(${colorHex}, ${op})` }}
+            />
+          );
+        })
+      )}
+    </div>
+  );
+};
+
+export const App: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const isDrawing = useRef<boolean>(false);
+  const lastPos = useRef<Coordinate>({ x: 0, y: 0 });
+  const [result, setResult] = useState<PredictResponse | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   // Initialize canvas background to black
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas) {
       const ctx = canvas.getContext('2d');
-      ctx.fillStyle = 'black';
-      ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+      if (ctx) {
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+      }
     }
   }, []);
 
-  const getCoordinates = (e) => {
+  const getCoordinates = (
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
+  ): Coordinate => {
     const canvas = canvasRef.current;
+    if (!canvas) return { x: 0, y: 0 };
     const rect = canvas.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    
-    // Calculate scaling to perfectly align mouse with internal canvas resolution
+    const clientX = 'touches' in e && e.touches.length > 0 ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
+    const clientY = 'touches' in e && e.touches.length > 0 ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
-    
+
     return {
       x: (clientX - rect.left) * scaleX,
-      y: (clientY - rect.top) * scaleY
+      y: (clientY - rect.top) * scaleY,
     };
   };
 
-  const startDrawing = (e) => {
-    e.preventDefault();
-    isDrawing.current = true;
-    const pos = getCoordinates(e);
-    lastPos.current = pos;
-    draw(e, pos); // Draw a dot immediately
-  };
-
-  const draw = (e, initialPos = null) => {
+  const draw = (
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>,
+    initialPos: Coordinate | null = null
+  ) => {
     e.preventDefault();
     if (!isDrawing.current && !initialPos) return;
-    
+
     const pos = initialPos || getCoordinates(e);
-    const ctx = canvasRef.current.getContext('2d');
-    
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
     ctx.strokeStyle = 'white';
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
@@ -65,40 +91,52 @@ function App() {
     lastPos.current = pos;
   };
 
+  const startDrawing = (
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
+  ) => {
+    e.preventDefault();
+    isDrawing.current = true;
+    const pos = getCoordinates(e);
+    lastPos.current = pos;
+    draw(e, pos); // Draw a dot immediately
+  };
+
   const stopDrawing = () => {
     isDrawing.current = false;
   };
 
   const clearCanvas = () => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
     setResult(null);
   };
 
-  const extract28x28 = () => {
+  const extract28x28 = (): number[][] => {
     const canvas = canvasRef.current;
+    if (!canvas) return [];
     const ctx = canvas.getContext('2d');
+    if (!ctx) return [];
     const imageData = ctx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE).data;
-    
-    const grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(0));
+
+    const grid: number[][] = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(0));
     const scale = CANVAS_SIZE / GRID_SIZE; // 10
 
     for (let r = 0; r < GRID_SIZE; r++) {
       for (let c = 0; c < GRID_SIZE; c++) {
         let sum = 0;
-        // Average the 10x10 block
         for (let y = 0; y < scale; y++) {
           for (let x = 0; x < scale; x++) {
-            const px = (c * scale) + x;
-            const py = (r * scale) + y;
+            const px = c * scale + x;
+            const py = r * scale + y;
             const idx = (py * CANVAS_SIZE + px) * 4;
-            sum += imageData[idx]; // Red channel (since it's grayscale white-on-black)
+            sum += imageData[idx]; // Red channel
           }
         }
-        // Normalize 0-255 to 0.0-1.0
-        grid[r][c] = (sum / (scale * scale)) / 255.0;
+        grid[r][c] = sum / (scale * scale) / 255.0;
       }
     }
     return grid;
@@ -111,47 +149,27 @@ function App() {
       const res = await fetch('http://127.0.0.1:8000/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: drawing })
+        body: JSON.stringify({ image: drawing }),
       });
-      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(`Server returned HTTP ${res.status}`);
+      }
+      const data: PredictResponse = await res.json();
       setResult(data);
-    } catch(e) {
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : 'Unknown error';
       console.error(e);
-      alert('Backend error: ' + e.message);
+      alert('Backend error: ' + msg);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
-  };
-
-  const FeatureGrid = ({ data, colorHex }) => {
-    if (!data || data.length === 0) return null;
-    const h = data.length;
-    const w = data[0].length;
-    const maxVal = Math.max(0.01, ...data.flat().map(v => Math.abs(v)));
-    
-    return (
-      <div className={styles.featureGrid} style={{ gridTemplateColumns: `repeat(${w}, minmax(0, 1fr))` }}>
-        {data.map((row, i) =>
-          row.map((val, j) => {
-            const op = Math.max(0, val / maxVal);
-            return (
-              <div 
-                key={`${i}-${j}`} 
-                className={styles.featureCell} 
-                style={{ backgroundColor: `rgba(${colorHex}, ${op})` }} 
-              />
-            );
-          })
-        )}
-      </div>
-    );
   };
 
   return (
     <div className={styles.dashboard}>
       <h1 className={styles.title}>V2 Accelerator Glass Box</h1>
-      
+
       <div className={styles.layout}>
-        
         {/* LEFT PANEL: DRAWING */}
         <div className={`${styles.panel} ${styles.leftPanel}`}>
           <h2 className={styles.panelTitle}>Input Digit (Draw Smoothly!)</h2>
@@ -175,7 +193,7 @@ function App() {
             <button className={`${styles.btn} ${styles.btnClear}`} onClick={clearCanvas}>
               Clear
             </button>
-            <button 
+            <button
               className={`${styles.btn} ${styles.btnRun}`}
               onClick={handlePredict}
               disabled={loading}
@@ -184,11 +202,13 @@ function App() {
             </button>
           </div>
         </div>
-        
+
         {/* RIGHT PANEL: VISUALIZER */}
         <div className={`${styles.panel} ${styles.rightPanel}`}>
           <div className={styles.headerRow}>
-            <h2 className={styles.panelTitle} style={{marginBottom: 0}}>Feature Maps & Output</h2>
+            <h2 className={styles.panelTitle} style={{ marginBottom: 0 }}>
+              Feature Maps & Output
+            </h2>
             {result && (
               <div className={styles.prediction}>
                 Prediction: <span className={styles.predictionHighlight}>{result.prediction}</span>
@@ -200,7 +220,6 @@ function App() {
             <div className={styles.emptyState}>Draw a digit and run to inspect internal logic.</div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-              
               {/* Logits */}
               <div>
                 <h3 className={styles.sectionTitle}>Raw Logits (Dense -&gt; Argmax)</h3>
@@ -209,22 +228,24 @@ function App() {
                     const maxLogit = Math.max(...result.logits);
                     const range = Math.max(1, maxLogit - Math.min(...result.logits));
                     const temp = range / 5.0; // Dynamic temperature scaling
-                    const exps = result.logits.map(l => Math.exp((l - maxLogit) / temp));
+                    const exps = result.logits.map((l) => Math.exp((l - maxLogit) / temp));
                     const sumExps = exps.reduce((a, b) => a + b, 0);
-                    const probs = exps.map(e => e / sumExps);
-                    
-                    return result.logits.map((val, idx) => {
+                    const probs = exps.map((e) => e / sumExps);
+
+                    return result.logits.map((_val, idx) => {
                       const isMax = idx === result.prediction;
                       const ht = Math.max(2, probs[idx] * 100);
                       return (
                         <div key={idx} className={styles.logitBarContainer}>
-                          <div 
-                            className={`${styles.logitBar} ${isMax ? styles.barActive : styles.barInactive}`} 
+                          <div
+                            className={`${styles.logitBar} ${isMax ? styles.barActive : styles.barInactive}`}
                             style={{ height: `${ht}%` }}
                           />
-                          <span className={`${styles.logitLabel} ${isMax ? styles.labelActive : ''}`}>{idx}</span>
+                          <span className={`${styles.logitLabel} ${isMax ? styles.labelActive : ''}`}>
+                            {idx}
+                          </span>
                         </div>
-                      )
+                      );
                     });
                   })()}
                 </div>
@@ -232,10 +253,10 @@ function App() {
 
               {/* Pre-processed Input */}
               <div>
-                 <h3 className={styles.sectionTitle}>Downsampled Hardware Input (20x20)</h3>
-                 <div className={styles.featureMaps}>
-                   <FeatureGrid data={result.input} colorHex="255, 255, 255" />
-                 </div>
+                <h3 className={styles.sectionTitle}>Downsampled Hardware Input (20x20)</h3>
+                <div className={styles.featureMaps}>
+                  <FeatureGrid data={result.input} colorHex="255, 255, 255" />
+                </div>
               </div>
 
               {/* MaxPool1 */}
@@ -247,7 +268,7 @@ function App() {
                   ))}
                 </div>
               </div>
-              
+
               {/* MaxPool2 */}
               <div>
                 <h3 className={styles.sectionTitle}>MaxPool2 Channels (8x5x5)</h3>
@@ -257,16 +278,16 @@ function App() {
                   ))}
                 </div>
               </div>
-              
+
               {/* Dense1 */}
               <div>
                 <h3 className={styles.sectionTitle}>Dense 1 (64 Neurons)</h3>
                 <div className={styles.featureMaps}>
                   {(() => {
-                    const grid = [];
+                    const grid: number[][] = [];
                     if (result.dense1) {
                       for (let i = 0; i < 8; i++) {
-                        const row = [];
+                        const row: number[] = [];
                         for (let j = 0; j < 8; j++) row.push(result.dense1[i * 8 + j] || 0);
                         grid.push(row);
                       }
@@ -275,16 +296,16 @@ function App() {
                   })()}
                 </div>
               </div>
-              
+
               {/* Dense2 */}
               <div>
                 <h3 className={styles.sectionTitle}>Dense 2 (32 Neurons)</h3>
                 <div className={styles.featureMaps}>
                   {(() => {
-                    const grid = [];
+                    const grid: number[][] = [];
                     if (result.dense2) {
                       for (let i = 0; i < 4; i++) {
-                        const row = [];
+                        const row: number[] = [];
                         for (let j = 0; j < 8; j++) row.push(result.dense2[i * 8 + j] || 0);
                         grid.push(row);
                       }
@@ -293,13 +314,12 @@ function App() {
                   })()}
                 </div>
               </div>
-              
             </div>
           )}
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default App;

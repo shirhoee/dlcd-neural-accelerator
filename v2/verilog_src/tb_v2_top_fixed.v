@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`default_nettype none
 
 module tb_v2_top_fixed;
     reg clk;
@@ -252,3 +253,4 @@ module tb_v2_top_fixed;
     end
 
 endmodule
+`default_nettype wire

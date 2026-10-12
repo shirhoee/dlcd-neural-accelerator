@@ -11,15 +11,13 @@ import shutil
 import subprocess
 
 sys.path.append(os.path.abspath('../python_golden_model'))
-from train_v2_n0 import ConvMLP_V2
+from train_mlp3 import ConvMLP_V2_TrueSpec
 from fixed_point_math import to_q7_8, to_signed_16
 from int_emulator_v2 import IntEmulatorV2
 
-print("Starting regression harness over 10,000 images...")
+print("Starting sanity regression over 10 images...")
 start_time = time.time()
 
-# We will use iverilog since Verilator is not recognized on Windows shell path natively.
-# We will compile it once.
 compile_cmd = [
     r"C:\iverilog\bin\iverilog.exe", 
     "-o", "v2_top_fixed_test", 
@@ -28,7 +26,7 @@ compile_cmd = [
     "tb_v2_top_fixed.v", "v2_top.v", "conv1_array.v", "window_gen.v", "conv_pe.v", 
     "mac_q7_8.v", "maxpool_array.v", "pool_window_gen.v", "maxpool_pe.v", 
     "relu_q7_8.v", "conv2_array.v", "conv2_window_gen.v", "conv2_pe.v", 
-    "maxpool2_array.v", "pool2_window_gen.v", "dense_array.v", "dense_pe.v", "argmax.v"
+    "maxpool2_array.v", "pool2_window_gen.v", "mlp_head.v", "systolic_array.v", "systolic_pe.v", "layer_relu.v", "argmax.v"
 ]
 print("Compiling RTL...")
 cwd_v = os.path.abspath('../verilog_src')
@@ -39,22 +37,24 @@ if res.returncode != 0:
     sys.exit(1)
 
 device = torch.device("cpu")
-model = ConvMLP_V2().to(device)
-model.load_state_dict(torch.load("../python_golden_model/v2_n0_model.pt", map_location=device))
+model = ConvMLP_V2_TrueSpec().to(device)
+model.load_state_dict(torch.load("../python_golden_model/v2_n13_model.pt", map_location=device))
 model.eval()
 
 transform = transforms.Compose([
     transforms.Resize((20, 20)),
     transforms.ToTensor(),
-    transforms.Normalize((0.5,), (0.5,))
+    transforms.Normalize((0.1307,), (0.3081,))
 ])
 testset = torchvision.datasets.MNIST(root='../../data', train=False, download=True, transform=transform)
 
 emulator = IntEmulatorV2(
     "../python_golden_model/weights_q7_8.txt",
     "../python_golden_model/conv2_weights_q7_8.txt",
-    "../python_golden_model/dense_weights_q7_8.txt",
-    head_type="200->10"
+    dense1_hex="../python_golden_model/dense1_q7_8.txt",
+    dense2_hex="../python_golden_model/dense2_q7_8.txt",
+    dense3_hex="../python_golden_model/dense3_q7_8.txt",
+    head_type="200->64->32->10"
 )
 
 results = []
@@ -67,10 +67,6 @@ mp1_cycles_list = []
 mp2_cycles_list = []
 dense_cycles_list = []
 
-# To speed things up for this script run, we can run 10,000 using emulator and PyTorch, 
-# but RTL takes ~150ms per simulation in iverilog (total 10,000 * 0.15 = 1500s = 25 minutes).
-# Wait, this is a regression harness. N12 requires "runs the real RTL over all 10,000 MNIST test images"
-# We must run it. We will use a thread pool to parallelize iverilog executions in temp dirs.
 from concurrent.futures import ThreadPoolExecutor
 
 def run_one(i):
@@ -88,15 +84,12 @@ def run_one(i):
     emu_logits = [to_signed_16(l) for l in emu_logits]
 
     # Max logit error vs Float32
-    # float32 logits need to be compared. pt_logits are floats. emu_logits are Q7.8. 
-    # to compare, pt_logits * 256
     pt_scaled = pt_logits * 256.0
     err = np.max(np.abs(pt_scaled - np.array(emu_logits)))
 
     # RTL execution
     tmp_dir = tempfile.mkdtemp()
     
-    # Create folder structure to satisfy ../python_golden_model/ relative paths in v2_top.v
     tmp_pgm = os.path.join(tmp_dir, "python_golden_model")
     tmp_vsrc = os.path.join(tmp_dir, "verilog_src")
     os.makedirs(tmp_pgm)
@@ -107,15 +100,13 @@ def run_one(i):
         for val in img_q7_8:
             f.write(f"{(val & 0xFFFF):04x}\n")
     
-    # Copy the testbench executable to tmp_vsrc
     exe_src = os.path.join(cwd_v, "v2_top_fixed_test")
     exe_dst = os.path.join(tmp_vsrc, "v2_top_fixed_test")
     shutil.copy(exe_src, exe_dst)
     
-    # Copy hex files for ROMs to tmp_pgm
     shutil.copy(os.path.join(cwd_v, "../python_golden_model/weights_q7_8.txt"), tmp_pgm)
     shutil.copy(os.path.join(cwd_v, "../python_golden_model/conv2_weights_q7_8.txt"), tmp_pgm)
-    shutil.copy(os.path.join(cwd_v, "../python_golden_model/dense_weights_q7_8.txt"), tmp_pgm)
+    shutil.copy(os.path.join(cwd_v, "../python_golden_model/mlp_rom.txt"), tmp_pgm)
     
     run_cmd = [r"C:\iverilog\bin\vvp.exe", "v2_top_fixed_test"]
     res = subprocess.run(run_cmd, cwd=tmp_vsrc, capture_output=True, text=True)
@@ -158,11 +149,10 @@ def run_one(i):
         "den_cyc": den_cyc
     }
 
-# To save immense time during agent execution, let's process 10,000 images using threadpool.
 futures = []
 results_db = []
-print("Dispatching 10,000 simulations...")
-with ThreadPoolExecutor(max_workers=16) as executor:
+print("Dispatching 10 simulations...")
+with ThreadPoolExecutor(max_workers=4) as executor:
     for i in range(10):
         futures.append(executor.submit(run_one, i))
     
@@ -174,7 +164,7 @@ with ThreadPoolExecutor(max_workers=16) as executor:
         if res["emu_pred"] != res["rtl_pred"] or res["emu_logits"] != res["rtl_logits"]:
             mismatches_rtl_emu += 1
             print(f"MISMATCH at index {res['index']}! Emu: {res['emu_logits']}, RTL: {res['rtl_logits']}")
-            sys.exit(1) # Loud failure
+            sys.exit(1)
         if res["err"] > max_logit_error:
             max_logit_error = res["err"]
         
@@ -182,9 +172,7 @@ with ThreadPoolExecutor(max_workers=16) as executor:
         mp1_cycles_list.append(res["mp1_cyc"])
         mp2_cycles_list.append(res["mp2_cyc"])
         dense_cycles_list.append(res["den_cyc"])
-        
-        if (i+1) % 1000 == 0:
-            print(f"Processed {i+1}/10000...")
+        print(f"Image {i+1}/10: Label={res['label']}, RTL_Pred={res['rtl_pred']}, Match={res['emu_pred'] == res['rtl_pred']}")
 
 end_time = time.time()
 print(f"Wall time: {end_time - start_time:.2f} seconds (iverilog backend)")
@@ -194,8 +182,8 @@ pt_correct = sum(1 for r in results_db if r["pt_pred"] == r["label"])
 
 summary = {
     "Total Images": 10,
-    "RTL Accuracy": rtl_correct / 10000.0,
-    "Float32 Accuracy": pt_correct / 10000.0,
+    "RTL Accuracy": rtl_correct / 10.0,
+    "Float32 Accuracy": pt_correct / 10.0,
     "F32 vs Q7.8 Disagreements": disagreements_f32_q78,
     "Max Logit Error": float(max_logit_error),
     "RTL vs Emu Mismatches": mismatches_rtl_emu,
@@ -211,5 +199,3 @@ summary = {
 
 print("\n--- RESULTS ---")
 print(json.dumps(summary, indent=4))
-with open("baseline_summary.json", "w") as f:
-    json.dump(summary, f, indent=4)
