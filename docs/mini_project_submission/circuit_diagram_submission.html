@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mini Project Submission - Circuit Diagram (DLCD)</title>
+<style>
+  @page {
+    size: A4 portrait;
+    margin: 10mm 12mm 10mm 12mm;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #1a202c;
+    line-height: 1.35;
+    font-size: 8.5pt;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .page {
+    height: 100%;
+    page-break-after: always;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .page:last-child {
+    page-break-after: avoid;
+  }
+
+  /* Header Title Block */
+  .title-block {
+    border: 2px solid #1a365d;
+    background: #f8fafc;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+  }
+  .title-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1.5px solid #cbd5e0;
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+  }
+  .course-title {
+    font-size: 11pt;
+    font-weight: 700;
+    color: #1a365d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .doc-badge {
+    background: #2b6cb0;
+    color: #ffffff;
+    font-size: 7.5pt;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .sub-title {
+    font-size: 12.5pt;
+    font-weight: 800;
+    color: #2b6cb0;
+    margin: 2px 0 6px 0;
+  }
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 6px;
+    font-size: 8pt;
+    background: #ffffff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+  }
+  .meta-col strong {
+    color: #1a365d;
+  }
+
+  /* Team members inline */
+  .team-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 8px;
+    margin-top: 3px;
+    font-size: 7.8pt;
+  }
+  .team-member {
+    display: flex;
+    justify-content: space-between;
+    background: #f1f5f9;
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid #e2e8f0;
+  }
+  .member-name {
+    font-weight: 600;
+    color: #2d3748;
+  }
+  .member-srn {
+    font-family: monospace;
+    font-weight: 700;
+    color: #2b6cb0;
+  }
+
+  /* Compact Overview & Pin Table */
+  .sec-heading {
+    font-size: 9pt;
+    font-weight: 700;
+    color: #1a365d;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    border-bottom: 1px solid #cbd5e0;
+    padding-bottom: 2px;
+    margin: 6px 0 4px 0;
+  }
+  .brief-desc {
+    font-size: 8pt;
+    color: #334155;
+    margin-bottom: 5px;
+  }
+
+  table.pin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 7.2pt;
+    margin-bottom: 6px;
+  }
+  table.pin-table th {
+    background: #1a365d;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 3px 5px;
+    text-align: left;
+    border: 1px solid #cbd5e0;
+  }
+  table.pin-table td {
+    padding: 2.5px 5px;
+    border: 1px solid #cbd5e0;
+  }
+  table.pin-table tr:nth-child(even) {
+    background: #f8fafc;
+  }
+
+  /* Diagram Containers */
+  .diagram-card {
+    border: 1.5px solid #cbd5e0;
+    border-radius: 6px;
+    background: #ffffff;
+    padding: 6px;
+    text-align: center;
+    margin-top: 4px;
+  }
+  .diagram-img {
+    max-width: 100%;
+    height: auto;
+    max-height: 128mm;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+  .diagram-caption {
+    font-size: 7.6pt;
+    font-weight: 600;
+    color: #475569;
+    margin-top: 4px;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 3px;
+  }
+
+  /* Page 2 Specifics */
+  .split-diagram-card {
+    border: 1.5px solid #cbd5e0;
+    border-radius: 6px;
+    background: #ffffff;
+    padding: 5px;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  .split-img-gate {
+    max-width: 100%;
+    height: auto;
+    max-height: 82mm;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+  .split-img-wave {
+    max-width: 100%;
+    height: auto;
+    max-height: 72mm;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+
+  .summary-box {
+    background: #f0fdf4;
+    border: 1px solid #86efac;
+    border-radius: 5px;
+    padding: 5px 8px;
+    font-size: 7.4pt;
+    color: #166534;
+    margin-top: 4px;
+  }
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    text-align: center;
+  }
+  .stat-card {
+    background: #ffffff;
+    border: 1px solid #bbf7d0;
+    border-radius: 4px;
+    padding: 3px;
+  }
+  .stat-val {
+    font-size: 8.5pt;
+    font-weight: 800;
+    color: #15803d;
+  }
+  .stat-lbl {
+    font-size: 6.8pt;
+    color: #4b5563;
+  }
+
+  .footer-bar {
+    display: flex;
+    justify-content: space-between;
+    font-size: 7pt;
+    color: #64748b;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 3px;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+  <!-- ==================== PAGE 1 ==================== -->
+  <div class="page">
+    <div>
+      <!-- Header Block -->
+      <div class="title-block">
+        <div class="title-header">
+          <span class="course-title">Digital Logic &amp; Computer Design (DLCD)</span>
+          <span class="doc-badge">Mini Project Circuit Submission</span>
+        </div>
+        <div class="sub-title">Module Specification &amp; Datapath Circuit Diagram</div>
+        
+        <div class="meta-grid">
+          <div class="meta-col">
+            <div><strong>Selected Module:</strong> <code>conv_pe.v</code> with Sequential Q7.8 MAC (<code>mac_q7_8.v</code>)</div>
+            <div><strong>Project:</strong> Hardware Neural Network Accelerator (DLCD Neural Accelerator)</div>
+            <div><strong>Arithmetic Format:</strong> Q7.8 Fixed-Point (16-bit signed 2's complement, Scale = 256)</div>
+          </div>
+          <div class="meta-col">
+            <strong>Design Team &amp; Roll Numbers:</strong>
+            <div class="team-grid">
+              <div class="team-member"><span class="member-name">Shreyansh Raj</span><span class="member-srn">PES2UG25CS516</span></div>
+              <div class="team-member"><span class="member-name">Sarthak Bhowmik</span><span class="member-srn">PES2UG25CS493</span></div>
+              <div class="team-member"><span class="member-name">Shaurya Singh</span><span class="member-srn">PES2UG25CS508</span></div>
+              <div class="team-member"><span class="member-name">Shreya Anand</span><span class="member-srn">PES2UG25CS515</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Module Functional Summary -->
+      <div class="sec-heading">1. Module Functional Architecture &amp; Signal Contract</div>
+      <div class="brief-desc">
+        The Convolutional Processing Element (<code>conv_pe.v</code>) implements a <strong>9-tap weight-stationary, sequential Multiply-Accumulate (MAC) architecture</strong> for 3&times;3 convolution kernels. It time-multiplexes a single signed Q7.8 multiplier across 9 clock cycles per receptive field, reducing hardware multiplier requirements by <strong>88.89%</strong> compared to parallel spatial unrolling.
+      </div>
+
+      <!-- Compact Pin Table -->
+      <table class="pin-table">
+        <thead>
+          <tr>
+            <th>Port Name</th>
+            <th>Dir</th>
+            <th>Width</th>
+            <th>Description &amp; Operation</th>
+            <th>Port Name</th>
+            <th>Dir</th>
+            <th>Width</th>
+            <th>Description &amp; Operation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>clk</code></td>
+            <td>IN</td>
+            <td>1 bit</td>
+            <td>Primary synchronous system clock</td>
+            <td><code>clr_acc</code></td>
+            <td>IN</td>
+            <td>1 bit</td>
+            <td>Asserted at Tap 0 to clear feedback accumulator to 0</td>
+          </tr>
+          <tr>
+            <td><code>reset</code></td>
+            <td>IN</td>
+            <td>1 bit</td>
+            <td>Synchronous active-high reset (clears counter &amp; valid)</td>
+            <td><code>pixel_in</code></td>
+            <td>IN</td>
+            <td>16 bits</td>
+            <td>Streaming pixel feature input (Q7.8 signed 2's complement)</td>
+          </tr>
+          <tr>
+            <td><code>load_weight</code></td>
+            <td>IN</td>
+            <td>1 bit</td>
+            <td>Serial shift-enable to pre-load 9 kernel weights</td>
+            <td><code>out_acc</code></td>
+            <td>OUT</td>
+            <td>16 bits</td>
+            <td>16-bit signed accumulated convolution sum (Q7.8 format)</td>
+          </tr>
+          <tr>
+            <td><code>weight_in</code></td>
+            <td>IN</td>
+            <td>16 bits</td>
+            <td>Serial weight stream fed during configuration</td>
+            <td><code>valid_out</code></td>
+            <td>OUT</td>
+            <td>1 bit</td>
+            <td>Active-high 1-cycle output strobe asserted at Tap 8</td>
+          </tr>
+          <tr>
+            <td><code>mac_en</code></td>
+            <td>IN</td>
+            <td>1 bit</td>
+            <td>Computation enable; advances tap counter; halts on stall</td>
+            <td colspan="4" style="background:#f1f5f9; color:#475569; text-align:center;">
+              <strong>Throughput:</strong> 1 valid output feature vector every 9 clock cycles
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Figure 1: RTL Datapath Diagram -->
+      <div class="sec-heading">2. Register Transfer Level (RTL) Datapath Circuit Schematic</div>
+      <div class="diagram-card">
+        <img class="diagram-img" src="file:///C:/Users/SHREYANSH RAJ/DLCD_Neural_Accelerator/docs/mini_project_submission/conv_pe_circuit_diagram.png" alt="conv_pe RTL Datapath Circuit Diagram" />
+        <div class="diagram-caption">
+          <strong>Figure 1:</strong> RTL Datapath Architecture Schematic of <code>conv_pe.v</code>. Highlights the 9-stage weight shift buffer, 9:1 weight multiplexer, Q7.8 signed multiplier (<code>mac_q7_8</code>), bit-slice truncation (<code>[23:8]</code>), accumulator adder with synchronous clear MUX, 4-bit Modulo-9 tap counter, and <code>valid_out</code> control logic.
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-bar">
+      <span>DLCD Mini Project &bull; Module Circuit Diagram Submission</span>
+      <span>Page 1 of 2</span>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 2 ==================== -->
+  <div class="page">
+    <div>
+      <div class="sec-heading">3. Gate-Level Microarchitecture Schematic</div>
+      <div class="split-diagram-card">
+        <img class="split-img-gate" src="file:///C:/Users/SHREYANSH RAJ/DLCD_Neural_Accelerator/docs/mini_project_submission/conv_pe_gate_level_diagram.png" alt="Gate-Level Microarchitecture Schematic" />
+        <div class="diagram-caption">
+          <strong>Figure 2:</strong> Gate-Level Microarchitecture Implementation. Details the 4-bit synchronous Modulo-9 counter (D-FFs and next-state excitation logic), terminal count comparator (<code>tap_idx == 8</code>), <code>valid_out</code> gating logic, 1-bit 2:1 multiplexer transmission slice, 1-bit Full Adder logic with carry-chain generation, and Q7.8 bit-slice wiring (<code>product[23:8]</code>).
+        </div>
+      </div>
+
+      <div class="sec-heading">4. Simulation Waveform &amp; Functional Timing Verification</div>
+      <div class="split-diagram-card">
+        <img class="split-img-wave" src="file:///C:/Users/SHREYANSH RAJ/DLCD_Neural_Accelerator/docs/mini_project_submission/conv_pe_waveform.png" alt="GTKWave Simulation Waveform Verification" />
+        <div class="diagram-caption">
+          <strong>Figure 3:</strong> Authentic GTKWave Simulation Trace (<code>tb_conv_pe.vcd</code>). Validates: (1) Serial weight loading into internal shift registers, (2) Deterministic 9-cycle accumulation progression (<code>tap_idx</code> 0 &rarr; 8), (3) Correct assertion of <code>valid_out = 1</code> at Tap 8, (4) Mid-stream pipeline stall/resume behavior via <code>mac_en</code>, and (5) Hardware regression test status (<code>failed = 0</code>).
+        </div>
+      </div>
+
+      <!-- Verification & Resource Metrics Box -->
+      <div class="summary-box">
+        <div class="summary-grid">
+          <div class="stat-card">
+            <div class="stat-val">88.89%</div>
+            <div class="stat-lbl">Multiplier Savings (1 vs 9 DSPs)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val">9 Cycles</div>
+            <div class="stat-lbl">Latency per 3&times;3 Kernel Window</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val">[-4.9, +8.1]</div>
+            <div class="stat-lbl">Conv1 Q7.8 Headroom (Range: &plusmn;128)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val">0 Errors (PASSED)</div>
+            <div class="stat-lbl">tb_conv_pe Regression Status</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-bar">
+      <span>DLCD Mini Project &bull; Module Circuit Diagram Submission</span>
+      <span>Page 2 of 2</span>
+    </div>
+  </div>
+
+</body>
+</html>
