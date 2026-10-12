@@ -6,7 +6,7 @@
 **Design Team & SRN:**  
 - **Shreyansh Raj** — `PES2UG25CS516`  
 - **Sarthak Bhowmik** — `PES2UG25CS493`  
-- **Shaurya Singh** — `PES2UG25CS493`  
+- **Shaurya Singh** — `PES2UG25CS508`  
 - **Shreya Anand** — `PES2UG25CS515`  
 **Date:** October 2026  
 

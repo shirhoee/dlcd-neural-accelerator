@@ -181,7 +181,7 @@ html_content = f"""<!DOCTYPE html>
       <strong>Design Team &amp; SRN:</strong> 
       Shreyansh Raj (<code>PES2UG25CS516</code>), 
       Sarthak Bhowmik (<code>PES2UG25CS493</code>), 
-      Shaurya Singh (<code>PES2UG25CS493</code>), 
+      Shaurya Singh (<code>PES2UG25CS508</code>), 
       Shreya Anand (<code>PES2UG25CS515</code>)
     </div>
   </div>
