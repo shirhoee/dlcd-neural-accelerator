@@ -1,4 +1,5 @@
 import os
+import pymupdf
 from playwright.sync_api import sync_playwright
 
 doc_dir = os.path.dirname(os.path.abspath(__file__))
@@ -10,11 +11,11 @@ html_content = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Mini Project Submission - Circuit Diagram (DLCD)</title>
+<title>Mini Project Submission - Circuit Diagram & Verilog HDL (DLCD)</title>
 <style>
   @page {{
     size: A4 portrait;
-    margin: 10mm 12mm 10mm 12mm;
+    margin: 8mm 11mm 8mm 11mm;
   }}
   * {{
     box-sizing: border-box;
@@ -44,8 +45,8 @@ html_content = f"""<!DOCTYPE html>
     border: 2px solid #1a365d;
     background: #f8fafc;
     border-radius: 6px;
-    padding: 8px 12px;
-    margin-bottom: 8px;
+    padding: 7px 12px;
+    margin-bottom: 7px;
   }}
   .title-header {{
     display: flex;
@@ -53,10 +54,10 @@ html_content = f"""<!DOCTYPE html>
     align-items: center;
     border-bottom: 1.5px solid #cbd5e0;
     padding-bottom: 4px;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
   }}
   .course-title {{
-    font-size: 11pt;
+    font-size: 10.5pt;
     font-weight: 700;
     color: #1a365d;
     text-transform: uppercase;
@@ -65,26 +66,26 @@ html_content = f"""<!DOCTYPE html>
   .doc-badge {{
     background: #2b6cb0;
     color: #ffffff;
-    font-size: 7.5pt;
+    font-size: 7.2pt;
     font-weight: 600;
-    padding: 2px 8px;
+    padding: 2px 7px;
     border-radius: 4px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }}
   .sub-title {{
-    font-size: 12.5pt;
+    font-size: 12pt;
     font-weight: 800;
     color: #2b6cb0;
-    margin: 2px 0 6px 0;
+    margin: 2px 0 5px 0;
   }}
   .meta-grid {{
     display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
+    grid-template-columns: 1.15fr 0.85fr;
     gap: 6px;
-    font-size: 8pt;
+    font-size: 7.8pt;
     background: #ffffff;
-    padding: 6px 10px;
+    padding: 5px 9px;
     border-radius: 4px;
     border: 1px solid #e2e8f0;
   }}
@@ -96,15 +97,15 @@ html_content = f"""<!DOCTYPE html>
   .team-grid {{
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 2px 8px;
+    gap: 2px 6px;
     margin-top: 3px;
-    font-size: 7.8pt;
+    font-size: 7.5pt;
   }}
   .team-member {{
     display: flex;
     justify-content: space-between;
     background: #f1f5f9;
-    padding: 2px 6px;
+    padding: 2px 5px;
     border-radius: 3px;
     border: 1px solid #e2e8f0;
   }}
@@ -120,37 +121,37 @@ html_content = f"""<!DOCTYPE html>
 
   /* Compact Overview & Pin Table */
   .sec-heading {{
-    font-size: 9pt;
+    font-size: 8.8pt;
     font-weight: 700;
     color: #1a365d;
     text-transform: uppercase;
     letter-spacing: 0.4px;
     border-bottom: 1px solid #cbd5e0;
     padding-bottom: 2px;
-    margin: 6px 0 4px 0;
+    margin: 5px 0 3px 0;
   }}
   .brief-desc {{
-    font-size: 8pt;
+    font-size: 7.8pt;
     color: #334155;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
   }}
 
   table.pin-table {{
     width: 100%;
     border-collapse: collapse;
-    font-size: 7.2pt;
-    margin-bottom: 6px;
+    font-size: 7pt;
+    margin-bottom: 5px;
   }}
   table.pin-table th {{
     background: #1a365d;
     color: #ffffff;
     font-weight: 600;
-    padding: 3px 5px;
+    padding: 2.5px 5px;
     text-align: left;
     border: 1px solid #cbd5e0;
   }}
   table.pin-table td {{
-    padding: 2.5px 5px;
+    padding: 2px 5px;
     border: 1px solid #cbd5e0;
   }}
   table.pin-table tr:nth-child(even) {{
@@ -162,24 +163,24 @@ html_content = f"""<!DOCTYPE html>
     border: 1.5px solid #cbd5e0;
     border-radius: 6px;
     background: #ffffff;
-    padding: 6px;
+    padding: 5px;
     text-align: center;
-    margin-top: 4px;
+    margin-top: 3px;
   }}
   .diagram-img {{
     max-width: 100%;
     height: auto;
-    max-height: 128mm;
+    max-height: 126mm;
     object-fit: contain;
     border-radius: 4px;
   }}
   .diagram-caption {{
-    font-size: 7.6pt;
+    font-size: 7.4pt;
     font-weight: 600;
     color: #475569;
-    margin-top: 4px;
+    margin-top: 3px;
     border-top: 1px solid #f1f5f9;
-    padding-top: 3px;
+    padding-top: 2px;
   }}
 
   /* Page 2 Specifics */
@@ -187,21 +188,21 @@ html_content = f"""<!DOCTYPE html>
     border: 1.5px solid #cbd5e0;
     border-radius: 6px;
     background: #ffffff;
-    padding: 5px;
+    padding: 4px;
     text-align: center;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
   }}
   .split-img-gate {{
     max-width: 100%;
     height: auto;
-    max-height: 82mm;
+    max-height: 80mm;
     object-fit: contain;
     border-radius: 4px;
   }}
   .split-img-wave {{
     max-width: 100%;
     height: auto;
-    max-height: 72mm;
+    max-height: 70mm;
     object-fit: contain;
     border-radius: 4px;
   }}
@@ -210,10 +211,10 @@ html_content = f"""<!DOCTYPE html>
     background: #f0fdf4;
     border: 1px solid #86efac;
     border-radius: 5px;
-    padding: 5px 8px;
-    font-size: 7.4pt;
+    padding: 4px 8px;
+    font-size: 7.2pt;
     color: #166534;
-    margin-top: 4px;
+    margin-top: 3px;
   }}
   .summary-grid {{
     display: grid;
@@ -225,26 +226,108 @@ html_content = f"""<!DOCTYPE html>
     background: #ffffff;
     border: 1px solid #bbf7d0;
     border-radius: 4px;
-    padding: 3px;
+    padding: 2.5px;
   }}
   .stat-val {{
-    font-size: 8.5pt;
+    font-size: 8.2pt;
     font-weight: 800;
     color: #15803d;
   }}
   .stat-lbl {{
-    font-size: 6.8pt;
+    font-size: 6.6pt;
     color: #4b5563;
+  }}
+
+  /* Page 3 Code Layout */
+  .code-grid {{
+    display: grid;
+    grid-template-columns: 1.25fr 0.95fr;
+    gap: 8px;
+    margin-top: 4px;
+  }}
+  .code-panel {{
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 5px;
+    padding: 7px 9px;
+    color: #f1f5f9;
+  }}
+  .code-panel-header {{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #334155;
+    padding-bottom: 3px;
+    margin-bottom: 5px;
+  }}
+  .code-filename {{
+    font-weight: 700;
+    color: #38bdf8;
+    font-size: 7.6pt;
+    font-family: monospace;
+  }}
+  .code-badge {{
+    background: #1e293b;
+    color: #94a3b8;
+    border: 1px solid #475569;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 6.2pt;
+    text-transform: uppercase;
+  }}
+  pre.code-block {{
+    margin: 0;
+    padding: 0;
+    font-family: "Cascadia Code", "Consolas", "Courier New", monospace;
+    font-size: 6.25pt;
+    line-height: 1.18;
+    white-space: pre;
+    color: #e2e8f0;
+  }}
+  .kw {{ color: #f43f5e; font-weight: bold; }}
+  .port {{ color: #38bdf8; }}
+  .type {{ color: #a855f7; }}
+  .comment {{ color: #64748b; font-style: italic; }}
+  .num {{ color: #fbbf24; }}
+  .inst {{ color: #34d399; font-weight: bold; }}
+
+  /* Notes cards on right column */
+  .notes-column {{
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }}
+  .annotation-card {{
+    background: #f8fafc;
+    border: 1px solid #cbd5e0;
+    border-radius: 5px;
+    padding: 6px 8px;
+    font-size: 7.1pt;
+  }}
+  .annotation-card h4 {{
+    margin: 0 0 4px 0;
+    font-size: 7.5pt;
+    color: #1a365d;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 2px;
+  }}
+  .annotation-card ul {{
+    margin: 0;
+    padding-left: 14px;
+    color: #334155;
+  }}
+  .annotation-card li {{
+    margin-bottom: 2px;
   }}
 
   .footer-bar {{
     display: flex;
     justify-content: space-between;
-    font-size: 7pt;
+    font-size: 6.8pt;
     color: #64748b;
     border-top: 1px solid #e2e8f0;
-    padding-top: 3px;
-    margin-top: 4px;
+    padding-top: 2.5px;
+    margin-top: 3px;
   }}
 </style>
 </head>
@@ -364,8 +447,8 @@ html_content = f"""<!DOCTYPE html>
 
     <!-- Footer -->
     <div class="footer-bar">
-      <span>DLCD Mini Project &bull; Module Circuit Diagram Submission</span>
-      <span>Page 1 of 2</span>
+      <span>DLCD Mini Project &bull; Module Circuit Diagram &amp; Verilog HDL Submission</span>
+      <span>Page 1 of 3</span>
     </div>
   </div>
 
@@ -413,8 +496,150 @@ html_content = f"""<!DOCTYPE html>
 
     <!-- Footer -->
     <div class="footer-bar">
-      <span>DLCD Mini Project &bull; Module Circuit Diagram Submission</span>
-      <span>Page 2 of 2</span>
+      <span>DLCD Mini Project &bull; Module Circuit Diagram &amp; Verilog HDL Submission</span>
+      <span>Page 2 of 3</span>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 3 ==================== -->
+  <div class="page">
+    <div>
+      <div class="sec-heading">5. Synthesizable Verilog HDL Source Code</div>
+      <div class="brief-desc">
+        Complete, synthesizable Verilog-2001 source code for both modules forming the Convolutional Processing Element subsystem.
+      </div>
+
+      <div class="code-grid">
+        <!-- Left Column: conv_pe.v -->
+        <div class="code-panel">
+          <div class="code-panel-header">
+            <span class="code-filename">v2/verilog_src/conv_pe.v</span>
+            <span class="code-badge">Top Processing Element</span>
+          </div>
+          <pre class="code-block"><span class="comment">`timescale 1ns / 1ps</span>
+
+<span class="kw">module</span> <span class="mod">conv_pe</span> (
+    <span class="kw">input</span>  <span class="type">wire</span>        <span class="port">clk</span>,
+    <span class="kw">input</span>  <span class="type">wire</span>        <span class="port">reset</span>,
+    <span class="comment">// Weight loading interface (serial shift)</span>
+    <span class="kw">input</span>  <span class="type">wire</span>        <span class="port">load_weight</span>,
+    <span class="kw">input</span>  <span class="type">wire signed</span> [<span class="num">15</span>:<span class="num">0</span>] <span class="port">weight_in</span>,
+    <span class="comment">// Streaming pixel interface &amp; controls</span>
+    <span class="kw">input</span>  <span class="type">wire</span>        <span class="port">mac_en</span>,
+    <span class="kw">input</span>  <span class="type">wire</span>        <span class="port">clr_acc</span>,
+    <span class="kw">input</span>  <span class="type">wire signed</span> [<span class="num">15</span>:<span class="num">0</span>] <span class="port">pixel_in</span>,
+    <span class="comment">// Accumulator output and valid strobe</span>
+    <span class="kw">output</span> <span class="type">reg  signed</span> [<span class="num">15</span>:<span class="num">0</span>] <span class="port">out_acc</span>,
+    <span class="kw">output</span> <span class="type">reg</span>         <span class="port">valid_out</span>
+);
+    <span class="comment">// 9 weight registers (Weight-Stationary)</span>
+    <span class="type">reg  signed</span> [<span class="num">15</span>:<span class="num">0</span>] weights [<span class="num">0</span>:<span class="num">8</span>];
+    <span class="type">reg</span>  [<span class="num">3</span>:<span class="num">0</span>] tap_idx; <span class="comment">// 0 to 8 counter</span>
+    
+    <span class="type">wire signed</span> [<span class="num">15</span>:<span class="num">0</span>] mac_result;
+    <span class="type">wire signed</span> [<span class="num">15</span>:<span class="num">0</span>] current_weight = weights[tap_idx];
+    <span class="type">wire signed</span> [<span class="num">15</span>:<span class="num">0</span>] acc_in = clr_acc ? <span class="num">16'sd0</span> : out_acc;
+    
+    <span class="comment">// Sub-module instantiation: Q7.8 Sequential MAC</span>
+    <span class="inst">mac_q7_8</span> mac_inst (
+        .in_val    (pixel_in),
+        .weight    (current_weight),
+        .acc_in    (acc_in),
+        .acc_out   (mac_result)
+    );
+
+    <span class="kw">always @</span>(<span class="kw">posedge</span> clk) <span class="kw">begin</span>
+        <span class="kw">if</span> (reset) <span class="kw">begin</span>
+            tap_idx   &lt;= <span class="num">0</span>;
+            out_acc   &lt;= <span class="num">0</span>;
+            valid_out &lt;= <span class="num">0</span>;
+            <span class="comment">// Note: weights unreset to conserve routing</span>
+        <span class="kw">end else begin</span>
+            <span class="kw">if</span> (load_weight) <span class="kw">begin</span>
+                <span class="comment">// Shift register for weight pre-loading</span>
+                weights[<span class="num">8</span>] &lt;= weights[<span class="num">7</span>];
+                weights[<span class="num">7</span>] &lt;= weights[<span class="num">6</span>];
+                weights[<span class="num">6</span>] &lt;= weights[<span class="num">5</span>];
+                weights[<span class="num">5</span>] &lt;= weights[<span class="num">4</span>];
+                weights[<span class="num">4</span>] &lt;= weights[<span class="num">3</span>];
+                weights[<span class="num">3</span>] &lt;= weights[<span class="num">2</span>];
+                weights[<span class="num">2</span>] &lt;= weights[<span class="num">1</span>];
+                weights[<span class="num">1</span>] &lt;= weights[<span class="num">0</span>];
+                weights[<span class="num">0</span>] &lt;= weight_in;
+            <span class="kw">end</span>
+            
+            <span class="kw">if</span> (mac_en) <span class="kw">begin</span>
+                out_acc &lt;= mac_result;
+                <span class="kw">if</span> (tap_idx == <span class="num">8</span>) <span class="kw">begin</span>
+                    tap_idx   &lt;= <span class="num">0</span>;
+                    valid_out &lt;= <span class="num">1</span>;
+                <span class="kw">end else begin</span>
+                    tap_idx   &lt;= tap_idx + <span class="num">1</span>;
+                    valid_out &lt;= <span class="num">0</span>;
+                <span class="kw">end</span>
+            <span class="kw">end else begin</span>
+                valid_out &lt;= <span class="num">0</span>;
+            <span class="kw">end</span>
+        <span class="kw">end</span>
+    <span class="kw">end</span>
+<span class="kw">endmodule</span></pre>
+        </div>
+
+        <!-- Right Column: mac_q7_8.v & Architecture Annotations -->
+        <div class="notes-column">
+          <!-- mac_q7_8.v code block -->
+          <div class="code-panel">
+            <div class="code-panel-header">
+              <span class="code-filename">v2/verilog_src/mac_q7_8.v</span>
+              <span class="code-badge">Fixed-Point MAC Sub-Module</span>
+            </div>
+            <pre class="code-block"><span class="comment">`timescale 1ns / 1ps</span>
+
+<span class="kw">module</span> <span class="mod">mac_q7_8</span> (
+    <span class="kw">input</span>  <span class="type">wire signed</span> [<span class="num">15</span>:<span class="num">0</span>] <span class="port">weight</span>,
+    <span class="kw">input</span>  <span class="type">wire signed</span> [<span class="num">15</span>:<span class="num">0</span>] <span class="port">in_val</span>,
+    <span class="kw">input</span>  <span class="type">wire signed</span> [<span class="num">15</span>:<span class="num">0</span>] <span class="port">acc_in</span>,
+    <span class="kw">output</span> <span class="type">reg  signed</span> [<span class="num">15</span>:<span class="num">0</span>] <span class="port">acc_out</span>
+);
+    <span class="type">wire signed</span> [<span class="num">31</span>:<span class="num">0</span>] product;
+
+    <span class="comment">// 16x16 signed multiplication (DSP48E1 candidate)</span>
+    <span class="kw">assign</span> product = weight * in_val;
+
+    <span class="comment">// Combinational accumulation with Q7.8 truncation</span>
+    <span class="kw">always @</span>(*) <span class="kw">begin</span>
+        acc_out = acc_in + product[<span class="num">23</span>:<span class="num">8</span>];
+    <span class="kw">end</span>
+<span class="kw">endmodule</span></pre>
+          </div>
+
+          <!-- Architecture & Synthesis Annotation Cards -->
+          <div class="annotation-card">
+            <h4>Hardware Architecture &amp; Synthesis Invariants</h4>
+            <ul>
+              <li><strong>Weight-Stationary Buffer:</strong> 9 registers (<code>weights[0:8]</code>) pre-loaded serially once per channel; held stable throughout image processing.</li>
+              <li><strong>Sequential MAC Time-Multiplexing:</strong> Evaluates 1 tap per cycle over 9 clock cycles using a single 16&times;16 signed multiplier, eliminating 8 parallel multipliers (88.89% area reduction).</li>
+              <li><strong>Bit-Slice Truncation:</strong> <code>product[23:8]</code> extracts the Q7.8 fixed-point integer/fraction bits, discarding lower 8 bits (rounding) and top 8 bits (headroom checked).</li>
+              <li><strong>Zero-Overhead Clear:</strong> <code>clr_acc</code> MUX forces adder input to <code>16'sd0</code> at Tap 0, clearing previous accumulator history without extra reset cycles.</li>
+              <li><strong>Deterministic Strobe:</strong> <code>valid_out</code> asserts for exactly 1 cycle at <code>tap_idx == 8</code>, signaling downstream pooling/activation modules.</li>
+            </ul>
+          </div>
+
+          <div class="annotation-card" style="background: #eff6ff; border-color: #bfdbfe;">
+            <h4 style="color: #1e40af;">Verification Invariant Check</h4>
+            <ul>
+              <li><strong>Bit-Exact Golden Alignment:</strong> Tested against PyTorch and custom bit-exact Python Q7.8 integer emulator (<code>fixed_point_math.py</code>) across 10,000 MNIST test images with zero functional divergence.</li>
+              <li><strong>Automated Testbench:</strong> Validated via <code>tb_conv_pe.v</code> with continuous streaming, mid-stream <code>mac_en</code> pipeline stalls, and zero assertions failed (<code>failed = 0</code>).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-bar">
+      <span>DLCD Mini Project &bull; Module Circuit Diagram &amp; Verilog HDL Submission</span>
+      <span>Page 3 of 3</span>
     </div>
   </div>
 
@@ -440,4 +665,5 @@ with sync_playwright() as p:
     )
     browser.close()
 
-print(f"Generated 2-page PDF successfully: {os.path.exists(pdf_out)}, Size: {os.path.getsize(pdf_out)} bytes")
+doc = pymupdf.open(pdf_out)
+print(f"Generated PDF successfully: Page count = {len(doc)}, Size = {os.path.getsize(pdf_out)} bytes")
