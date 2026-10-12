@@ -40,6 +40,7 @@ module tb_conv_pe;
 
     integer i;
     reg failed = 0;
+    reg signed [15:0] frozen_acc;
 
     initial begin
         $dumpfile("tb_conv_pe.vcd");
@@ -87,16 +88,34 @@ module tb_conv_pe;
             clr_acc = (i == 0) ? 1 : 0;
             pixel_in = P1[i];
             @(negedge clk);
+            if (i < 8 && valid_out !== 1'b0) begin
+                $display("FAIL: valid_out asserted prematurely at tap %d", i);
+                failed = 1;
+            end
         end
-        mac_en = 0;
         
-        // Wait for result to be clocked
-        @(negedge clk);
+        // Immediately after tap 8 posedge: valid_out must pulse high and out_acc == 104
+        if (valid_out !== 1'b1) begin
+            $display("FAIL: Test Case 1 expected valid_out=1, got %b", valid_out);
+            failed = 1;
+        end
         if (out_acc !== 16'sd104) begin
             $display("FAIL: Test Case 1 expected 104, got %d", out_acc);
             failed = 1;
         end else begin
-            $display("PASS: Test Case 1");
+            $display("PASS: Test Case 1 (out_acc=104, valid_out=1)");
+        end
+
+        // Deassert mac_en: verify valid_out drops and out_acc holds
+        mac_en = 0;
+        @(negedge clk);
+        if (valid_out !== 1'b0) begin
+            $display("FAIL: valid_out should deassert when mac_en=0");
+            failed = 1;
+        end
+        if (out_acc !== 16'sd104) begin
+            $display("FAIL: out_acc should hold during stall, got %d", out_acc);
+            failed = 1;
         end
 
         // Phase 3: Test Case 2 (Edge Window with padding)
@@ -106,16 +125,61 @@ module tb_conv_pe;
             pixel_in = P2[i];
             @(negedge clk);
         end
-        mac_en = 0;
-        
-        // Wait for result to be clocked
-        @(negedge clk);
+
+        // Check completion of Test Case 2
+        if (valid_out !== 1'b1) begin
+            $display("FAIL: Test Case 2 expected valid_out=1, got %b", valid_out);
+            failed = 1;
+        end
         if (out_acc !== 16'sd19) begin
             $display("FAIL: Test Case 2 expected 19, got %d", out_acc);
             failed = 1;
         end else begin
-            $display("PASS: Test Case 2");
+            $display("PASS: Test Case 2 (out_acc=19, valid_out=1)");
         end
+
+        // Phase 4: Test Case 3 (Mid-Window mac_en Stall & Resume Test)
+        // Run taps 0 to 3
+        for (i = 0; i < 4; i = i + 1) begin
+            mac_en = 1;
+            clr_acc = (i == 0) ? 1 : 0;
+            pixel_in = P1[i];
+            @(negedge clk);
+        end
+        frozen_acc = out_acc;
+        
+        // Stall execution for 3 cycles (mac_en=0)
+        mac_en = 0;
+        for (i = 0; i < 3; i = i + 1) begin
+            @(negedge clk);
+            if (out_acc !== frozen_acc) begin
+                $display("FAIL: out_acc changed during mac_en stall! Expected %d, got %d", frozen_acc, out_acc);
+                failed = 1;
+            end
+            if (valid_out !== 1'b0) begin
+                $display("FAIL: valid_out asserted during mac_en stall!");
+                failed = 1;
+            end
+        end
+
+        // Resume execution for taps 4 to 8
+        for (i = 4; i < 9; i = i + 1) begin
+            mac_en = 1;
+            clr_acc = 0;
+            pixel_in = P1[i];
+            @(negedge clk);
+        end
+
+        // Verify that after stall, window still finishes with correct 104 and valid_out=1
+        if (valid_out !== 1'b1 || out_acc !== 16'sd104) begin
+            $display("FAIL: Test Case 3 (Stall & Resume) expected 104 and valid_out=1, got %d, valid_out=%b", out_acc, valid_out);
+            failed = 1;
+        end else begin
+            $display("PASS: Test Case 3 (Mid-Stream mac_en Stall & Resume Verified)");
+        end
+
+        mac_en = 0;
+        @(negedge clk);
 
         if (failed == 0) begin
             $display("ALL TESTS PASSED.");

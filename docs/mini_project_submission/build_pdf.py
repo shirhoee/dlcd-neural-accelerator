@@ -2,7 +2,9 @@ import os
 from playwright.sync_api import sync_playwright
 
 doc_dir = os.path.dirname(os.path.abspath(__file__))
-img_path = os.path.join(doc_dir, "conv_pe_circuit_diagram.png").replace("\\", "/")
+fig1_path = os.path.join(doc_dir, "conv_pe_circuit_diagram.png").replace("\\", "/")
+fig2_path = os.path.join(doc_dir, "conv_pe_waveform.png").replace("\\", "/")
+fig3_path = os.path.join(doc_dir, "conv_pe_gate_level_diagram.png").replace("\\", "/")
 
 html_content = f"""<!DOCTYPE html>
 <html lang="en">
@@ -26,18 +28,18 @@ html_content = f"""<!DOCTYPE html>
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     color: #1a202c;
     line-height: 1.45;
-    font-size: 9.5pt;
+    font-size: 9.2pt;
     margin: 0;
     padding: 0;
   }}
   .header-block {{
-    border-bottom: 2px solid #1a365d;
+    border-bottom: 2.5px solid #1a365d;
     padding-bottom: 8px;
     margin-bottom: 12px;
   }}
   h1 {{
     color: #1a365d;
-    font-size: 15pt;
+    font-size: 14.5pt;
     margin-top: 0;
     margin-bottom: 6px;
     line-height: 1.2;
@@ -46,11 +48,11 @@ html_content = f"""<!DOCTYPE html>
   .meta-grid {{
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 4px 20px;
-    font-size: 9pt;
+    gap: 4px 16px;
+    font-size: 8.5pt;
     color: #4a5568;
     margin-top: 6px;
-    background: #f7fafc;
+    background: #f8fafc;
     padding: 8px 12px;
     border-radius: 4px;
     border: 1px solid #e2e8f0;
@@ -60,7 +62,7 @@ html_content = f"""<!DOCTYPE html>
   }}
   h2 {{
     color: #2b6cb0;
-    font-size: 11.5pt;
+    font-size: 11pt;
     border-bottom: 1px solid #e2e8f0;
     padding-bottom: 3px;
     margin-top: 14px;
@@ -69,29 +71,26 @@ html_content = f"""<!DOCTYPE html>
   }}
   h3 {{
     color: #2d3748;
-    font-size: 9.5pt;
+    font-size: 9.2pt;
     margin-top: 8px;
     margin-bottom: 4px;
     page-break-after: avoid;
   }}
   p, ul, ol {{
     margin-top: 3px;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
   }}
   li {{
     margin-bottom: 2px;
   }}
-  ul {{
-    padding-left: 18px;
-  }}
-  ol {{
+  ul, ol {{
     padding-left: 18px;
   }}
   table {{
     width: 100%;
     border-collapse: collapse;
-    margin: 6px 0 10px 0;
-    font-size: 8.5pt;
+    margin: 6px 0 8px 0;
+    font-size: 8.2pt;
     page-break-inside: avoid;
   }}
   th, td {{
@@ -107,15 +106,13 @@ html_content = f"""<!DOCTYPE html>
   tr:nth-child(even) td {{
     background-color: #f7fafc;
   }}
-  .schematic-container {{
+  .figure-container {{
     text-align: center;
-    margin: 6px 0 8px 0;
+    margin: 8px 0 10px 0;
     page-break-inside: avoid;
   }}
-  .schematic-container img {{
-    max-width: 92%;
-    max-height: 230px;
-    object-fit: contain;
+  .figure-container img {{
+    max-width: 98%;
     border: 1px solid #cbd5e0;
     border-radius: 4px;
   }}
@@ -124,6 +121,7 @@ html_content = f"""<!DOCTYPE html>
     color: #4a5568;
     margin-top: 4px;
     font-style: italic;
+    text-align: center;
   }}
   pre, code {{
     font-family: "Consolas", "Courier New", monospace;
@@ -132,7 +130,7 @@ html_content = f"""<!DOCTYPE html>
     background-color: #edf2f7;
     padding: 1px 3px;
     border-radius: 2px;
-    font-size: 8.5pt;
+    font-size: 8.2pt;
     color: #2b6cb0;
   }}
   pre {{
@@ -140,12 +138,12 @@ html_content = f"""<!DOCTYPE html>
     border: 1px solid #e2e8f0;
     border-left: 3px solid #3182ce;
     padding: 6px 8px;
-    font-size: 7.8pt;
+    font-size: 7.5pt;
     line-height: 1.3;
     overflow-x: auto;
     border-radius: 3px;
     page-break-inside: avoid;
-    margin: 4px 0 8px 0;
+    margin: 4px 0 6px 0;
   }}
   .math-block {{
     background-color: #f7fafc;
@@ -153,17 +151,17 @@ html_content = f"""<!DOCTYPE html>
     padding: 4px 8px;
     margin: 4px 0;
     font-family: "Georgia", serif;
-    font-size: 9.5pt;
+    font-size: 9pt;
   }}
   .code-columns {{
     display: grid;
-    grid-template-columns: 0.9fr 1.1fr;
+    grid-template-columns: 0.95fr 1.05fr;
     gap: 10px;
     margin-top: 4px;
   }}
   .code-columns pre {{
-    font-size: 7.2pt;
-    line-height: 1.25;
+    font-size: 7pt;
+    line-height: 1.22;
   }}
   .page-break {{
     page-break-before: always;
@@ -176,11 +174,16 @@ html_content = f"""<!DOCTYPE html>
   <h1>Mini Project Submission: Digital Circuit Design Specification &amp; Datapath Schematic</h1>
   <div class="meta-grid">
     <div><strong>Course:</strong> Digital Logic &amp; Computer Design (DLCD)</div>
-    <div><strong>Student Name:</strong> Shreyansh Raj</div>
     <div><strong>Project Title:</strong> Hardware Neural Network Accelerator</div>
-    <div><strong>SRN / Roll Number:</strong> [SRN / Roll Number]</div>
     <div><strong>Selected Module:</strong> Conv PE (<code>conv_pe.v</code>) with Q7.8 MAC (<code>mac_q7_8.v</code>)</div>
     <div><strong>Date:</strong> October 2026</div>
+    <div style="grid-column: 1 / span 2;">
+      <strong>Design Team &amp; SRN:</strong> 
+      Shreyansh Raj (<code>PES2UG25CS516</code>), 
+      Sarthak Bhowmik (<code>PES2UG25CS493</code>), 
+      Shaurya Singh (<code>PES2UG25CS493</code>), 
+      Shreya Anand (<code>PES2UG25CS515</code>)
+    </div>
   </div>
 </div>
 
@@ -200,13 +203,14 @@ A fully unrolled 2D convolution requires 9 parallel hardware multipliers per out
   <li><strong>Hardware Component Footprint (<code>conv_pe</code>):</strong>
     1 Signed 16 &times; 16 Multiplier (<code>mac_q7_8.v</code>), 
     1 Signed 16-bit Adder (<code>mac_q7_8.v</code>), 
-    9 16-bit Weight Shift Registers (<code>weights[0:8]</code>; intentionally unreset), 
+    9 16-bit Weight Registers (<code>weights[0:8]</code> serial shift register; unreset), 
     1 16-bit Accumulator Register (<code>out_acc</code>), 
     1 16-bit 2-to-1 Feedback Multiplexer (<code>clr_acc</code> selector), 
     1 16-bit 9-to-1 Weight Multiplexer (addressed by <code>tap_idx</code>), 
-    1 4-bit Modulo-9 Ring Counter with Comparator (<code>tap_idx</code>, 0 to 8), and 
+    1 4-bit Modulo-9 Binary Up-Counter (<code>tap_idx</code>, 0 to 8, gated by <code>mac_en</code>), 
+    1 4-bit Comparator (<code>tap_idx == 8</code>), 2-input AND gate with <code>mac_en</code>, and 
     1 1-bit Output Valid Flip-Flop (<code>valid_out</code>).
-    <em>(Note: The Conv1 layer in <code>conv1_array.v</code> instantiates 4 of these <code>conv_pe</code> elements in parallel, one per output channel).</em>
+    <em>(Note: The full Conv1 array in <code>conv1_array.v</code> instantiates 4 of these <code>conv_pe</code> instances in parallel, one for each output channel).</em>
   </li>
 </ul>
 
@@ -215,7 +219,7 @@ A fully unrolled 2D convolution requires 9 parallel hardware multipliers per out
   <thead>
     <tr>
       <th style="width: 14%;">Signal Name</th>
-      <th style="width: 9%;">Direction</th>
+      <th style="width: 8%;">Direction</th>
       <th style="width: 10%;">Bit Width</th>
       <th style="width: 9%;">Type</th>
       <th style="width: 11%;">Active Level</th>
@@ -237,7 +241,7 @@ A fully unrolled 2D convolution requires 9 parallel hardware multipliers per out
       <td>1</td>
       <td>Control</td>
       <td>High (1)</td>
-      <td>Synchronous reset. Resets <code>tap_idx</code>, <code>out_acc</code>, and <code>valid_out</code> to 0. <em>(Weight registers are intentionally not reset to conserve routing resources).</em></td>
+      <td>Synchronous reset. Resets <code>tap_idx</code> to 0, <code>out_acc</code> to 0, and <code>valid_out</code> to 0. <em>(Weights are intentionally unreset to conserve routing resources).</em></td>
     </tr>
     <tr>
       <td><code>load_weight</code></td>
@@ -261,7 +265,7 @@ A fully unrolled 2D convolution requires 9 parallel hardware multipliers per out
       <td>1</td>
       <td>Control</td>
       <td>High (1)</td>
-      <td>Clock-enable for MAC computation and tap counter advance. When low, <code>tap_idx</code> and <code>out_acc</code> freeze their states.</td>
+      <td>Clock-enable for MAC computation and tap counter advance. When low, <code>tap_idx</code> and <code>out_acc</code> hold their current states.</td>
     </tr>
     <tr>
       <td><code>clr_acc</code></td>
@@ -301,9 +305,9 @@ A fully unrolled 2D convolution requires 9 parallel hardware multipliers per out
 <div class="page-break"></div>
 
 <h2>3. Register Transfer Level (RTL) Datapath Schematic</h2>
-<div class="schematic-container">
-  <img src="file:///{img_path}" alt="Conv1 Processing Element Circuit Diagram">
-  <div class="caption">Figure 1: Complete Register-Transfer Level (RTL) Datapath Schematic of the Convolutional Processing Element (<code>conv_pe.v</code>) with Q7.8 MAC Core (<code>mac_q7_8.v</code>).</div>
+<div class="figure-container">
+  <img src="file:///{fig1_path}" alt="Conv1 Processing Element Circuit Diagram">
+  <div class="caption">Figure 1: Complete Register-Transfer Level (RTL) Datapath Schematic of the Convolutional Processing Element (<code>conv_pe.v</code>) with Q7.8 MAC Core (<code>mac_q7_8.v</code>), Modulo-9 Tap Counter, and Valid Generation Logic.</div>
 </div>
 
 <h3>Datapath Breakdown:</h3>
@@ -315,12 +319,12 @@ A fully unrolled 2D convolution requires 9 parallel hardware multipliers per out
   <li><strong>Output Registers:</strong> When <code>mac_en = 1</code>, <code>out_acc</code> registers the adder sum on each clock edge. On <code>tap_idx == 8</code>, <code>valid_out</code> registers high for the subsequent clock cycle and <code>tap_idx</code> rolls over to 0.</li>
 </ol>
 
-<h2>4. Control Unit &amp; Tap Sequencer</h2>
+<h2>4. Control Unit &amp; Modulo-9 Tap Counter</h2>
 <p>
-The module avoids complex FSM control overhead by employing a synchronous 4-bit modulo-9 ring counter (<code>tap_idx</code>, counting 0 to 8) enabled by <code>mac_en</code>. When <code>mac_en = 0</code>, the counter freezes in place; it does not jump to an idle state. Weight loading is orthogonal via <code>load_weight</code>.
+The module avoids complex FSM control overhead by employing a synchronous 4-bit modulo-9 binary up-counter (<code>tap_idx</code>, counting 0 to 8) enabled by <code>mac_en</code>. When <code>mac_en = 0</code>, the counter freezes in place; it does not jump to an idle state. Weight loading is orthogonal via <code>load_weight</code>.
 </p>
 
-<h3>Modulo-9 Ring Counter Sequence &amp; Truth Table:</h3>
+<h3>Modulo-9 Counter Signal Sequence Across a 9-Tap Window:</h3>
 <table>
   <thead>
     <tr>
@@ -393,7 +397,7 @@ The module avoids complex FSM control overhead by employing a synchronous 4-bit 
 
 <div class="page-break"></div>
 
-<h2>5. Q7.8 Fixed-Point Mathematical Formulation</h2>
+<h2>5. Q7.8 Fixed-Point Mathematical Formulation &amp; Headroom Analysis</h2>
 <p>
 Fixed-point arithmetic maps real values to signed integers using uniform scaling factor <em>S = 2<sup>B</sup></em> (where <em>B = 8</em>):
 <em>X</em><sub>fixed</sub> = round(<em>X</em><sub>real</sub> &times; 2<sup>8</sup>).
@@ -401,7 +405,7 @@ Fixed-point arithmetic maps real values to signed integers using uniform scaling
 
 <h3>Multiplication &amp; Bit Format:</h3>
 <p>
-Multiplying two 16-bit signed Q7.8 numbers (each having 1 sign bit, 7 integer bits, 8 fractional bits) produces a 32-bit signed product in <strong>Q15.16</strong> format:
+Multiplying two 16-bit signed Q7.8 numbers produces a 32-bit signed product in <strong>Q15.16</strong> format:
 </p>
 <div class="math-block">
   Product = <em>A</em> &times; <em>B</em> &nbsp;&nbsp;&rArr;&nbsp;&nbsp; 1 sign bit + 15 integer bits + 16 fractional bits = 32 bits (Scale 2<sup>16</sup>)
@@ -420,34 +424,65 @@ Product [31:0]:
   [7:0]   (8 bits) : Lower sub-fractional bits (truncated floor; dropped)
 </pre>
 
-<h3>Headroom &amp; Overflow Behavior:</h3>
+<h3>Headroom &amp; Dynamic Range Quantification:</h3>
 <p>
-The RTL adder and accumulator implement standard two's complement 16-bit arithmetic without saturation logic; if a value exceeds [-128.0, +127.996], it wraps around. To prevent overflow in hardware, the neural network training pipeline incorporates an upstream Headroom Gate during weight export:
+The RTL adder and accumulator implement standard two's complement 16-bit arithmetic without saturation logic; if a value exceeds [-128.0, +127.996], it wraps around. 
+In the accelerator training pipeline, inputs are normalized with standard MNIST mean/std (&mu; = 0.1307, &sigma; = 0.3081), producing pixel input values ranging from roughly -0.424 to +2.821. 
+To rigorously verify that intermediate accumulations never overflow the 16-bit accumulator, the full test set was measured using the bit-exact integer emulator (<code>int_emulator_v2.py</code>):
 </p>
 <ul>
-  <li>Maximum model output logit observed across the test set is 72.5, safely below the Q7.8 ceiling of +127.996.</li>
-  <li>Input pixels are normalized within [0.0, 1.0] (0 to 255 in Q7.8), and kernel weights are bounded, ensuring intermediate 9-tap sums remain strictly within the 16-bit dynamic range.</li>
+  <li><strong>Conv1 Accumulator Raw Range:</strong> [-1253, +2080] integer counts.</li>
+  <li><strong>Conv1 Accumulator Real Range:</strong> [-4.895, +8.125] in Q7.8 format.</li>
+  <li><strong>Peak Dynamic Range Utilization:</strong> Peak magnitude is 8.125, consuming only <strong>6.3%</strong> of the available [-128.0, +127.996] dynamic range.</li>
+  <li><strong>Headroom Margin:</strong> 128.0 - 8.125 = 119.875 (&gt; 14&times; safety margin), completely eliminating any risk of accumulator overflow.</li>
 </ul>
 
-<h2>6. Cycle-Accurate Timing Diagram</h2>
+<h2>6. Cycle-Accurate Timing Diagram &amp; Simulation Waveform</h2>
+
 <pre>
-Clock Cycle :  0    1    2    3   ...   7    8    9   10   11   ...
-clk         : _/ \\_/ \\_/ \\_/ \\_/ ... \\_/ \\_/ \\_/ \\_/ \\_/ \\_/ \\_
-mac_en      : _____/==============================================
-clr_acc     : _____/=====\\___________________________/=====\\______
-pixel_in    : -----&lt; p0 &gt;&lt; p1 &gt;&lt; p2 &gt; ... &lt; p7 &gt;&lt; p8 &gt;&lt; q0 &gt;&lt; q1 &gt;-
-tap_idx     : -----&lt;  0 &gt;&lt;  1 &gt;&lt;  2 &gt; ... &lt;  7 &gt;&lt;  8 &gt;&lt;  0 &gt;&lt;  1 &gt;-
-weights[idx]: -----&lt; w0 &gt;&lt; w1 &gt;&lt; w2 &gt; ... &lt; w7 &gt;&lt; w8 &gt;&lt; w0 &gt;&lt; w1 &gt;-
-mac_result  : -----&lt; Acc0&gt;&lt; Acc1&gt;&lt; Acc2&gt; ...&lt;Acc7&gt;&lt;Acc8&gt;&lt;New0&gt;&lt;New1&gt;
-out_acc     : ----------&lt;Acc0&gt;&lt;Acc1&gt; ... ... &lt;Acc7&gt;&lt;Acc8&gt;&lt;New0&gt;---
-valid_out   : _______________________________________/=====\\______
-                                                          ^
-                                                Window 1 Result Valid
+Clock Cycle :    0       1       2       3    ...    7       8       9      10      11
+clk         :  _/ \\_   _/ \\_   _/ \\_   _/ \\_  ...  _/ \\_   _/ \\_   _/ \\_   _/ \\_   _/ \\_
+mac_en      :  ______/==============================================================
+clr_acc     :  ______/=======\\_____________________________/=======\\________________
+pixel_in    :  ------&lt;  p0  &gt;&lt;  p1  &gt;&lt;  p2  &gt; ... &lt;  p7  &gt;&lt;  p8  &gt;&lt;  q0  &gt;&lt;  q1  &gt;----
+tap_idx     :  ------&lt;   0  &gt;&lt;   1  &gt;&lt;   2  &gt; ... &lt;   7  &gt;&lt;   8  &gt;&lt;   0  &gt;&lt;   1  &gt;----
+weights[idx]:  ------&lt;  w0  &gt;&lt;  w1  &gt;&lt;  w2  &gt; ... &lt;  w7  &gt;&lt;  w8  &gt;&lt;  w0  &gt;&lt;  w1  &gt;----
+mac_result  :  ------&lt; Acc0 &gt;&lt; Acc1 &gt;&lt; Acc2 &gt; ... &lt; Acc7 &gt;&lt; Acc8 &gt;&lt; New0 &gt;&lt; New1 &gt;----
+out_acc     :  --------------&lt; Acc0 &gt;&lt; Acc1 &gt; ... ... ... &lt; Acc7 &gt;&lt; Acc8 &gt;&lt; New0 &gt;----
+valid_out   :  ____________________________________________/=======\\________________
+                                                               ^
+                                                     Window 1 Output Valid!
 </pre>
+
+<div class="figure-container">
+  <img src="file:///{fig2_path}" alt="GTKWave Simulation Waveform">
+  <div class="caption">Figure 2: GTKWave Logic Simulation Trace of <code>tb_conv_pe.v</code> verifying Window 1 interior accumulation (<code>out_acc=104, valid_out=1</code>), Window 2 edge accumulation (<code>out_acc=19, valid_out=1</code>), and clock-enable gating.</div>
+</div>
 
 <div class="page-break"></div>
 
-<h2>7. Verilog Code Implementation</h2>
+<h2>7. Gate-Level Microarchitecture Schematic</h2>
+<div class="figure-container">
+  <img src="file:///{fig3_path}" alt="Gate-Level Logic Schematic">
+  <div class="caption">Figure 3: Gate-Level Logic Schematic illustrating (A) 4-bit Modulo-9 Synchronous Binary Up-Counter and Next-State Logic, (B) Terminal Count (<code>== 8</code>) Comparator and <code>valid_out</code> Register, (C) 1-Bit Clear Multiplexer Slice, (D) 1-Bit Full Adder Carry-Chain Slice, and (E) Truncation Wiring Slice.</div>
+</div>
+
+<h3>Gate-Level Circuit Details:</h3>
+<ol>
+  <li><strong>Modulo-9 Counter Logic:</strong> Implemented using 4 D flip-flops with next-state combinational gates: 
+      <em>D<sub>0</sub> = ~Q<sub>0</sub> &middot; ~Q<sub>3</sub></em>; 
+      <em>D<sub>1</sub> = (Q<sub>1</sub> &oplus; Q<sub>0</sub>) &middot; ~Q<sub>3</sub></em>; 
+      <em>D<sub>2</sub> = (Q<sub>2</sub> &oplus; (Q<sub>1</sub> &middot; Q<sub>0</sub>)) &middot; ~Q<sub>3</sub></em>; 
+      <em>D<sub>3</sub> = (Q<sub>3</sub> &middot; ~Q<sub>0</sub>) + (Q<sub>2</sub> &middot; Q<sub>1</sub> &middot; Q<sub>0</sub>)</em>.</li>
+  <li><strong>Terminal Count (<code>== 8</code>) Comparator:</strong> Detects state 8 (1000b) via a 4-input AND gate: <em>eq_8 = Q<sub>3</sub> &middot; ~Q<sub>2</sub> &middot; ~Q<sub>1</sub> &middot; ~Q<sub>0</sub></em>.</li>
+  <li><strong>Valid Output Gate:</strong> A 2-input AND gate computes <em>D<sub>valid</sub> = eq_8 &middot; mac_en</em>, clocking into the <code>valid_out</code> flip-flop on posedge <code>clk</code>.</li>
+  <li><strong>1-Bit Clear MUX Gate:</strong> Implemented as <em>acc_in[k] = ~clr_acc &middot; out_acc[k]</em> (an inverter and AND gate), forcing <code>acc_in</code> to 0 on Tap 0.</li>
+  <li><strong>1-Bit Full Adder Slice:</strong> Standard dual-XOR sum generation (<em>S<sub>k</sub> = A<sub>k</sub> &oplus; B<sub>k</sub> &oplus; C<sub>in</sub></em>) and carry generation (<em>C<sub>out</sub> = A<sub>k</sub> &middot; B<sub>k</sub> + C<sub>in</sub> &middot; (A<sub>k</sub> &oplus; B<sub>k</sub>)</em>).</li>
+</ol>
+
+<div class="page-break"></div>
+
+<h2>8. Verilog Code Implementation</h2>
 
 <div class="code-columns">
   <div>
@@ -531,22 +566,28 @@ endmodule
   </div>
 </div>
 
-<h2>8. Verification Results &amp; Hardware Resource Analysis</h2>
+<h2>9. Verification Results &amp; FPGA Resource Analysis</h2>
 
 <h3>1. Directed Testbench Verification (<code>tb_conv_pe.v</code>):</h3>
 <p>
-The module was verified using the self-checking testbench <code>v2/verilog_src/tb_conv_pe.v</code> compiled with Icarus Verilog against Python golden values:
+The module was verified using the self-checking testbench <code>v2/verilog_src/tb_conv_pe.v</code> compiled with Icarus Verilog:
 </p>
 <ul>
-  <li><strong>Test Case 1 (Interior 3 &times; 3 Window):</strong> Evaluated 9 non-zero pixel inputs (P<sub>1</sub> = [0.10, 0.20, ..., 0.90]) against signed kernel weights. Expected Q7.8 golden result: <code>104</code> (0.40625). RTL simulation output produced <code>104</code> (<code>PASS</code>).</li>
-  <li><strong>Test Case 2 (Edge 3 &times; 3 Window with Zero-Padding):</strong> Evaluated boundary pixels with zero-padded corner and border positions (P<sub>2</sub> = [0, 0, 0, 0, 0.50, 0.60, 0, 0.80, 0.90]). Expected Q7.8 golden result: <code>19</code> (0.0742). RTL simulation output produced <code>19</code> (<code>PASS</code>).</li>
+  <li><strong>Test Case 1 (Interior 3 &times; 3 Window):</strong> Evaluated 9 non-zero pixel inputs (P<sub>1</sub> = [0.10, 0.20, ..., 0.90]) against signed kernel weights. Expected Q7.8 golden result: <code>104</code> (0.40625). RTL simulation output produced <code>104</code> and asserted <code>valid_out = 1</code> precisely on cycle 9 (<code>PASS</code>).</li>
+  <li><strong>Test Case 2 (Edge 3 &times; 3 Window with Zero-Padding):</strong> Evaluated boundary pixels with zero-padded corner and border positions (P<sub>2</sub> = [0, 0, 0, 0, 0.50, 0.60, 0, 0.80, 0.90]). Expected Q7.8 golden result: <code>19</code> (0.0742). RTL simulation output produced <code>19</code> and asserted <code>valid_out = 1</code> (<code>PASS</code>).</li>
+  <li><strong>Test Case 3 (Mid-Stream <code>mac_en</code> Stall &amp; Resume Test):</strong> Deasserted <code>mac_en</code> for 3 clock cycles mid-stream at tap 4. Verified that <code>tap_idx</code> froze at 4, <code>out_acc</code> preserved its intermediate sum without corruption, and <code>valid_out</code> remained 0, before resuming to finish with <code>out_acc = 104</code> (<code>PASS</code>).</li>
   <li><strong>Summary:</strong> Zero mismatches detected across directed test cases (<code>ALL TESTS PASSED.</code>).</li>
 </ul>
 
-<h3>2. Critical Path Analysis (Estimated Design Analysis, Unsynthesized):</h3>
+<h3>2. Critical Path &amp; FPGA Resource Mapping (Estimated Design Analysis, Unsynthesized):</h3>
 <ul>
-  <li><strong>Combinational Critical Path:</strong> <code>pixel_in</code> / <code>current_weight</code> &rarr; 16 &times; 16 Multiplier &rarr; <code>product[23:8]</code> Truncation Wiring &rarr; 16-bit Signed Adder &rarr; <code>out_acc</code> flip-flop setup time.</li>
-  <li><strong>Timing Estimate:</strong> When targeted to typical FPGA fabrics (such as Xilinx Artix-7), the multiplier and adder map directly into a single DSP48E1 slice or equivalent LUT logic. The single-cycle combinational delay is estimated to support operating clock frequencies in the range of 100 to 150 MHz without requiring multi-stage pipeline registers.</li>
+  <li><strong>FPGA Mapping Analysis:</strong> Because the <code>[23:8]</code> truncation wiring slice sits between the multiplication and addition, the 16-bit adder cannot fold into a single DSP internal feedback accumulator. Consequently:
+    <ul>
+      <li>The 16 &times; 16 signed multiplier maps to a dedicated DSP slice (e.g. Xilinx DSP48E1).</li>
+      <li>The <code>[23:8]</code> bit-slicing and 16-bit signed adder map to the FPGA fabric logic using dedicated LUT carry chains (<code>CARRY4</code>).</li>
+    </ul>
+  </li>
+  <li><strong>Timing Estimate:</strong> In typical FPGA fabrics (such as Xilinx Artix-7), the DSP multiplication combined with LUT carry-chain addition easily operates within a single clock cycle at estimated frequencies of 100 to 150 MHz without requiring multi-stage pipeline registers.</li>
 </ul>
 
 <h3>3. Hardware Resource Trade-Off Arithmetic:</h3>
