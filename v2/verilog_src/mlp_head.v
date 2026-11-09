@@ -34,9 +34,13 @@ module mlp_head (
     reg [7:0] write_ptr;
 
     // ROM
+`ifndef MLP_ROM_PATH
+    `define MLP_ROM_PATH "../python_golden_model/mlp_rom.txt"
+`endif
+
     reg [255:0] weight_rom [0:991];
     initial begin
-        $readmemh("../python_golden_model/mlp_rom.txt", weight_rom);
+        $readmemh(`MLP_ROM_PATH, weight_rom);
     end
 
     // FSM State

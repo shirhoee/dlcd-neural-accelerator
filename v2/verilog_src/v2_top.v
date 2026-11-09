@@ -24,12 +24,20 @@ module v2_top (
     wire internal_reset = reset | ~run_latch;
     
     // Weight ROMs
+`ifndef CONV1_ROM_PATH
+    `define CONV1_ROM_PATH "../python_golden_model/weights_q7_8.txt"
+`endif
+
+`ifndef CONV2_ROM_PATH
+    `define CONV2_ROM_PATH "../python_golden_model/conv2_weights_q7_8.txt"
+`endif
+
     reg [15:0] conv1_rom [0:35];
     reg [15:0] conv2_rom [0:287];
     
     initial begin
-        $readmemh("../python_golden_model/weights_q7_8.txt", conv1_rom);
-        $readmemh("../python_golden_model/conv2_weights_q7_8.txt", conv2_rom);
+        $readmemh(`CONV1_ROM_PATH, conv1_rom);
+        $readmemh(`CONV2_ROM_PATH, conv2_rom);
     end
     
     wire [575:0] conv1_weights_flat;

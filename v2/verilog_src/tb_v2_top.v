@@ -20,10 +20,18 @@ module tb_v2_top;
         .done(done)
     );
     
+`ifndef TEST_IMAGE_PATH
+    `define TEST_IMAGE_PATH "../python_golden_model/test_image_q7_8.txt"
+`endif
+
+`ifndef EXPECTED_LABEL
+    `define EXPECTED_LABEL 4'd8
+`endif
+
     reg signed [15:0] image_rom [0:399];
     
     initial begin
-        $readmemh("../python_golden_model/test_image_q7_8.txt", image_rom);
+        $readmemh(`TEST_IMAGE_PATH, image_rom);
     end
     
     assign pixel_in = image_rom[pixel_addr];
@@ -86,16 +94,18 @@ module tb_v2_top;
         
         wait(done == 1);
         
-        // Dump logic analyzer
+        // Dump logic analyzer if enabled
+`ifdef DUMP_LOGS
         $writememh("../v2_ui/backend/logs/mp1_cap.txt", tb_mp1_cap);
         $writememh("../v2_ui/backend/logs/mp2_cap.txt", tb_mp2_cap);
         $writememh("../v2_ui/backend/logs/logits_cap.txt", tb_logits_cap);
+`endif
         
-        $display("End-to-End Prediction: %0d", prediction);
-        if (prediction === 4'd7) begin
-            $display("PASS: Output = 7.");
+        $display("End-to-End Prediction: %0d (Expected: %0d)", prediction, `EXPECTED_LABEL);
+        if (prediction === `EXPECTED_LABEL) begin
+            $display("PASS: Output = %0d.", prediction);
         end else begin
-            $display("FAIL: Expected 7, got %0d.", prediction);
+            $display("FAIL: Expected %0d, got %0d.", `EXPECTED_LABEL, prediction);
         end
         
         #20 $finish;
