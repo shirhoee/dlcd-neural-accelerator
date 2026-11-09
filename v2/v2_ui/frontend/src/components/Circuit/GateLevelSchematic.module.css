@@ -1,0 +1,338 @@
+.schematicContainer {
+  display: flex;
+  flex-direction: column;
+  background: rgba(10, 15, 29, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  width: 100%;
+}
+
+.schematicToolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  background: rgba(15, 23, 42, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  font-size: 0.72rem;
+  color: #94a3b8;
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.gateDotCyan {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #06b6d4;
+  box-shadow: 0 0 8px #06b6d4;
+}
+
+.gateDotPurple {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #a855f7;
+  box-shadow: 0 0 8px #a855f7;
+}
+
+.gateDotAmber {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f59e0b;
+  box-shadow: 0 0 8px #f59e0b;
+}
+
+.gateDotEmerald {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.signalReadout {
+  font-size: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(6, 182, 212, 0.15);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+  color: #38bdf8;
+}
+
+.signalReadout strong {
+  color: #ffffff;
+}
+
+.svgViewport {
+  background: radial-gradient(circle at 50% 50%, #030712 0%, #020617 100%);
+  padding: 1.5rem;
+  overflow-x: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.svg {
+  width: 100%;
+  max-width: 840px;
+  min-width: 680px;
+  height: auto;
+  user-select: none;
+}
+
+/* Logic & Wire Styles */
+.portBox {
+  fill: #1e293b;
+  stroke: #475569;
+  stroke-width: 1.5;
+}
+
+.portText {
+  fill: #f1f5f9;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-anchor: middle;
+  font-weight: 600;
+}
+
+.busLine {
+  stroke: #64748b;
+  stroke-width: 2.5;
+  fill: none;
+  cursor: pointer;
+  transition: stroke 0.2s ease, stroke-width 0.2s ease;
+}
+
+.busLine:hover {
+  stroke: #38bdf8;
+  stroke-width: 3.5;
+}
+
+.busLineCyan {
+  stroke: #06b6d4;
+  stroke-width: 2.5;
+  fill: none;
+  cursor: pointer;
+  transition: stroke 0.2s ease, stroke-width 0.2s ease;
+}
+
+.busLineCyan:hover {
+  stroke: #67e8f9;
+  stroke-width: 3.5;
+}
+
+.busSlash {
+  fill: #94a3b8;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.controlLine {
+  stroke: #f59e0b;
+  stroke-width: 1.5;
+  stroke-dasharray: 4, 3;
+  fill: none;
+}
+
+.controlLineGreen {
+  stroke: #10b981;
+  stroke-width: 2;
+  fill: none;
+}
+
+.feedbackLine {
+  stroke: #ec4899;
+  stroke-width: 2;
+  stroke-dasharray: 5, 3;
+  fill: none;
+}
+
+/* Gates & Blocks */
+.gateBoxCyan {
+  fill: rgba(6, 182, 212, 0.12);
+  stroke: #06b6d4;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.25));
+}
+
+.shiftBox {
+  fill: rgba(56, 189, 248, 0.12);
+  stroke: #38bdf8;
+  stroke-width: 1.5;
+}
+
+.adderPolygon {
+  fill: rgba(6, 182, 212, 0.15);
+  stroke: #06b6d4;
+  stroke-width: 2;
+}
+
+.dffBox {
+  fill: rgba(168, 85, 247, 0.12);
+  stroke: #a855f7;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.25));
+}
+
+.regBankBox {
+  fill: rgba(168, 85, 247, 0.08);
+  stroke: #a855f7;
+  stroke-width: 1.5;
+}
+
+.subReg {
+  fill: rgba(0, 0, 0, 0.4);
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 1;
+}
+
+.subRegText {
+  fill: #cbd5e1;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  text-anchor: middle;
+}
+
+.counterBox {
+  fill: rgba(245, 158, 11, 0.15);
+  stroke: #f59e0b;
+  stroke-width: 1.5;
+}
+
+.counterTitle {
+  fill: #fbbf24;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.counterSub {
+  fill: #94a3b8;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  text-anchor: middle;
+}
+
+.muxBox {
+  fill: rgba(245, 158, 11, 0.15);
+  stroke: #f59e0b;
+  stroke-width: 1.5;
+}
+
+.muxText {
+  fill: #fbbf24;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.comparatorBox {
+  fill: rgba(16, 185, 129, 0.12);
+  stroke: #10b981;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.2));
+}
+
+.lineBufBox {
+  fill: rgba(56, 189, 248, 0.12);
+  stroke: #38bdf8;
+  stroke-width: 1.5;
+}
+
+.tapGridBox {
+  fill: rgba(15, 23, 42, 0.6);
+  stroke: rgba(255, 255, 255, 0.15);
+  stroke-width: 1.5;
+}
+
+.dffMiniBox {
+  fill: rgba(168, 85, 247, 0.15);
+  stroke: #a855f7;
+  stroke-width: 1.2;
+}
+
+.dffMiniText {
+  fill: #e2e8f0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.macroBox {
+  fill: rgba(15, 23, 42, 0.6);
+  stroke: rgba(6, 182, 212, 0.3);
+  stroke-width: 2;
+}
+
+/* Typography Inside SVG */
+.gateSymbol {
+  fill: #38bdf8;
+  font-size: 26px;
+  font-weight: 900;
+  text-anchor: middle;
+  font-family: 'Inter', sans-serif;
+}
+
+.gateTitle {
+  fill: #f8fafc;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-anchor: middle;
+  letter-spacing: 0.05em;
+}
+
+.gateSub {
+  fill: #94a3b8;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  text-anchor: middle;
+}
+
+.gateSub2 {
+  fill: #64748b;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  text-anchor: middle;
+}
+
+.clockTriangle {
+  fill: none;
+  stroke: #c084fc;
+  stroke-width: 1.5;
+}
+
+.outputPin {
+  fill: #10b981;
+  stroke: #34d399;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 6px #10b981);
+}
+
+.outputLabel {
+  fill: #34d399;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+}

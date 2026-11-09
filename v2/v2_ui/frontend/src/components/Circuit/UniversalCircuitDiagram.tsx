@@ -3,10 +3,12 @@ import styles from './UniversalCircuitDiagram.module.css';
 import { CIRCUIT_MODULES } from '../../data/projectData';
 import { CircuitModule } from '../../types/api';
 import { ModuleInspectorModal } from './ModuleInspectorModal';
-import { ArrowRight } from 'lucide-react';
+import { GateLevelSchematic } from './GateLevelSchematic';
+import { ArrowRight, Cpu } from 'lucide-react';
 
 export const UniversalCircuitDiagram: React.FC = () => {
   const [selectedModule, setSelectedModule] = useState<CircuitModule | null>(null);
+  const [activeSchematicId, setActiveSchematicId] = useState<string>('mac_q7_8');
 
   const stages = [
     {
@@ -109,6 +111,36 @@ export const UniversalCircuitDiagram: React.FC = () => {
             </React.Fragment>
           ))}
         </div>
+      </div>
+
+      {/* Inline Gate-Level Schematic Viewer */}
+      <div className={styles.inlineSchematicSection}>
+        <div className={styles.inlineHeader}>
+          <div className={styles.inlineTitleBox}>
+            <Cpu size={18} className={styles.inlineIcon} />
+            <h3 className={styles.inlineHeading}>Live Gate-Level Digital Logic Schematics</h3>
+          </div>
+          <div className={styles.schematicPills}>
+            {[
+              { id: 'mac_q7_8', label: 'mac_q7_8 (ALU Core)' },
+              { id: 'conv_pe', label: 'conv_pe (9-Cycle PE)' },
+              { id: 'window_gen', label: 'window_gen (Line Buffers)' },
+              { id: 'maxpool_pe', label: 'maxpool_pe (Fused ReLU)' },
+              { id: 'argmax', label: 'argmax (Comparator Tree)' },
+              { id: 'systolic_array', label: 'systolic_array (16x16 Mesh)' },
+            ].map((item) => (
+              <button
+                key={item.id}
+                className={`${styles.schematicPillBtn} ${activeSchematicId === item.id ? styles.activeSchematicPill : ''}`}
+                onClick={() => setActiveSchematicId(item.id)}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <GateLevelSchematic moduleId={activeSchematicId} />
       </div>
 
       {/* Module Inspector Modal */}

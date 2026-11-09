@@ -8,31 +8,29 @@ import { V1V2Comparison } from './components/Comparison/V1V2Comparison';
 import { VerilogCodeBrowser } from './components/Code/VerilogCodeBrowser';
 import { DashboardTabs } from './components/Dashboards/DashboardTabs';
 import { WaveformsSection } from './components/Sections/WaveformsSection';
+import { ProjectReportSection } from './components/Documentation/ProjectReportSection';
 import { ReferencesSection } from './components/Sections/ReferencesSection';
 import { usePredict } from './hooks/usePredict';
 import { 
-  Target, 
+  PlayCircle, 
   GitFork, 
   Workflow, 
   GitCompare, 
   FileCode, 
-  PlayCircle, 
   Activity, 
   BookOpen, 
+  ScrollText,
   ChevronUp 
 } from 'lucide-react';
 
 export const App: React.FC = () => {
   const { predictV2, predictV1, predictCompare } = usePredict();
+  const [activeTab, setActiveTab] = useState<string>('studio'); // Default: Zero-scroll Canvas Studio
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 400) {
-        setShowScrollTop(true);
-      } else {
-        setShowScrollTop(false);
-      }
+      setShowScrollTop(window.scrollY > 400);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -42,46 +40,51 @@ export const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const navItems = [
-    { id: 'section-1', label: '1. Problem Statement', icon: Target },
-    { id: 'section-2', label: '2. Circuit Diagram', icon: GitFork },
-    { id: 'section-3', label: '3. FSM Machines', icon: Workflow },
-    { id: 'section-4', label: '4. Literature Survey', icon: GitCompare },
-    { id: 'section-5', label: '5. Verilog Code', icon: FileCode },
-    { id: 'section-6', label: '6. Hardware Inference', icon: PlayCircle },
-    { id: 'section-7', label: '7. Output & Waveforms', icon: Activity },
-    { id: 'section-8', label: '8. References', icon: BookOpen },
+  const navTabs = [
+    { id: 'studio', label: '1. Live Drawing Studio', icon: PlayCircle, badge: 'Canvas' },
+    { id: 'circuit', label: '2. Gate-Level Circuits', icon: GitFork, badge: 'Vector SVGs' },
+    { id: 'fsm', label: '3. FSM State Machines', icon: Workflow, badge: 'Live Stepper' },
+    { id: 'comparison', label: '4. V1 vs V2 Comparison', icon: GitCompare, badge: '+5.77% Gain' },
+    { id: 'verilog', label: '5. Verilog HDL Code', icon: FileCode, badge: 'RTL' },
+    { id: 'waveforms', label: '6. Waveforms & Timing', icon: Activity, badge: '9,116 Cyc' },
+    { id: 'docs', label: '7. Project Report & Docs', icon: BookOpen, badge: 'Full ESA' },
+    { id: 'full_report', label: 'Continuous Full Report', icon: ScrollText, badge: 'Scroll' },
   ];
 
-  const handleNavClick = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      const yOffset = -70; // offset for sticky nav
-      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: y, behavior: 'smooth' });
-    }
+  const handleSelectTab = (tabId: string) => {
+    setActiveTab(tabId);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <div className={styles.appContainer}>
       {/* PES University & Team Member Header */}
       <header className={styles.headerWrapper}>
-        <TeamHeader />
+        <TeamHeader
+          activeSection={activeTab}
+          onSelectSection={handleSelectTab}
+        />
       </header>
 
-      {/* Sticky Quick-Jump Navigation Bar */}
+      {/* Sticky Top-Level Tab Switcher */}
       <nav className={styles.stickyNav}>
         <div className={styles.navInner}>
-          {navItems.map((item) => {
-            const Icon = item.icon;
+          {navTabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
             return (
               <button
-                key={item.id}
-                className={styles.navBtn}
-                onClick={() => handleNavClick(item.id)}
+                key={tab.id}
+                className={`${styles.navBtn} ${isActive ? styles.activeNavBtn : ''}`}
+                onClick={() => handleSelectTab(tab.id)}
               >
-                <Icon size={14} className={styles.navIcon} />
-                <span>{item.label}</span>
+                <Icon size={15} className={isActive ? styles.activeIcon : styles.navIcon} />
+                <span>{tab.label}</span>
+                {tab.badge && (
+                  <span className={`${styles.navBadge} ${isActive ? styles.activeBadge : ''}`}>
+                    {tab.badge}
+                  </span>
+                )}
               </button>
             );
           })}
@@ -90,56 +93,87 @@ export const App: React.FC = () => {
 
       {/* Main Content Body */}
       <main className={styles.mainContent}>
-        {/* Section 1: Problem Statement */}
-        <section id="section-1" className={styles.sectionCard}>
-          <ProblemStatementSection />
-        </section>
+        {/* TAB 1: Live Drawing Studio & Hardware Inference (Zero-Scroll Canvas!) */}
+        {activeTab === 'studio' && (
+          <section className={styles.activeTabContent}>
+            <div className={styles.sectionIntro}>
+              <span className={styles.sectionTag}>PRIMARY INTERACTIVE STUDIO</span>
+              <h2 className={styles.sectionHeading}>Hardware-in-the-Loop Digit Inference Studio</h2>
+              <p className={styles.sectionDescription}>
+                Draw a digit on the 380×380 canvas or select a canonical preset. 
+                Images are automatically centered by center-of-mass and normalized before streaming to the Verilog hardware simulation.
+              </p>
+            </div>
+            <DashboardTabs
+              onPredictV2={predictV2}
+              onPredictV1={predictV1}
+              onPredictCompare={predictCompare}
+            />
+          </section>
+        )}
 
-        {/* Section 2: Universal Circuit Diagram with Clickable Drill-Down Modals */}
-        <section id="section-2" className={styles.sectionCard}>
-          <UniversalCircuitDiagram />
-        </section>
+        {/* TAB 2: Gate-Level Digital Logic Circuit Schematics */}
+        {activeTab === 'circuit' && (
+          <section className={styles.activeTabContent}>
+            <UniversalCircuitDiagram />
+          </section>
+        )}
 
-        {/* Section 3: Interactive Finite State Machine (FSM) Visualizer */}
-        <section id="section-3" className={styles.sectionCard}>
-          <FsmVisualizer />
-        </section>
+        {/* TAB 3: Finite State Machine (FSM) Visualizer */}
+        {activeTab === 'fsm' && (
+          <section className={styles.activeTabContent}>
+            <FsmVisualizer />
+          </section>
+        )}
 
-        {/* Section 4: Literature Survey & Architecture Comparison (V1 vs V2) */}
-        <section id="section-4" className={styles.sectionCard}>
-          <V1V2Comparison />
-        </section>
+        {/* TAB 4: Literature Survey & Architecture Comparison (V1 vs V2) */}
+        {activeTab === 'comparison' && (
+          <section className={styles.activeTabContent}>
+            <V1V2Comparison />
+          </section>
+        )}
 
-        {/* Section 5: Main Verilog Code Browser */}
-        <section id="section-5" className={styles.sectionCard}>
-          <VerilogCodeBrowser />
-        </section>
+        {/* TAB 5: Verilog HDL Code Explorer */}
+        {activeTab === 'verilog' && (
+          <section className={styles.activeTabContent}>
+            <VerilogCodeBrowser />
+          </section>
+        )}
 
-        {/* Section 6: Hardware Inference Dashboards (V2 Studio, V1 Baseline, Dual Inference) */}
-        <section id="section-6" className={styles.sectionCard}>
-          <div className={styles.sectionIntro}>
-            <span className={styles.sectionTag}>SECTION 6 &bull; INTERACTIVE SYSTEM</span>
-            <h2 className={styles.sectionHeading}>Hardware Inference Dashboards</h2>
-            <p className={styles.sectionDescription}>
-              Select between the primary 6-layer CNN accelerator, legacy V1 baseline MLP studio, or simultaneous dual co-inference to test handwritten digits live on Q7.8 arithmetic models.
-            </p>
+        {/* TAB 6: Output & Waveform Timing Analysis */}
+        {activeTab === 'waveforms' && (
+          <section className={styles.activeTabContent}>
+            <WaveformsSection />
+          </section>
+        )}
+
+        {/* TAB 7: Full In-App PES University Project Report & Documentation */}
+        {activeTab === 'docs' && (
+          <section className={styles.activeTabContent}>
+            <ProjectReportSection />
+          </section>
+        )}
+
+        {/* OPTIONAL VIEW: Continuous Full Report View (All sections stacked) */}
+        {activeTab === 'full_report' && (
+          <div className={styles.fullReportStack}>
+            <section className={styles.sectionCard}><ProblemStatementSection /></section>
+            <section className={styles.sectionCard}><UniversalCircuitDiagram /></section>
+            <section className={styles.sectionCard}><FsmVisualizer /></section>
+            <section className={styles.sectionCard}><V1V2Comparison /></section>
+            <section className={styles.sectionCard}><VerilogCodeBrowser /></section>
+            <section className={styles.sectionCard}>
+              <DashboardTabs
+                onPredictV2={predictV2}
+                onPredictV1={predictV1}
+                onPredictCompare={predictCompare}
+              />
+            </section>
+            <section className={styles.sectionCard}><WaveformsSection /></section>
+            <section className={styles.sectionCard}><ProjectReportSection /></section>
+            <section className={styles.sectionCard}><ReferencesSection /></section>
           </div>
-          <DashboardTabs
-            onPredictV2={predictV2}
-            onPredictV1={predictV1}
-            onPredictCompare={predictCompare}
-          />
-        </section>
-
-        {/* Section 7: Output & Waveform Timing Analysis */}
-        <section id="section-7" className={styles.sectionCard}>
-          <WaveformsSection />
-        </section>
-
-        {/* Section 8: References */}
-        <section id="section-8" className={styles.sectionCard}>
-          <ReferencesSection />
-        </section>
+        )}
       </main>
 
       {/* Academic Footer */}
@@ -150,7 +184,7 @@ export const App: React.FC = () => {
             <span>Department of Computer Science &amp; Engineering &bull; UE25CS251A DLCD Laboratory (2026)</span>
           </div>
           <div className={styles.footerRight}>
-            <span>End Semester Assessment (ESA) &bull; Verilog-2001 Neural Network Hardware Accelerator</span>
+            <span>End Semester Assessment (ESA) &bull; Q7.8 CNN Hardware Accelerator</span>
           </div>
         </div>
       </footer>

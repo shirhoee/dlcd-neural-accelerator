@@ -7,11 +7,13 @@
 
 .canvasFrame {
   position: relative;
-  width: 280px;
-  height: 280px;
-  border: 2px solid #38bdf8;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(56, 189, 248, 0.25), inset 0 0 15px rgba(0, 0, 0, 0.8);
+  width: 380px;
+  height: 380px;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+  border: 2px solid #06b6d4;
+  border-radius: 12px;
+  box-shadow: 0 0 25px rgba(6, 182, 212, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.9);
   overflow: hidden;
   background: #030712;
 }
@@ -21,6 +23,7 @@
   height: 100%;
   cursor: crosshair;
   display: block;
+  touch-action: none;
 }
 
 .gridOverlay {
@@ -33,31 +36,32 @@
   background-image: 
     linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 28px 28px;
+  background-size: 19px 19px;
 }
 
 .brushToolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 280px;
-  margin-top: 0.75rem;
-  padding: 0.25rem 0;
+  width: 380px;
+  max-width: 100%;
+  margin-top: 0.85rem;
+  padding: 0.35rem 0;
 }
 
 .brushGroup {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.4rem;
 }
 
 .brushLabel {
-  font-size: 0.65rem;
+  font-size: 0.68rem;
   font-family: 'JetBrains Mono', monospace;
   color: #64748b;
   display: flex;
   align-items: center;
-  gap: 0.2rem;
+  gap: 0.25rem;
   margin-right: 0.2rem;
 }
 
@@ -65,9 +69,9 @@
   background: rgba(30, 41, 59, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: #94a3b8;
-  font-size: 0.68rem;
-  padding: 0.2rem 0.45rem;
-  border-radius: 4px;
+  font-size: 0.72rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -78,19 +82,19 @@
 }
 
 .activeBrush {
-  background: rgba(56, 189, 248, 0.2);
-  border-color: #38bdf8;
+  background: rgba(6, 182, 212, 0.2);
+  border-color: #06b6d4;
   color: #38bdf8;
   font-weight: 700;
 }
 
 .clearBtn {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.25);
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
   color: #f87171;
-  font-size: 0.72rem;
-  padding: 0.25rem 0.6rem;
-  border-radius: 4px;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -104,29 +108,94 @@
   color: #ffffff;
 }
 
+/* Preprocessed Hardware Preview */
+.previewBox {
+  width: 380px;
+  max-width: 100%;
+  margin-top: 0.85rem;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  border-radius: 10px;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  backdrop-filter: blur(8px);
+}
+
+.previewHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #38bdf8;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.previewIcon {
+  color: #06b6d4;
+}
+
+.previewContent {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.previewGrid {
+  display: grid;
+  grid-template-columns: repeat(20, 1fr);
+  gap: 1px;
+  width: 80px;
+  height: 80px;
+  background: #030712;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 2px;
+  flex-shrink: 0;
+}
+
+.previewCell {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.5px;
+}
+
+.previewStats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.68rem;
+  color: #94a3b8;
+  line-height: 1.3;
+}
+
 .runBtn {
   margin-top: 1rem;
-  width: 280px;
-  background: linear-gradient(135deg, #2563eb, #6366f1);
+  width: 380px;
+  max-width: 100%;
+  background: linear-gradient(135deg, #0284c7, #6366f1);
   border: none;
   color: #ffffff;
-  padding: 0.85rem 1rem;
-  border-radius: 8px;
-  font-size: 0.88rem;
+  padding: 0.95rem 1.25rem;
+  border-radius: 10px;
+  font-size: 0.92rem;
   font-weight: 800;
   letter-spacing: 0.05em;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
+  gap: 0.6rem;
+  box-shadow: 0 4px 20px rgba(6, 182, 212, 0.35);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .runBtn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.5);
+  box-shadow: 0 8px 28px rgba(6, 182, 212, 0.55);
   filter: brightness(1.1);
 }
 
@@ -140,7 +209,7 @@
 }
 
 .runLoading {
-  background: linear-gradient(135deg, #475569, #334155);
+  background: linear-gradient(135deg, #334155, #1e293b);
   animation: pulseLoading 1.5s infinite;
 }
 

@@ -1,0 +1,310 @@
+.reportContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.actionBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 0.85rem 1.25rem;
+  backdrop-filter: blur(12px);
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.docBadge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #38bdf8;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.printBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #38bdf8;
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.printBtn:hover {
+  background: rgba(56, 189, 248, 0.25);
+  color: #ffffff;
+}
+
+/* Printable Document Sheet */
+.reportSheet {
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 3rem 3.5rem;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem;
+  color: #e2e8f0;
+  line-height: 1.65;
+}
+
+@media (max-width: 768px) {
+  .reportSheet {
+    padding: 1.5rem;
+  }
+}
+
+.sheetHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.35rem;
+}
+
+.univName {
+  font-size: 1.45rem;
+  font-weight: 900;
+  color: #f8fafc;
+  letter-spacing: 0.05em;
+}
+
+.campusName {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  letter-spacing: 0.04em;
+}
+
+.deptName {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #cbd5e1;
+  margin-top: 0.2rem;
+}
+
+.courseTitle {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #38bdf8;
+  letter-spacing: 0.06em;
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 0.2rem;
+}
+
+.subTitle {
+  font-size: 0.75rem;
+  color: #f59e0b;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.sheetDivider {
+  width: 100%;
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  margin: 1.25rem 0;
+}
+
+.reportTitle {
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: #38bdf8;
+  letter-spacing: 0.04em;
+  margin: 0;
+  max-width: 850px;
+  line-height: 1.4;
+}
+
+/* Roster Box */
+.rosterBox {
+  margin-top: 1.5rem;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  width: 100%;
+  max-width: 780px;
+}
+
+.rosterHeading {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #94a3b8;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.6rem;
+  text-align: center;
+}
+
+.rosterGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .rosterGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.rosterItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.rosterItem strong {
+  font-size: 0.85rem;
+  color: #f8fafc;
+}
+
+.rosterItem span {
+  font-size: 0.72rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: #38bdf8;
+}
+
+/* Report Sections */
+.reportSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.secHeading {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #f8fafc;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.4rem;
+  margin: 0;
+}
+
+.subSubHeading {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #cbd5e1;
+  margin: 0.5rem 0 0 0;
+}
+
+.bulletsList,
+.numberedList,
+.refsList {
+  padding-left: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.specTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.specTable th {
+  background: rgba(0, 0, 0, 0.4);
+  color: #94a3b8;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: left;
+}
+
+.specTable td {
+  padding: 0.65rem 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: #cbd5e1;
+}
+
+.specTable td strong {
+  color: #f8fafc;
+}
+
+.fsmCard {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 0.85rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.fsmHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #38bdf8;
+  font-size: 0.85rem;
+}
+
+.verifySummaryGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.verifyItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+}
+
+.checkIcon {
+  color: #10b981;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.verifyItem strong {
+  display: block;
+  font-size: 0.85rem;
+  color: #34d399;
+}
+
+.verifyItem span {
+  font-size: 0.78rem;
+  color: #cbd5e1;
+}
+
+@media print {
+  .actionBar {
+    display: none !important;
+  }
+  .reportSheet {
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+  .reportTitle,
+  .univName,
+  .secHeading {
+    color: #000000 !important;
+  }
+}

@@ -5,6 +5,7 @@ import { PresetRibbon } from '../Canvas/PresetRibbon';
 import { FeatureHeatmap } from '../FeatureGrid/FeatureHeatmap';
 import { LogitChart } from '../LogitChart/LogitChart';
 import { PredictResponse } from '../../types/api';
+import { NeuralFlowAnimation } from '../Animations/NeuralFlowAnimation';
 import { Award, ArrowRight, Activity } from 'lucide-react';
 
 interface V2StudioDashboardProps {
@@ -34,7 +35,10 @@ export const V2StudioDashboard: React.FC<V2StudioDashboardProps> = ({ onPredict 
   };
 
   return (
-    <div className={styles.container}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
+      <NeuralFlowAnimation isSimulating={loading} />
+
+      <div className={styles.container}>
       {/* Left Column: Drawing & Presets */}
       <div className={styles.leftCol}>
         <div className={styles.panelCard}>
@@ -179,5 +183,6 @@ export const V2StudioDashboard: React.FC<V2StudioDashboardProps> = ({ onPredict 
         )}
       </div>
     </div>
+  </div>
   );
 };

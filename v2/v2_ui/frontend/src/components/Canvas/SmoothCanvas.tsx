@@ -1,7 +1,7 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import styles from './SmoothCanvas.module.css';
 import { extract28x28FromCanvas, CANVAS_SIZE } from '../../utils/downsample';
-import { Trash2, Play, Brush } from 'lucide-react';
+import { Trash2, Play, Brush, Eye } from 'lucide-react';
 
 interface SmoothCanvasProps {
   onRun: (matrix28: number[][]) => void;
@@ -14,25 +14,35 @@ export const SmoothCanvas: React.FC<SmoothCanvasProps> = ({
   onRun,
   loading,
   presetMatrix,
-  onClearPreset
+  onClearPreset,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [lastPoint, setLastPoint] = useState<{ x: number; y: number } | null>(null);
-  const [brushSize, setBrushSize] = useState<number>(20);
+  const [brushSize, setBrushSize] = useState<number>(26);
+  const [preview20, setPreview20] = useState<number[][] | null>(null);
 
   // Initialize black canvas
-  const initCanvas = () => {
+  const initCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     ctx.fillStyle = '#030712';
     ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-  };
+    setPreview20(null);
+  }, []);
 
   useEffect(() => {
     initCanvas();
+  }, [initCanvas]);
+
+  // Update preview when drawing finishes or preset loads
+  const updatePreview = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const { grid20 } = extract28x28FromCanvas(canvas);
+    setPreview20(grid20);
   }, []);
 
   // When a preset matrix is selected, render it onto canvas
@@ -53,11 +63,12 @@ export const SmoothCanvas: React.FC<SmoothCanvasProps> = ({
         if (val > 0.05) {
           const brightness = Math.min(255, Math.floor(val * 255));
           ctx.fillStyle = `rgb(${brightness}, ${brightness}, ${brightness})`;
-          ctx.fillRect(c * scale, r * scale, scale, scale);
+          ctx.fillRect(c * scale, r * scale, scale + 0.5, scale + 0.5);
         }
       }
     }
-  }, [presetMatrix]);
+    updatePreview();
+  }, [presetMatrix, updatePreview]);
 
   const getCanvasPos = (e: React.MouseEvent | React.TouchEvent) => {
     const canvas = canvasRef.current;
@@ -67,7 +78,7 @@ export const SmoothCanvas: React.FC<SmoothCanvasProps> = ({
     const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
     return {
       x: ((clientX - rect.left) / rect.width) * CANVAS_SIZE,
-      y: ((clientY - rect.top) / rect.height) * CANVAS_SIZE
+      y: ((clientY - rect.top) / rect.height) * CANVAS_SIZE,
     };
   };
 
@@ -92,9 +103,9 @@ export const SmoothCanvas: React.FC<SmoothCanvasProps> = ({
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
 
-    // Dual-pass glow: Cyan plasma blur + solid white core
-    ctx.shadowBlur = 12;
-    ctx.shadowColor = '#06b6d4';
+    // Anti-aliased stroke with soft cyan glow
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = 'rgba(6, 182, 212, 0.6)';
     ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = brushSize;
 
@@ -109,8 +120,11 @@ export const SmoothCanvas: React.FC<SmoothCanvasProps> = ({
   };
 
   const stopDrawing = () => {
-    setIsDrawing(false);
-    setLastPoint(null);
+    if (isDrawing) {
+      setIsDrawing(false);
+      setLastPoint(null);
+      updatePreview();
+    }
   };
 
   const handleClear = () => {
@@ -121,12 +135,13 @@ export const SmoothCanvas: React.FC<SmoothCanvasProps> = ({
   const handleExecute = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const matrix = extract28x28FromCanvas(canvas);
-    onRun(matrix);
+    const { grid28 } = extract28x28FromCanvas(canvas);
+    onRun(grid28);
   };
 
   return (
     <div className={styles.canvasWrapper}>
+      {/* Canvas Viewport */}
       <div className={styles.canvasFrame}>
         <canvas
           ref={canvasRef}
@@ -141,30 +156,30 @@ export const SmoothCanvas: React.FC<SmoothCanvasProps> = ({
           onTouchMove={draw}
           onTouchEnd={stopDrawing}
         />
-        <div className={styles.gridOverlay}></div>
+        <div className={styles.gridOverlay} />
       </div>
 
-      {/* Brush Settings */}
+      {/* Brush Settings Toolbar */}
       <div className={styles.brushToolbar}>
         <div className={styles.brushGroup}>
           <span className={styles.brushLabel}><Brush size={13} /> STROKE:</span>
           <button
-            className={`${styles.brushSizeBtn} ${brushSize === 16 ? styles.activeBrush : ''}`}
-            onClick={() => setBrushSize(16)}
+            className={`${styles.brushSizeBtn} ${brushSize === 20 ? styles.activeBrush : ''}`}
+            onClick={() => setBrushSize(20)}
           >
             Fine
           </button>
           <button
-            className={`${styles.brushSizeBtn} ${brushSize === 22 ? styles.activeBrush : ''}`}
-            onClick={() => setBrushSize(22)}
+            className={`${styles.brushSizeBtn} ${brushSize === 26 ? styles.activeBrush : ''}`}
+            onClick={() => setBrushSize(26)}
           >
             Medium
           </button>
           <button
-            className={`${styles.brushSizeBtn} ${brushSize === 28 ? styles.activeBrush : ''}`}
-            onClick={() => setBrushSize(28)}
+            className={`${styles.brushSizeBtn} ${brushSize === 34 ? styles.activeBrush : ''}`}
+            onClick={() => setBrushSize(34)}
           >
-            Fat
+            Thick
           </button>
         </div>
 
@@ -173,6 +188,36 @@ export const SmoothCanvas: React.FC<SmoothCanvasProps> = ({
         </button>
       </div>
 
+      {/* Live Preprocessed Hardware Preview */}
+      {preview20 && (
+        <div className={styles.previewBox}>
+          <div className={styles.previewHeader}>
+            <Eye size={13} className={styles.previewIcon} />
+            <span>MNIST CENTER-OF-MASS HARDWARE VIEW (20×20)</span>
+          </div>
+          <div className={styles.previewContent}>
+            <div className={styles.previewGrid}>
+              {preview20.map((row, r) =>
+                row.map((val, c) => (
+                  <div
+                    key={`${r}-${c}`}
+                    className={styles.previewCell}
+                    style={{
+                      backgroundColor: `rgba(6, 182, 212, ${Math.min(1, val * 1.2)})`,
+                    }}
+                  />
+                ))
+              )}
+            </div>
+            <div className={styles.previewStats}>
+              <span>&bull; Aspect ratio preserved</span>
+              <span>&bull; Center of mass centered at (13.5, 13.5)</span>
+              <span>&bull; Scaled to 20×20 bounding box</span>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Execute Button */}
       <button
         className={`${styles.runBtn} ${loading ? styles.runLoading : ''}`}
@@ -180,7 +225,7 @@ export const SmoothCanvas: React.FC<SmoothCanvasProps> = ({
         disabled={loading}
       >
         <Play size={18} className={styles.runIcon} />
-        <span>{loading ? 'SIMULATING RTL IN ICARUS...' : 'RUN HARDWARE INFERENCE'}</span>
+        <span>{loading ? 'SIMULATING RTL IN ICARUS VERILOG...' : 'RUN HARDWARE INFERENCE'}</span>
       </button>
     </div>
   );

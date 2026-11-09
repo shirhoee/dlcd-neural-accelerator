@@ -10,14 +10,13 @@ interface TeamHeaderProps {
 
 export const TeamHeader: React.FC<TeamHeaderProps> = ({ activeSection, onSelectSection }) => {
   const navItems = [
-    { id: 'section-1', label: '1. Problem Statement' },
-    { id: 'section-2', label: '2. Circuit Diagram' },
-    { id: 'section-3', label: '3. FSM State Machines' },
-    { id: 'section-4', label: '4. V1 vs V2 Comparison' },
-    { id: 'section-5', label: '5. Verilog HDL Code' },
-    { id: 'section-6', label: '6. Live Dashboards' },
-    { id: 'section-7', label: '7. Output & Waveforms' },
-    { id: 'section-8', label: '8. References' }
+    { id: 'studio', label: '1. Live Drawing Studio' },
+    { id: 'circuit', label: '2. Gate-Level Circuits' },
+    { id: 'fsm', label: '3. FSM State Machines' },
+    { id: 'comparison', label: '4. V1 vs V2 Comparison' },
+    { id: 'verilog', label: '5. Verilog HDL Code' },
+    { id: 'waveforms', label: '6. Waveforms & Timing' },
+    { id: 'docs', label: '7. Full ESA Project Report' },
   ];
 
   const handleClick = (id: string) => {

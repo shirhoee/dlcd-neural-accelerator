@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './ModuleInspectorModal.module.css';
 import { CircuitModule } from '../../types/api';
+import { GateLevelSchematic } from './GateLevelSchematic';
 import { X, Copy, Check, Cpu, Clock, Layers } from 'lucide-react';
 
 interface ModuleInspectorModalProps {
@@ -86,7 +87,10 @@ export const ModuleInspectorModal: React.FC<ModuleInspectorModalProps> = ({ modu
         <div className={styles.modalBody}>
           {activeTab === 'schematic' && (
             <div className={styles.schematicTab}>
-              <h4 className={styles.subHeading}>Datapath Building Blocks</h4>
+              <h4 className={styles.subHeading}>Vector Logic Gate &amp; Register Schematic</h4>
+              <GateLevelSchematic moduleId={module.id} />
+
+              <h4 className={styles.subHeading} style={{ marginTop: '1.25rem' }}>Datapath Building Blocks</h4>
               <div className={styles.blocksList}>
                 {module.schematicSummary.map((item, idx) => (
                   <div key={idx} className={styles.blockCard}>
