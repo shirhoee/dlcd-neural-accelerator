@@ -1,0 +1,107 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.tag {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #38bdf8;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #f8fafc;
+}
+
+.desc {
+  margin: 0;
+  font-size: 0.92rem;
+  color: #94a3b8;
+  max-width: 850px;
+  line-height: 1.5;
+}
+
+.refsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.refCard {
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.15rem 1.35rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  backdrop-filter: blur(12px);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.refCard:hover {
+  border-color: rgba(56, 189, 248, 0.3);
+  transform: translateX(4px);
+}
+
+.refNumber {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #38bdf8;
+  padding-top: 0.1rem;
+  flex-shrink: 0;
+}
+
+.refBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.refAuthors {
+  color: #e2e8f0;
+  font-weight: 600;
+}
+
+.refTitle {
+  color: #f8fafc;
+  font-style: italic;
+}
+
+.refPub {
+  color: #94a3b8;
+}
+
+.refLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #38bdf8;
+  font-size: 0.75rem;
+  text-decoration: none;
+  margin-top: 0.3rem;
+  width: fit-content;
+  font-family: 'JetBrains Mono', monospace;
+  transition: color 0.2s ease;
+}
+
+.refLink:hover {
+  color: #7dd3fc;
+  text-decoration: underline;
+}

@@ -1,0 +1,82 @@
+.heatmapWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mapLabel {
+  font-size: 0.68rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: #94a3b8;
+  margin-bottom: 0.35rem;
+}
+
+.gridContainer {
+  display: grid;
+  gap: 1.5px;
+  background: #020617;
+  padding: 4px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cell {
+  border: 0.5px solid transparent;
+  border-radius: 1.5px;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.cell:hover {
+  transform: scale(1.4);
+  z-index: 10;
+  box-shadow: 0 0 8px #ffffff;
+}
+
+.inspectorTooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #090d16;
+  border: 1px solid #38bdf8;
+  border-radius: 6px;
+  padding: 0.4rem 0.65rem;
+  font-size: 0.7rem;
+  font-family: 'JetBrains Mono', monospace;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.8), 0 0 10px rgba(56, 189, 248, 0.3);
+  z-index: 100;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.ttHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: #64748b;
+  font-size: 0.62rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 0.2rem;
+  margin-bottom: 0.25rem;
+}
+
+.ttFormat {
+  color: #38bdf8;
+  font-weight: 700;
+}
+
+.ttBody {
+  display: flex;
+  gap: 0.75rem;
+  color: #cbd5e1;
+}
+
+.ttHex {
+  color: #a7f3d0;
+}
+
+.ttVal {
+  color: #f8fafc;
+}

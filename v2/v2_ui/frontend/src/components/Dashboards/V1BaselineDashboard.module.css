@@ -1,0 +1,308 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.v1Notice {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.25rem;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 10px;
+  font-size: 0.85rem;
+  color: #fbbf24;
+}
+
+.warnIcon {
+  color: #f59e0b;
+  flex-shrink: 0;
+}
+
+.mainGrid {
+  display: grid;
+  grid-template-columns: 460px 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 1080px) {
+  .mainGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.leftCol,
+.rightCol {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.panelCard {
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  backdrop-filter: blur(12px);
+}
+
+.cardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cardTag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #f59e0b;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.cardDesc {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+/* Winner Hero */
+.winnerHero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(15, 23, 42, 0.7) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.winnerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.winnerBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #fbbf24;
+  text-transform: uppercase;
+}
+
+.awardIcon {
+  color: #fbbf24;
+}
+
+.digitDisplayRow {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.digitNumber {
+  font-size: 3.5rem;
+  font-weight: 900;
+  line-height: 1;
+  color: #fbbf24;
+  text-shadow: 0 0 24px rgba(245, 158, 11, 0.45);
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.baselineTag {
+  font-size: 0.82rem;
+  color: #f1f5f9;
+}
+
+.baselineTag strong {
+  color: #fbbf24;
+}
+
+.cycleReadout {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 0.2rem;
+}
+
+.cycleReadout strong {
+  color: #38bdf8;
+}
+
+.v1Specs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.specBox {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 0.5rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.specBox span {
+  font-size: 0.62rem;
+  color: #94a3b8;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.specBox strong {
+  font-size: 0.78rem;
+  color: #f1f5f9;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Layers Stack */
+.layersStack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.layerCard {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.layerHeading {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.centerHeatmap {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0;
+}
+
+.neuronMetersGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.25rem;
+}
+
+@media (max-width: 800px) {
+  .neuronMetersGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.neuronSubGroup {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.neuronSubTitle {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.barsGrid16 {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  gap: 0.25rem;
+  height: 90px;
+  align-items: flex-end;
+}
+
+.barsGrid6 {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.4rem;
+  height: 90px;
+  align-items: flex-end;
+}
+
+.miniNeuronBar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  gap: 0.25rem;
+}
+
+.barFill {
+  width: 100%;
+  background: linear-gradient(180deg, #f59e0b 0%, rgba(245, 158, 11, 0.2) 100%);
+  border-radius: 3px 3px 0 0;
+  min-height: 2px;
+  transition: height 0.4s ease-out;
+}
+
+.barFill2 {
+  width: 100%;
+  background: linear-gradient(180deg, #ec4899 0%, rgba(236, 72, 153, 0.2) 100%);
+  border-radius: 3px 3px 0 0;
+  min-height: 2px;
+  transition: height 0.4s ease-out;
+}
+
+.neuronIdx {
+  font-size: 0.58rem;
+  color: #64748b;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.emptyHero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 280px;
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 2rem;
+  color: #64748b;
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+.emptyIcon {
+  color: #475569;
+  flex-shrink: 0;
+}

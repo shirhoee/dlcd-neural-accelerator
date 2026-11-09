@@ -1,0 +1,202 @@
+.section {
+  padding: 3rem 2rem;
+  background: #080c14;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sectionHeader {
+  margin-bottom: 2rem;
+}
+
+.categoryBadge {
+  font-size: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: #38bdf8;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.4rem;
+}
+
+.sectionTitle {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #f8fafc;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.01em;
+}
+
+.sectionDesc {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  margin: 0;
+  max-width: 48rem;
+  line-height: 1.5;
+}
+
+.browserContainer {
+  display: flex;
+  flex-direction: column;
+  background: #090d16;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+@media (min-width: 900px) {
+  .browserContainer {
+    flex-direction: row;
+    height: 32rem;
+  }
+}
+
+.sidebar {
+  width: 100%;
+  background: #060911;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 900px) {
+  .sidebar {
+    width: 17rem;
+    border-bottom: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    flex-shrink: 0;
+  }
+}
+
+.sidebarTitle {
+  font-size: 0.68rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.75rem;
+  padding-left: 0.5rem;
+}
+
+.tabList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  overflow-y: auto;
+}
+
+.moduleTab {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.moduleTab:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: #f1f5f9;
+}
+
+.activeModuleTab {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  font-weight: 700;
+}
+
+.tabIcon {
+  color: #64748b;
+}
+
+.activeModuleTab .tabIcon {
+  color: #38bdf8;
+}
+
+.codePane {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background: #030712;
+  overflow: hidden;
+}
+
+.paneHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #090d16;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.75rem 1.25rem;
+}
+
+.paneInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.activeFile {
+  font-size: 0.92rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.compPill {
+  font-size: 0.65rem;
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(255, 255, 255, 0.06);
+  color: #94a3b8;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+}
+
+.copyBtn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.15s ease;
+}
+
+.copyBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.codeContent {
+  margin: 0;
+  padding: 1.25rem;
+  overflow: auto;
+  flex-grow: 1;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: #38bdf8;
+}
+
+.paneFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #090d16;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.5rem 1.25rem;
+  font-size: 0.72rem;
+  color: #64748b;
+  font-family: 'JetBrains Mono', monospace;
+}

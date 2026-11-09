@@ -1,0 +1,263 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+@media (min-width: 1100px) {
+  .container {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.leftCol {
+  width: 100%;
+}
+
+@media (min-width: 1100px) {
+  .leftCol {
+    width: 22rem;
+    flex-shrink: 0;
+  }
+}
+
+.rightCol {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.panelCard {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.cardHeader {
+  margin-bottom: 1rem;
+}
+
+.cardTag {
+  font-size: 0.65rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: #38bdf8;
+  letter-spacing: 0.05em;
+}
+
+.cardTitle {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #f8fafc;
+  margin: 0.2rem 0;
+}
+
+.cardDesc {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.winnerHero {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(15, 23, 42, 0.8));
+  border: 1.5px solid rgba(16, 185, 129, 0.4);
+  border-radius: 12px;
+  padding: 1.25rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.15);
+}
+
+@media (min-width: 768px) {
+  .winnerHero {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.winnerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.winnerBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: #10b981;
+}
+
+.awardIcon {
+  color: #10b981;
+}
+
+.digitDisplayRow {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.digitNumber {
+  font-size: 4rem;
+  font-weight: 900;
+  line-height: 1;
+  font-family: 'JetBrains Mono', monospace;
+  color: #ffffff;
+  text-shadow: 0 0 25px rgba(16, 185, 129, 0.8);
+}
+
+.confidenceScore {
+  font-size: 0.85rem;
+  color: #cbd5e1;
+}
+
+.scoreHighlight {
+  color: #10b981;
+  font-weight: 800;
+}
+
+.cycleReadout {
+  font-size: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: #94a3b8;
+  margin-top: 0.2rem;
+}
+
+.winnerPills {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.metricPill {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.5rem 0.85rem;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.65rem;
+  color: #94a3b8;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.metricPill strong {
+  font-size: 0.78rem;
+  color: #e2e8f0;
+  margin-top: 0.15rem;
+}
+
+.emptyHero {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: #94a3b8;
+  text-align: center;
+  font-size: 0.88rem;
+}
+
+.emptyIcon {
+  color: #38bdf8;
+  animation: pulseEmpty 2s infinite;
+}
+
+@keyframes pulseEmpty {
+  0%, 100% { opacity: 0.4; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+.pipelineStack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.stageBlock {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+
+.stageTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.stagePill {
+  font-size: 0.65rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+}
+
+.stageHeading {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0;
+}
+
+.mapsRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.pipelineArrow {
+  color: #64748b;
+}
+
+.channelGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.mp2Grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+@media (min-width: 900px) {
+  .mp2Grid {
+    grid-template-columns: repeat(8, 1fr);
+  }
+}
+
+.denseRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.logitsChartBox {
+  flex-grow: 1;
+  min-width: 18rem;
+}

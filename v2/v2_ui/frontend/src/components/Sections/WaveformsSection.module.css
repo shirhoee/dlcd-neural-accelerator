@@ -1,0 +1,352 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.tag {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #38bdf8;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #f8fafc;
+}
+
+.desc {
+  margin: 0;
+  font-size: 0.92rem;
+  color: #94a3b8;
+  max-width: 850px;
+  line-height: 1.5;
+}
+
+.tabNav {
+  display: flex;
+  gap: 0.75rem;
+  background: rgba(15, 23, 42, 0.65);
+  padding: 0.4rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  width: fit-content;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.tabBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: #94a3b8;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.tabBtn:hover {
+  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.activeTab {
+  background: rgba(56, 189, 248, 0.12) !important;
+  border-color: rgba(56, 189, 248, 0.35) !important;
+  color: #38bdf8 !important;
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.15);
+}
+
+/* Waveforms Card */
+.waveformsCard,
+.breakdownCard,
+.confusionCard {
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 1.5rem;
+  backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.waveHeader,
+.breakdownHeader,
+.confHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.waveTag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #38bdf8;
+  text-transform: uppercase;
+}
+
+.waveTitle {
+  margin: 0.2rem 0 0 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.timeAxisLabel {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.waveViewer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  overflow-x: auto;
+}
+
+.signalRow {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  align-items: center;
+  gap: 1rem;
+  min-width: 600px;
+  height: 32px;
+}
+
+.signalNameCol {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #cbd5e1;
+}
+
+.sigName {
+  font-weight: 600;
+}
+
+.sigWidth {
+  font-size: 0.62rem;
+  color: #64748b;
+}
+
+.traceCanvasCol {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.traceSvg {
+  width: 100%;
+  height: 28px;
+}
+
+.waveFooter {
+  display: flex;
+}
+
+.waveNote {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  line-height: 1.5;
+  border-left: 3px solid #38bdf8;
+}
+
+/* Breakdown Card */
+.totalCyclePill {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+}
+
+.totalCyclePill span {
+  font-size: 0.65rem;
+  color: #94a3b8;
+  letter-spacing: 0.08em;
+}
+
+.totalCyclePill strong {
+  font-size: 1.15rem;
+  color: #38bdf8;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.stackedBar {
+  display: flex;
+  height: 24px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.barSegment {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.stagesList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.stageRow {
+  display: grid;
+  grid-template-columns: 16px 1fr 140px 60px;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.82rem;
+  padding: 0.4rem 0.6rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+}
+
+.stageDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.stageTitleText {
+  color: #e2e8f0;
+}
+
+.stageCyclesText {
+  font-family: 'JetBrains Mono', monospace;
+  color: #38bdf8;
+  text-align: right;
+}
+
+.stagePctText {
+  font-family: 'JetBrains Mono', monospace;
+  color: #94a3b8;
+  text-align: right;
+  font-weight: 600;
+}
+
+.specCallout {
+  background: rgba(56, 189, 248, 0.06);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 8px;
+  padding: 0.85rem 1.1rem;
+  font-size: 0.82rem;
+  color: #cbd5e1;
+  line-height: 1.5;
+}
+
+.specCallout p {
+  margin: 0;
+}
+
+/* Confusion Card */
+.accuracyHero {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.accNumber {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #10b981;
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1;
+}
+
+.accSub {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 0.2rem;
+}
+
+.matrixTableWrapper {
+  overflow-x: auto;
+}
+
+.matrixTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  text-align: left;
+}
+
+.matrixTable th {
+  padding: 0.65rem 0.85rem;
+  background: rgba(0, 0, 0, 0.35);
+  color: #94a3b8;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.matrixTable td {
+  padding: 0.65rem 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: #cbd5e1;
+}
+
+.accBarContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 160px;
+}
+
+.accBarFill {
+  height: 8px;
+  background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+  border-radius: 4px;
+}
+
+.accBarText {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #f1f5f9;
+  font-weight: 700;
+}
+
+.passBadge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.12);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}

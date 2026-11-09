@@ -1,0 +1,110 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 0.85rem;
+}
+
+.chartHeader {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+  padding: 0 0.5rem;
+}
+
+.headerLabel {
+  letter-spacing: 0.05em;
+}
+
+.barsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.barRow {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.barRow:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.winnerRow {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.digitBadge {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #94a3b8;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.winnerBadge {
+  background: #10b981;
+  color: #022c22;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+}
+
+.track {
+  position: relative;
+  flex-grow: 1;
+  height: 1.25rem;
+  background: rgba(2, 6, 23, 0.6);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+}
+
+.fill {
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8, #6366f1);
+  border-radius: 3px;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.winnerFill {
+  background: linear-gradient(90deg, #10b981, #34d399);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
+}
+
+.pctText {
+  position: absolute;
+  right: 0.5rem;
+  font-size: 0.68rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: #cbd5e1;
+}
+
+.logitVal {
+  width: 2.8rem;
+  text-align: right;
+  font-size: 0.72rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: #64748b;
+  flex-shrink: 0;
+}

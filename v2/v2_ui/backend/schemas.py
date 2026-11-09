@@ -25,3 +25,17 @@ class PredictResponse(BaseModel):
     input: List[List[float]] = Field(..., description="Downsampled 20x20 input image sent to hardware")
     mp1: List[List[List[float]]] = Field(..., description="MaxPool1 4x10x10 feature maps")
     mp2: List[List[List[float]]] = Field(..., description="MaxPool2 8x5x5 feature maps")
+
+class V1PredictResponse(BaseModel):
+    prediction: int = Field(..., description="V1 Predicted digit (0-9)")
+    logits: List[float] = Field(..., description="V1 10 output logits")
+    layer1: List[float] = Field(..., description="V1 Hidden Layer 1 (16 activations)")
+    layer2: List[float] = Field(..., description="V1 Hidden Layer 2 (6 activations)")
+    input_10x10: List[List[float]] = Field(..., description="Downsampled 10x10 input image for V1")
+    cycles: int = Field(default=6139, description="V1 baseline simulation cycles")
+    accuracy_baseline: float = Field(default=93.06, description="V1 testset accuracy baseline")
+
+class ComparePredictResponse(BaseModel):
+    v1: V1PredictResponse
+    v2: PredictResponse
+    agreement: bool = Field(..., description="Whether V1 and V2 predicted the same digit")

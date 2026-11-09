@@ -1,0 +1,338 @@
+.section {
+  padding: 3rem 2rem;
+  background: #080c14;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+@media (min-width: 1024px) {
+  .sectionHeader {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+}
+
+.categoryBadge {
+  font-size: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: #10b981;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.4rem;
+}
+
+.sectionTitle {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #f8fafc;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.01em;
+}
+
+.sectionDesc {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  margin: 0;
+  max-width: 48rem;
+  line-height: 1.5;
+}
+
+.highlight {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.fsmTabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.fsmTabBtn {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fsmTabBtn:hover {
+  background: rgba(30, 41, 59, 0.9);
+  color: #ffffff;
+}
+
+.activeFsmTab {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: #10b981;
+  color: #10b981;
+}
+
+.fsmCard {
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.fsmCardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .fsmCardHeader {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.fsmTitle {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #f1f5f9;
+  margin: 0 0 0.35rem 0;
+}
+
+.cycleBadge {
+  font-size: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.ctrlBtn {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  padding: 0.45rem 0.85rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.15s ease;
+}
+
+.ctrlBtn:hover {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+  color: #ffffff;
+}
+
+.diagramContainer {
+  overflow-x: auto;
+  padding: 1.5rem 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.statesTrack {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  min-width: max-content;
+}
+
+.stateNode {
+  background: #0f172a;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 1.25rem;
+  width: 15rem;
+  min-height: 10rem;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.stateNode:hover {
+  transform: translateY(-4px);
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.activeNode {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.08);
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
+  transform: scale(1.03);
+}
+
+.nodeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.stateNum {
+  font-size: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.initTag {
+  font-size: 0.65rem;
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.finalTag {
+  font-size: 0.65rem;
+  background: rgba(236, 72, 153, 0.15);
+  color: #ec4899;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.stateName {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #f8fafc;
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 0.4rem;
+}
+
+.stateDesc {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  line-height: 1.35;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.activeGlowPulse {
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(16, 185, 129, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #10b981;
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.pulseIcon {
+  animation: spinSlow 3s linear infinite;
+}
+
+@keyframes spinSlow {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.transitionLine {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  color: #64748b;
+  transition: all 0.2s ease;
+}
+
+.activeTransition {
+  color: #10b981;
+}
+
+.transCond {
+  font-size: 0.7rem;
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 0.2rem;
+}
+
+.transArrow {
+  animation: pulseArrow 1.2s infinite;
+}
+
+@keyframes pulseArrow {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+}
+
+.transitionTableContainer {
+  background: #090d16;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+
+.tableHeading {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0 0 1rem 0;
+}
+
+.transTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.transTable th {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  background: rgba(15, 23, 42, 0.8);
+  color: #94a3b8;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.transTable td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: #cbd5e1;
+}
+
+.monoCell {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+.condCell {
+  font-family: 'JetBrains Mono', monospace;
+  color: #f59e0b;
+}
+
+.actionCell {
+  font-family: 'JetBrains Mono', monospace;
+  color: #a7f3d0;
+}

@@ -1,0 +1,246 @@
+.section {
+  padding: 3rem 2rem;
+  background: #090d16;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+@media (min-width: 1024px) {
+  .sectionHeader {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+}
+
+.categoryBadge {
+  font-size: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: #818cf8;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.4rem;
+}
+
+.sectionTitle {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #f8fafc;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.01em;
+}
+
+.sectionDesc {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  margin: 0;
+  max-width: 48rem;
+  line-height: 1.5;
+}
+
+.highlight {
+  color: #10b981;
+  font-weight: 700;
+}
+
+.aspectTabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tabBtn {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  padding: 0.55rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tabBtn:hover {
+  background: rgba(30, 41, 59, 0.9);
+  color: #ffffff;
+}
+
+.activeTab {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: #6366f1;
+  color: #818cf8;
+}
+
+.scorecardGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+@media (min-width: 900px) {
+  .scorecardGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.versionCard {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.v2HighlightCard {
+  background: rgba(15, 23, 42, 0.9);
+  border: 1.5px solid rgba(16, 185, 129, 0.4);
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.15);
+}
+
+.cardHeader {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.v2HeaderTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.35rem;
+}
+
+.versionTag {
+  font-size: 0.68rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  background: rgba(148, 163, 184, 0.15);
+  color: #94a3b8;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.v2Tag {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.gainBadge {
+  font-size: 0.7rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 800;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+}
+
+.versionTitle {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #f8fafc;
+  margin: 0.35rem 0 0.2rem 0;
+}
+
+.cardSub {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin: 0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.metricsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.metricRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.metricLabel {
+  font-size: 0.82rem;
+  color: #94a3b8;
+}
+
+.metricVal {
+  font-size: 0.85rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: #cbd5e1;
+  font-weight: 600;
+}
+
+.metricValV1 {
+  font-size: 1.15rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: #f59e0b;
+  font-weight: 800;
+}
+
+.metricValV2 {
+  font-size: 1.15rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: #10b981;
+  font-weight: 800;
+}
+
+.metricValDim {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.insightsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 900px) {
+  .insightsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.insightCard {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.insightIcon {
+  color: #38bdf8;
+  margin-bottom: 0.25rem;
+}
+
+.insightTitle {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0;
+}
+
+.insightDesc {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  line-height: 1.45;
+  margin: 0;
+}

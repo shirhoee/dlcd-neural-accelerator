@@ -1,0 +1,154 @@
+.canvasWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.canvasFrame {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  border: 2px solid #38bdf8;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.25), inset 0 0 15px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+  background: #030712;
+}
+
+.canvas {
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+  display: block;
+}
+
+.gridOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.brushToolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 280px;
+  margin-top: 0.75rem;
+  padding: 0.25rem 0;
+}
+
+.brushGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.brushLabel {
+  font-size: 0.65rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  margin-right: 0.2rem;
+}
+
+.brushSizeBtn {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  font-size: 0.68rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.brushSizeBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+}
+
+.activeBrush {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+  color: #38bdf8;
+  font-weight: 700;
+}
+
+.clearBtn {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #f87171;
+  font-size: 0.72rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.15s ease;
+}
+
+.clearBtn:hover {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: #ef4444;
+  color: #ffffff;
+}
+
+.runBtn {
+  margin-top: 1rem;
+  width: 280px;
+  background: linear-gradient(135deg, #2563eb, #6366f1);
+  border: none;
+  color: #ffffff;
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.runBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.5);
+  filter: brightness(1.1);
+}
+
+.runBtn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.runBtn:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.runLoading {
+  background: linear-gradient(135deg, #475569, #334155);
+  animation: pulseLoading 1.5s infinite;
+}
+
+@keyframes pulseLoading {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+.runIcon {
+  color: #ffffff;
+}

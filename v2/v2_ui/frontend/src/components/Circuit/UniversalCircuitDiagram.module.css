@@ -1,0 +1,266 @@
+.section {
+  padding: 3rem 2rem;
+  background: #090d16;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+@media (min-width: 1024px) {
+  .sectionHeader {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+}
+
+.categoryBadge {
+  font-size: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: #38bdf8;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.4rem;
+}
+
+.sectionTitle {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #f8fafc;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.01em;
+}
+
+.sectionDesc {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  margin: 0;
+  max-width: 50rem;
+  line-height: 1.5;
+}
+
+.highlight {
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: rgba(15, 23, 42, 0.6);
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.75rem;
+  color: #cbd5e1;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.dotInput { background: #38bdf8; box-shadow: 0 0 6px #38bdf8; }
+.dotConv { background: #10b981; box-shadow: 0 0 6px #10b981; }
+.dotPool { background: #f59e0b; box-shadow: 0 0 6px #f59e0b; }
+.dotSystolic { background: #6366f1; box-shadow: 0 0 6px #6366f1; }
+
+.datapathContainer {
+  overflow-x: auto;
+  padding-bottom: 1.5rem;
+}
+
+.flowStages {
+  display: flex;
+  gap: 1rem;
+  min-width: max-content;
+  align-items: stretch;
+}
+
+.stageCard {
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.25rem;
+  width: 20rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.stageCard:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+.stageHeader {
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 0.75rem;
+}
+
+.stageBadge {
+  font-size: 0.65rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 0.4rem;
+}
+
+.stageTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0 0 0.2rem 0;
+}
+
+.stageDesc {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.moduleList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  flex-grow: 1;
+}
+
+.moduleCard {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.moduleCard:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  border-color: #38bdf8;
+}
+
+.cat_input { border-left: 3px solid #38bdf8; }
+.cat_conv1, .cat_conv2 { border-left: 3px solid #10b981; }
+.cat_pool1, .cat_pool2 { border-left: 3px solid #f59e0b; }
+.cat_mlp { border-left: 3px solid #6366f1; }
+.cat_output { border-left: 3px solid #ec4899; }
+
+.modTopRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modName {
+  font-size: 0.88rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  color: #f8fafc;
+}
+
+.viewBadge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+}
+
+.modDesc {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.modFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.7rem;
+  color: #64748b;
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 0.25rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.latencyTag {
+  color: #e2e8f0;
+}
+
+.portCount {
+  color: #38bdf8;
+}
+
+.flowConnector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  position: relative;
+}
+
+.pulseWire {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #6366f1, #38bdf8);
+  box-shadow: 0 0 10px #38bdf8;
+  z-index: 1;
+}
+
+.flowArrow {
+  color: #38bdf8;
+  z-index: 2;
+  background: #090d16;
+  border-radius: 50%;
+  padding: 2px;
+  filter: drop-shadow(0 0 8px #38bdf8);
+  animation: bounceRight 1.5s infinite;
+}
+
+@keyframes bounceRight {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
+
+.busLabel {
+  font-size: 0.65rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: #94a3b8;
+  margin-top: 0.5rem;
+  background: #0f172a;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 2;
+}
