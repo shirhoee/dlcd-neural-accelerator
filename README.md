@@ -52,7 +52,7 @@ Cycle 0                                                                        C
 Latch      Conv1 + MaxPool1        Conv2 + MaxPool2     MLP Head (Systolic) Arg Align
 ```
 
-1. **Front-End Latch / Input Sampling Overhead:** 1 cycle (Cycle 0 $\rightarrow$ 1, 35 ns $\rightarrow$ 45 ns)
+1. **Front-End Latch / Input Sampling Overhead:** 1 cycle (Cycle 0 $\rightarrow$ 1, 35 ns $\rightarrow$ 45 ns; registered into `run_latch` in `v2_top.v:16-23`, deasserting `internal_reset` in line 25 to release `conv1_inst` on next posedge)
 2. **Conv1 + MaxPool1 Streaming Execution:** 4,892 cycles (Cycle 1 $\rightarrow$ 4893, 45 ns $\rightarrow$ 48,965 ns)
 3. **Conv2 Buffering + Conv2 + MaxPool2 Execution:** 1,244 cycles (Cycle 4893 $\rightarrow$ 6137, 48,965 ns $\rightarrow$ 61,405 ns)
 4. **MLP Head Systolic Matrix Multiplications:** 2,977 cycles (Cycle 6137 $\rightarrow$ 9114, 61,405 ns $\rightarrow$ 91,175 ns)

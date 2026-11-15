@@ -32,7 +32,7 @@ The codebase encompasses two complete architectural generations:
 
 | Stage ID | Pipeline Stage Name | Start Cycle | End Cycle | Cycles | Elapsed Time (100 MHz) | Function |
 | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
-| **1** | Front-End Latch / Input Sampling | 0 | 1 | 1 | 0.01 μs | Testbench `start` strobe sampled into `run_latch` |
+| **1** | Front-End Latch / Input Sampling | 0 | 1 | 1 | 0.01 μs | `start` registered into `run_latch` (`v2_top.v:16-23`), deasserting `internal_reset` (`v2_top.v:25`) |
 | **2** | Conv1 + MaxPool1 Streaming | 1 | 4,893 | 4,892 | 48.92 μs | 4-channel 3×3 convolution + 2×2 max-pooling on 20×20 pixels |
 | **3** | Conv2 Buffering + Conv2 + MaxPool2 | 4,893 | 6,137 | 1,244 | 12.44 μs | 8-filter 4-channel 3×3 convolution + 2×2 max-pooling into `ram_A` |
 | **4** | MLP Head Systolic Multiplications | 6,137 | 9,114 | 2,977 | 29.77 μs | Time-multiplexed 16×16 systolic array computing 200→64→32→10 |

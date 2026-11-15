@@ -50,3 +50,14 @@
   - Added `mlp_head_cycle_note` to `measure_facts.py` and `facts.json`.
   - Added exact explanatory paragraph into `generate_final_report.py` (Section 3.3).
   - Confirmed test output unchanged: `tb_mlp_head` passes with 2,978 cycles; `test_10.py` measures 2,977.0 dense cycles.
+
+### Entry 3: Task 3 - 1-Cycle Front-End Latch Stage Justification
+- **Hardware Mechanism Confirmation:**
+  - In `v2_top.v:16-25`, `run_latch` is cleared during reset.
+  - While `run_latch == 0`, `internal_reset = reset | ~run_latch` is held high.
+  - When `start` is pulsed high by the testbench at Cycle 0 (35 ns), `run_latch <= 1'b1` is scheduled at the 35 ns posedge.
+  - During Cycle 0 (35 ns to 45 ns), `conv1_inst` and all downstream logic remain in reset.
+  - At Cycle 1 (45 ns posedge), `internal_reset` is now low, releasing `conv1_inst` to begin active execution (`init_cnt <= init_cnt + 1`).
+  - Thus, this 1-cycle latency is a physical register delay caused by `run_latch` (`v2_top.v:16-23`) and `internal_reset` (`v2_top.v:25`).
+- **Documentation Updates:**
+  - Updated stage row description across `measure_facts.py`, `facts.json`, `README.md`, and `CURRENT_STATE.md` to explicitly cite `run_latch` (`v2_top.v:16-23`) and `internal_reset` (`v2_top.v:25`).

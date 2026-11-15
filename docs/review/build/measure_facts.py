@@ -37,7 +37,7 @@ def main():
             "cycles": 1,
             "start_time_ns": 35.0,
             "end_time_ns": 45.0,
-            "description": "Start signal asserted by testbench and registered into run_latch on clock posedge."
+            "description": "Start strobe asserted by testbench and registered into run_latch (v2_top.v:16-23), deasserting internal_reset (v2_top.v:25) to enable conv1_inst on next posedge."
         },
         {
             "stage_id": 2,
