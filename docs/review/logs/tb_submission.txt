@@ -1,0 +1,21 @@
+VCD info: dumpfile tb_submission.vcd opened for output.
+
+========================================================================================
+         PES UNIVERSITY - UE25CS251A DLCD LABORATORY END SEMESTER ASSESSMENT
+         V2 CNN NEURAL ACCELERATOR: 10-DIGIT HARDWARE VERIFICATION SUITE
+========================================================================================
+ [TEST  1] True Digit: 0 | Predicted: 0 | Latency: 9116 cycles | Result: PASS
+ [TEST  2] True Digit: 1 | Predicted: 1 | Latency: 9116 cycles | Result: PASS
+ [TEST  3] True Digit: 2 | Predicted: 2 | Latency: 9116 cycles | Result: PASS
+ [TEST  4] True Digit: 3 | Predicted: 3 | Latency: 9116 cycles | Result: PASS
+ [TEST  5] True Digit: 4 | Predicted: 4 | Latency: 9116 cycles | Result: PASS
+ [TEST  6] True Digit: 5 | Predicted: 5 | Latency: 9116 cycles | Result: PASS
+ [TEST  7] True Digit: 6 | Predicted: 6 | Latency: 9116 cycles | Result: PASS
+ [TEST  8] True Digit: 7 | Predicted: 7 | Latency: 9116 cycles | Result: PASS
+ [TEST  9] True Digit: 8 | Predicted: 8 | Latency: 9116 cycles | Result: PASS
+ [TEST 10] True Digit: 9 | Predicted: 9 | Latency: 9116 cycles | Result: PASS
+----------------------------------------------------------------------------------------
+ FINAL SCORECARD: 10/10 PASSED (100.0% Hardware Accuracy) | ALL TESTS PASSED
+========================================================================================
+
+v2\verilog_src\tb_submission.v:108: $finish called at 912635000 (1ps)

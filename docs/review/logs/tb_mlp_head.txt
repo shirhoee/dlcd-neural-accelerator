@@ -1,0 +1,3 @@
+VCD info: dumpfile tb_mlp_head.vcd opened for output.
+ALL TESTS PASSED: 10/10 MLP Head output logits matched in 2978 cycles.
+v2\verilog_src\tb_mlp_head.v:126: $finish called at 30085000 (1ps)

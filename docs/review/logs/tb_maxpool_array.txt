@@ -1,0 +1,2 @@
+T2/T3 Standalone: 1600/1600 matches.
+v2\verilog_src\tb_maxpool_array.v:80: $finish called at 45805000 (1ps)

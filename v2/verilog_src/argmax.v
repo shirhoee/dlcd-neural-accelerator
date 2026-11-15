@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`default_nettype none
 
 module argmax (
     input wire clk,
@@ -64,3 +65,4 @@ module argmax (
     end
 
 endmodule
+`default_nettype wire

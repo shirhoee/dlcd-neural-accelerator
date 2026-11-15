@@ -1,11 +1,12 @@
 import os
 import subprocess
 import glob
+import shutil
 
 v1_dir = "v1/verilog_src"
 v2_dir = "v2/verilog_src"
-iverilog = r"C:\iverilog\bin\iverilog.exe"
-vvp = r"C:\iverilog\bin\vvp.exe"
+iverilog = shutil.which("iverilog") or r"C:\iverilog\bin\iverilog.exe"
+vvp = shutil.which("vvp") or r"C:\iverilog\bin\vvp.exe"
 
 testbenches = []
 

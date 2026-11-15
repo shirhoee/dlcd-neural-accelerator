@@ -1,0 +1,2 @@
+T1 Conv2: 800/800 matches.
+v2\verilog_src\tb_conv2_array.v:82: $finish called at 13485000 (1ps)

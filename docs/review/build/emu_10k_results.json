@@ -1,0 +1,205 @@
+{
+  "total_images": 10000,
+  "pt_correct": 9883,
+  "pt_accuracy": 0.9883,
+  "pt_accuracy_pct": "98.83%",
+  "emu_correct": 9883,
+  "emu_accuracy": 0.9883,
+  "emu_accuracy_pct": "98.83%",
+  "disagreements": 12,
+  "wall_time_s": 1162.0,
+  "per_class": [
+    {
+      "class": 0,
+      "total": 980,
+      "correct": 978,
+      "accuracy": 0.998,
+      "accuracy_pct": "99.80%"
+    },
+    {
+      "class": 1,
+      "total": 1135,
+      "correct": 1128,
+      "accuracy": 0.9938,
+      "accuracy_pct": "99.38%"
+    },
+    {
+      "class": 2,
+      "total": 1032,
+      "correct": 1018,
+      "accuracy": 0.9864,
+      "accuracy_pct": "98.64%"
+    },
+    {
+      "class": 3,
+      "total": 1010,
+      "correct": 1001,
+      "accuracy": 0.9911,
+      "accuracy_pct": "99.11%"
+    },
+    {
+      "class": 4,
+      "total": 982,
+      "correct": 975,
+      "accuracy": 0.9929,
+      "accuracy_pct": "99.29%"
+    },
+    {
+      "class": 5,
+      "total": 892,
+      "correct": 878,
+      "accuracy": 0.9843,
+      "accuracy_pct": "98.43%"
+    },
+    {
+      "class": 6,
+      "total": 958,
+      "correct": 943,
+      "accuracy": 0.9843,
+      "accuracy_pct": "98.43%"
+    },
+    {
+      "class": 7,
+      "total": 1028,
+      "correct": 1015,
+      "accuracy": 0.9874,
+      "accuracy_pct": "98.74%"
+    },
+    {
+      "class": 8,
+      "total": 974,
+      "correct": 957,
+      "accuracy": 0.9825,
+      "accuracy_pct": "98.25%"
+    },
+    {
+      "class": 9,
+      "total": 1009,
+      "correct": 990,
+      "accuracy": 0.9812,
+      "accuracy_pct": "98.12%"
+    }
+  ],
+  "confusion_matrix": [
+    [
+      978,
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      1128,
+      1,
+      1,
+      0,
+      0,
+      3,
+      0,
+      2,
+      0
+    ],
+    [
+      5,
+      0,
+      1018,
+      2,
+      1,
+      0,
+      0,
+      4,
+      2,
+      0
+    ],
+    [
+      0,
+      0,
+      1,
+      1001,
+      0,
+      3,
+      0,
+      1,
+      2,
+      2
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      975,
+      0,
+      1,
+      0,
+      1,
+      5
+    ],
+    [
+      2,
+      0,
+      0,
+      5,
+      1,
+      878,
+      4,
+      0,
+      1,
+      1
+    ],
+    [
+      3,
+      2,
+      0,
+      0,
+      1,
+      7,
+      943,
+      0,
+      2,
+      0
+    ],
+    [
+      1,
+      1,
+      3,
+      3,
+      1,
+      0,
+      0,
+      1015,
+      1,
+      3
+    ],
+    [
+      1,
+      0,
+      2,
+      2,
+      0,
+      3,
+      1,
+      2,
+      957,
+      6
+    ],
+    [
+      1,
+      2,
+      0,
+      2,
+      5,
+      4,
+      0,
+      3,
+      2,
+      990
+    ]
+  ]
+}

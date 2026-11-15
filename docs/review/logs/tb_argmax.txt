@@ -1,0 +1,2 @@
+PASS
+v2\verilog_src\tb_argmax.v:74: $finish called at 185000 (1ps)

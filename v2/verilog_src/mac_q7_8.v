@@ -1,3 +1,6 @@
+`timescale 1ns / 1ps
+`default_nettype none
+
 module mac_q7_8 (
     input wire signed [15:0] weight,
     input wire signed [15:0] in_val,
@@ -13,3 +16,4 @@ module mac_q7_8 (
     end
 
 endmodule
+`default_nettype wire

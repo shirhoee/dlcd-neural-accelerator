@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`default_nettype none
 
 module maxpool_pe (
     input wire signed [15:0] in_val_0,
@@ -35,3 +36,4 @@ module maxpool_pe (
     end
 
 endmodule
+`default_nettype wire

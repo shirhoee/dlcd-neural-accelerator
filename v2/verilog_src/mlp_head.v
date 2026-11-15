@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`default_nettype none
 
 module mlp_head (
     input wire clk,
@@ -239,3 +240,4 @@ module mlp_head (
     assign out_digit_9 = ram_B[9];
 
 endmodule
+`default_nettype wire

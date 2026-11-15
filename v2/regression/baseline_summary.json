@@ -1,9 +1,9 @@
 {
     "Total Images": 10000,
-    "RTL Accuracy": 0.0002,
-    "Float32 Accuracy": 0.0005,
-    "F32 vs Q7.8 Disagreements": 3,
-    "Max Logit Error": 11988.431640625,
+    "RTL Accuracy": 0.9883,
+    "Float32 Accuracy": 0.9883,
+    "F32 vs Q7.8 Disagreements": 12,
+    "Max Logit Error": 823.134765625,
     "RTL vs Emu Mismatches": 0,
     "Cycles Mean": 9116.0,
     "Cycles Min": 9116,
@@ -11,6 +11,6 @@
     "Layer Breakdown Mean": {
         "MP1": 4894.0,
         "MP2": 1072.0,
-        "Dense": 0.0
+        "Dense": 2977.0
     }
 }

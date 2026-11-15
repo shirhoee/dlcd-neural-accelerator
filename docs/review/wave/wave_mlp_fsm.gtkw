@@ -1,0 +1,22 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*]
+[timestart] 61350000
+[size] 1600 900
+[pos] -1 -1
+*-marks-
+@28
+tb_wave.clk
+@24
+tb_wave.dut.dense_inst.state
+tb_wave.dut.dense_inst.layer
+tb_wave.dut.dense_inst.r_idx
+tb_wave.dut.dense_inst.c_idx
+tb_wave.dut.dense_inst.timer
+@28
+tb_wave.dut.d_valid
+tb_wave.dut.done
+@24
+tb_wave.dut.prediction
+[pattern_trace] 1
+[pattern_trace] 0

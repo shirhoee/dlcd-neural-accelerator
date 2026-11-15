@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`default_nettype none
 
 module maxpool_array (
     input wire clk,
@@ -73,3 +74,4 @@ module maxpool_array (
     assign valid_out = valid_w0;
 
 endmodule
+`default_nettype wire

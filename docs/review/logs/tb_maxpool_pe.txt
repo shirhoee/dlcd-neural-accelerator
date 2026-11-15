@@ -1,0 +1,7 @@
+VCD info: dumpfile tb_maxpool_pe.vcd opened for output.
+PASS: Test Case 1 (All Positive)
+PASS: Test Case 2 (All Negative)
+PASS: Test Case 3 (Mixed Positive/Negative)
+PASS: Test Case 4 (Tie)
+ALL TESTS PASSED.
+v2\verilog_src\tb_maxpool_pe.v:89: $finish called at 50000 (1ps)

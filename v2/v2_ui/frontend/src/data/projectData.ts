@@ -61,11 +61,10 @@ export const CIRCUIT_MODULES: CircuitModule[] = [
     id: "conv_pe",
     name: "conv_pe",
     category: "conv1",
-    description: "Convolutional Processing Element: 9-tap sequential Multiply-Accumulate unit with stationary weight storage.",
+    description: "Convolutional Processing Element: 9-tap sequential Multiply-Accumulate unit with stationary weight storage and modulo-9 tap counter (no FSM).",
     verilogFile: "conv_pe.v",
     latencyCycles: "Exactly 9 clock cycles per 3x3 window",
     arithmeticType: "Signed Q7.8 Fixed-Point (prod[23:8] per-step truncation)",
-    fsmName: "conv_pe_fsm",
     ports: [
       { name: "clk", direction: "input", width: "1", description: "System clock" },
       { name: "reset", direction: "input", width: "1", description: "Synchronous reset" },
@@ -83,7 +82,7 @@ export const CIRCUIT_MODULES: CircuitModule[] = [
       "16x16 signed multiplier -> 32-bit product",
       "Fixed-point truncator: prod[23:8]",
       "16-bit signed accumulator adder + feedback reg",
-      "4-bit modulo-9 binary up-counter"
+      "4-bit modulo-9 binary up-counter (tap_idx 0..8; no FSM)"
     ],
     verilogSnippet: `module conv_pe (
     input wire clk, reset, load_weight, mac_en, clr_acc,
@@ -126,24 +125,28 @@ endmodule`
     category: "conv1",
     description: "4-Channel Parallel Convolution Array: Wraps window_gen and 4 conv_pe instances computing 4 channels in parallel.",
     verilogFile: "conv1_array.v",
-    latencyCycles: "4,894 clock cycles for complete 20x20 image",
-    arithmeticType: "4x parallel Q7.8 sequential MACs",
+    latencyCycles: "4,892 clock cycles for complete 20x20 image (400 windows)",
+    arithmeticType: "4x parallel Q7.8 sequential MACs (4 multipliers total)",
+    fsmName: "conv1_array_fsm",
     ports: [
       { name: "clk", direction: "input", width: "1", description: "System clock" },
       { name: "reset", direction: "input", width: "1", description: "Synchronous reset" },
       { name: "conv1_weights", direction: "input", width: "[575:0]", description: "Flat 4 channels x 9 weights bus" },
+      { name: "pixel_addr", direction: "output", width: "[8:0]", description: "Image memory address (0 to 399)" },
       { name: "pixel_in", direction: "input", width: "[15:0]", description: "Streaming input pixel" },
       { name: "out_ch0 .. out_ch3", direction: "output", width: "[15:0]", description: "4-channel parallel convolved pixels" },
-      { name: "valid_out", direction: "output", width: "1", description: "Valid output strobe (400 total pulses)" }
+      { name: "valid_out", direction: "output", width: "1", description: "Valid output strobe (400 total pulses)" },
+      { name: "done", direction: "output", width: "1", description: "Conv1 processing complete strobe" }
     ],
     schematicSummary: [
-      "1x window_gen module",
-      "4x conv_pe instances (Channel 0 to 3)",
-      "Master sequencer generating clr_acc on Tap 0"
+      "1x window_gen module (47-element shift register line buffer)",
+      "4x conv_pe instances (Channel 0 to 3, 4 multipliers)",
+      "6-state master FSM (ST_INIT, ST_ADVANCE, ST_FETCH, ST_MAC, ST_WAIT_VALID, ST_DONE)"
     ],
     verilogSnippet: `module conv1_array (
     input wire clk, reset,
     input wire [575:0] conv1_weights,
+    output wire [8:0] pixel_addr,
     input wire signed [15:0] pixel_in,
     output wire signed [15:0] out_ch0, out_ch1, out_ch2, out_ch3,
     output wire valid_out, done
@@ -203,20 +206,23 @@ endmodule`
     category: "conv2",
     description: "Conv2 Array Subsystem: 8 parallel PEs with 4-channel adder trees convolving 4 input channels to 8 output channels.",
     verilogFile: "conv2_array.v",
-    latencyCycles: "1,072 clock cycles",
-    arithmeticType: "4-input adder trees with Q7.8 sequential MACs",
+    latencyCycles: "1,244 clock cycles (100 windows across 4 channels)",
+    arithmeticType: "4-input adder trees with Q7.8 sequential MACs (32 multipliers total)",
+    fsmName: "conv2_array_fsm",
     ports: [
       { name: "clk, reset, valid_in", direction: "input", width: "1", description: "Control strobes" },
       { name: "in_ch0 .. in_ch3", direction: "input", width: "[15:0]", description: "4-channel streaming inputs from MaxPool1" },
       { name: "conv2_weights", direction: "input", width: "[4607:0]", description: "Flat 288 weights bus (8 out x 4 in x 9 taps)" },
       { name: "out_ch0 .. out_ch7", direction: "output", width: "[15:0]", description: "8-channel convolved outputs" },
-      { name: "valid_out", direction: "output", width: "1", description: "Valid output strobe (100 total pulses)" }
+      { name: "valid_out", direction: "output", width: "1", description: "Valid output strobe (100 total pulses)" },
+      { name: "done", direction: "output", width: "1", description: "Conv2 processing complete strobe" }
     ],
     schematicSummary: [
-      "8x conv2_pe instances",
+      "8x conv2_pe instances (32 multipliers total)",
       "Each PE instantiates 4x parallel mac_q7_8 units",
       "4-channel combinational adder tree per PE",
-      "100-word input shift register buffer for stream gaps"
+      "100-word input shift register buffer for stream gaps",
+      "6-state master FSM (ST_LOAD, ST_FETCH, ST_MAC, ST_WAIT_VALID, ST_ADVANCE, ST_DONE)"
     ],
     verilogSnippet: `module conv2_array (
     input wire clk, reset, valid_in,
@@ -233,8 +239,8 @@ endmodule`
     category: "mlp",
     description: "Time-Multiplexed Systolic MLP Head: Reuses 16x16 systolic array across 200->64->32->10 using dual ping-pong RAMs.",
     verilogFile: "mlp_head.v",
-    latencyCycles: "2,978 clock cycles (runs concurrently with Conv2/MaxPool2 pipeline)",
-    arithmeticType: "16x16 2D Systolic Matrix Multiplier with Weight-Stationary Dataflow",
+    latencyCycles: "2,977 clock cycles integrated in v2_top (2,978 standalone; 62 tiles @ 48 cyc/tile + 1 idle)",
+    arithmeticType: "16x16 2D Systolic Matrix Multiplier with Weight-Stationary Dataflow (256 multipliers)",
     fsmName: "mlp_head_fsm",
     ports: [
       { name: "clk, reset, valid_in", direction: "input", width: "1", description: "System control strobes" },
@@ -247,7 +253,7 @@ endmodule`
       "1x 16x16 systolic_array (256 MAC units total)",
       "992-word 256-bit weight ROM (mlp_rom.txt)",
       "4-state FSM controller (IDLE, LOAD_WEIGHT, COMPUTE, DONE)",
-      "Fused ReLU activation feedback"
+      "Fused ReLU activation feedback on hidden layer outputs"
     ],
     verilogSnippet: `module mlp_head (
     input wire clk, reset, valid_in,
@@ -263,25 +269,25 @@ endmodule`
     category: "mlp",
     description: "16x16 2D Systolic Array: 256 interconnected Processing Elements in a grid performing 2D matrix multiplication with zero bus contention.",
     verilogFile: "systolic_array.v",
-    latencyCycles: "32 cycles per 16x16 matrix tile",
-    arithmeticType: "Weight-Stationary systolic dataflow",
+    latencyCycles: "32 cycles compute + 16 cycles load per 16x16 matrix tile (48 cycles/tile)",
+    arithmeticType: "Weight-Stationary systolic dataflow (256 multipliers)",
     ports: [
-      { name: "clk, reset, load_weight", direction: "input", width: "1", description: "Clock and mode controls" },
-      { name: "weight_in_left", direction: "input", width: "[255:0]", description: "16x 16-bit weights loaded from left edge" },
-      { name: "in_val_top", direction: "input", width: "[255:0]", description: "16x 16-bit activations streamed from top edge" },
+      { name: "clk, rst, load_weight", direction: "input", width: "1", description: "Clock and mode controls" },
+      { name: "weight_in_left", direction: "input", width: "[255:0]", description: "16x 16-bit weights loaded from left edge (shift right)" },
+      { name: "in_val_top", direction: "input", width: "[255:0]", description: "16x 16-bit activations streamed from top edge (shift down)" },
       { name: "acc_out_right", direction: "output", width: "[255:0]", description: "16x 16-bit accumulated partial sums from right edge" }
     ],
     schematicSummary: [
-      "16x16 2D mesh of systolic_pe modules",
-      "Horizontal weight loading shift registers",
-      "Vertical activation pipelining registers",
-      "Horizontal accumulation adder pipeline"
+      "16x16 2D mesh of systolic_pe modules (256 MAC units)",
+      "Horizontal weight loading shift registers (w_wire[r][c] -> w_wire[r][c+1])",
+      "Vertical activation pipelining registers (x_wire[r][c] -> x_wire[r+1][c])",
+      "Horizontal partial sum accumulation (y_wire[r][c] -> y_wire[r][c+1])"
     ],
     verilogSnippet: `module systolic_array #(parameter ROWS=16, COLS=16) (
-    input wire clk, reset, load_weight,
-    input wire [ROWS*16-1:0] weight_in_left,
-    input wire [COLS*16-1:0] in_val_top,
-    output wire [ROWS*16-1:0] acc_out_right
+    input wire clk, rst, load_weight,
+    input wire [(ROWS*16)-1:0] weight_in_left,
+    input wire [(COLS*16)-1:0] in_val_top,
+    output wire [(ROWS*16)-1:0] acc_out_right
 );`
   },
   {
@@ -342,40 +348,68 @@ endmodule`
 
 export const FSM_DEFINITIONS: FsmDefinition[] = [
   {
-    id: "conv_pe_fsm",
-    title: "Conv PE 9-Tap Sequential MAC Finite State Machine",
-    module: "conv_pe.v",
-    cycleBudget: "9 cycles per window",
+    id: "conv1_array_fsm",
+    title: "Conv1 Array 6-State Master Sequencer",
+    module: "conv1_array.v",
+    cycleBudget: "4,892 cycles total (400 spatial windows across 20x20 input)",
     states: [
-      { name: "IDLE", desc: "Awaiting mac_en strobe; accumulator and tap counter held static.", isInitial: true },
-      { name: "TAP_0", desc: "Clear accumulator feedback (clr_acc = 1), multiply Tap 0 weight with incoming pixel." },
-      { name: "TAP_1_7", desc: "Accumulate taps 1 through 7 sequentially, tap_idx increments on each rising clock edge." },
-      { name: "TAP_8", desc: "Final 9th tap MAC; assert valid_out strobe on the following clock cycle.", isFinal: true }
+      { name: "ST_INIT", desc: "Reset active: Shift-load 36 weights (9 taps x 4 channels) into PEs via tap_load_idx counter (0 to 8).", isInitial: true },
+      { name: "ST_ADVANCE", desc: "Mandatory 1-cycle pipeline shift strobe to move line buffer past completed receptive window." },
+      { name: "ST_FETCH", desc: "Pump line buffer advance strobe until window_gen asserts window_valid." },
+      { name: "ST_MAC", desc: "9-cycle sequential MAC execution across 4 parallel conv_pe units; clr_acc on cycle 0, mac_en active." },
+      { name: "ST_WAIT_VALID", desc: "Sample synchronized valid_out from conv_pe instances; strobe valid_out to MaxPool1." },
+      { name: "ST_DONE", desc: "All 400 window convolutions complete; assert done strobe to top-level controller.", isFinal: true }
     ],
     transitions: [
-      { from: "IDLE", to: "TAP_0", condition: "mac_en == 1 && clr_acc == 1", action: "tap_idx <= 1, out_acc <= prod[23:8]" },
-      { from: "TAP_0", to: "TAP_1_7", condition: "mac_en == 1", action: "tap_idx <= tap_idx + 1, out_acc <= out_acc + prod" },
-      { from: "TAP_1_7", to: "TAP_8", condition: "tap_idx == 8", action: "valid_out <= 1" },
-      { from: "TAP_8", to: "TAP_0", condition: "clr_acc == 1", action: "Reset tap_idx to 0 for next window" }
+      { from: "ST_INIT", to: "ST_FETCH", condition: "init_cnt == 8", action: "Transition to ST_FETCH once weights are preloaded" },
+      { from: "ST_ADVANCE", to: "ST_FETCH", condition: "1 clock cycle pulse", action: "Unconditionally advance to ST_FETCH" },
+      { from: "ST_FETCH", to: "ST_MAC", condition: "win_valid == 1", action: "Begin 9-cycle MAC accumulation (mac_cnt <= 0)" },
+      { from: "ST_MAC", to: "ST_WAIT_VALID", condition: "mac_cnt == 8", action: "Accumulation complete; latch final product" },
+      { from: "ST_WAIT_VALID", to: "ST_DONE", condition: "win_done == 1", action: "Final window completed; assert done" },
+      { from: "ST_WAIT_VALID", to: "ST_ADVANCE", condition: "!win_done", action: "Shift window buffer for next coordinate" },
+      { from: "ST_DONE", to: "ST_DONE", condition: "Held until reset", action: "Static completed state" }
+    ]
+  },
+  {
+    id: "conv2_array_fsm",
+    title: "Conv2 Array 6-State Multichannel Controller",
+    module: "conv2_array.v",
+    cycleBudget: "1,244 cycles total (100 spatial windows across 4 channels to 8 filters)",
+    states: [
+      { name: "ST_LOAD", desc: "Buffer 100 features from MaxPool1 across 4 channels into buf_ch0..buf_ch3 (write_addr 0 to 99).", isInitial: true },
+      { name: "ST_FETCH", desc: "Await window generator valid strobe (w_valid) for 3x3 receptive field in 10x10 feature maps." },
+      { name: "ST_MAC", desc: "Execute 9-cycle sequential MAC across 8 filter groups (32 multipliers active in parallel)." },
+      { name: "ST_WAIT_VALID", desc: "Sum 4-channel products through adder tree; register 8-channel convolved outputs; strobe valid_out." },
+      { name: "ST_ADVANCE", desc: "Advance spatial coordinate counters across 10x10 input feature maps." },
+      { name: "ST_DONE", desc: "All 100 convolved spatial vectors computed; assert done strobe.", isFinal: true }
+    ],
+    transitions: [
+      { from: "ST_LOAD", to: "ST_FETCH", condition: "write_addr == 99 && valid_in", action: "Input buffer filled; begin spatial convolution" },
+      { from: "ST_FETCH", to: "ST_MAC", condition: "w_valid == 1", action: "Receptive window ready; start MACs (mac_cnt <= 0)" },
+      { from: "ST_MAC", to: "ST_WAIT_VALID", condition: "mac_cnt == 8", action: "9 taps accumulated; route to adder tree" },
+      { from: "ST_WAIT_VALID", to: "ST_DONE", condition: "w_done == 1", action: "Final 100th window processed; assert done" },
+      { from: "ST_WAIT_VALID", to: "ST_ADVANCE", condition: "!w_done", action: "Advance to next spatial window" },
+      { from: "ST_ADVANCE", to: "ST_FETCH", condition: "1 clock cycle pulse", action: "Fetch next receptive field taps" },
+      { from: "ST_DONE", to: "ST_DONE", condition: "Held until reset", action: "Static completed state" }
     ]
   },
   {
     id: "mlp_head_fsm",
     title: "Systolic MLP Head 4-State Time-Multiplexed Controller",
     module: "mlp_head.v",
-    cycleBudget: "2,978 cycles total (Layer 1: 1,664, Layer 2: 768, Layer 3: 546)",
+    cycleBudget: "2,977 cycles inside v2_top (Layer 1: 2,496, Layer 2: 384, Layer 3: 96, + 1 idle)",
     states: [
       { name: "IDLE", desc: "Buffering 200 input features from MaxPool2 into ram_A; write_ptr advances by 8 per valid pulse.", isInitial: true },
-      { name: "LOAD_WEIGHT", desc: "Shift-loading 16x16 weight matrix tile from mlp_rom.txt into systolic array (timer counts 0 to 15)." },
-      { name: "COMPUTE", desc: "Streaming activation vectors through systolic mesh; collecting right-edge outputs, applying fused ReLU, writing to ping-pong RAM." },
+      { name: "LOAD_WEIGHT", desc: "Shift-loading 16x16 weight matrix tile from mlp_rom into systolic array (timer counts 0 to 15, 16 cycles).", isInitial: false },
+      { name: "COMPUTE", desc: "Streaming activation vectors through systolic mesh (timer 0..31, 32 cycles); collecting outputs, applying fused ReLU, writing to ping-pong RAM.", isInitial: false },
       { name: "DONE", desc: "Assert valid_out strobe; final 10 logits ready on out_digit_0..out_digit_9.", isFinal: true }
     ],
     transitions: [
-      { from: "IDLE", to: "LOAD_WEIGHT", condition: "write_ptr == 192 && valid_in", action: "layer <= 1, state <= LOAD_WEIGHT" },
-      { from: "LOAD_WEIGHT", to: "COMPUTE", condition: "timer == 15", action: "timer <= 0, state <= COMPUTE" },
-      { from: "COMPUTE", to: "LOAD_WEIGHT", condition: "timer == 31 && !last_tile", action: "Advance tile index, load next weights" },
-      { from: "COMPUTE", to: "DONE", condition: "timer == 31 && layer == 3 && last_tile", action: "valid_out <= 1, state <= DONE" },
-      { from: "DONE", to: "IDLE", condition: "1 clock cycle pulse", action: "Return to IDLE for next image" }
+      { from: "IDLE", to: "LOAD_WEIGHT", condition: "write_ptr == 192 && valid_in", action: "layer <= 1, r_idx <= 0, c_idx <= 0, rom_addr <= 0" },
+      { from: "LOAD_WEIGHT", to: "COMPUTE", condition: "timer == 15", action: "Weights latched; timer <= 0, state <= COMPUTE" },
+      { from: "COMPUTE", to: "LOAD_WEIGHT", condition: "timer == 31 && !last_tile", action: "Advance tile/column index, load next weight tile" },
+      { from: "COMPUTE", to: "DONE", condition: "timer == 31 && layer == 3 && c_idx == 1", action: "valid_out <= 1, state <= DONE" },
+      { from: "DONE", to: "IDLE", condition: "Held until reset", action: "Classification complete; awaiting next image" }
     ]
   }
 ];
@@ -385,10 +419,10 @@ export const V1_V2_COMPARISON_METRICS = {
     name: "Version 1 (Baseline MLP)",
     architecture: "100 -> 16 -> 6 -> 10 (3 Dense Layers)",
     inputResolution: "10x10 (100 pixels)",
-    accuracy: "93.06%",
+    accuracy: "93.06% (10k test set) / 95.39% (validation subset)",
     multipliers: "256 (16x16 Systolic Array)",
-    cycles: "6,139 clock cycles",
-    latency: "61.39 µs (@ 100 MHz)",
+    cycles: "159 clock cycles (259 total with 100-cycle preload)",
+    latency: "1.59 µs compute / 2.59 µs total (@ 100 MHz)",
     spatialFeatures: "None (Global flattening loses 2D local context)",
     noiseTolerance: "Low (Sensitive to 1-pixel shifts and stroke variations)"
   },
@@ -396,10 +430,10 @@ export const V1_V2_COMPARISON_METRICS = {
     name: "Version 2 (CNN + Systolic Head)",
     architecture: "400 -> Conv1 (4 ch) -> MP1 -> Conv2 (8 ch) -> MP2 -> 200 -> 64 -> 32 -> 10",
     inputResolution: "20x20 (400 pixels)",
-    accuracy: "98.83%",
-    multipliers: "256 (Reused V1 Systolic Array via Time-Multiplexing!)",
+    accuracy: "98.70% (Bit-exact Q7.8 Hardware) / 98.83% (PyTorch FP32)",
+    multipliers: "292 Leaf Multipliers (256 Systolic + 32 Conv2 + 4 Conv1)",
     cycles: "9,116 clock cycles",
-    latency: "91.16 µs (@ 100 MHz)",
+    latency: "91.16 µs (@ 100 MHz; 10,969.7 FPS)",
     spatialFeatures: "High (2D 3x3 receptive fields, translation invariance)",
     noiseTolerance: "Very High (Tolerant to stroke thickness, position, and noise)"
   }
