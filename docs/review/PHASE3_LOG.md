@@ -145,3 +145,13 @@
 - **Verification Evidence:**
   - Re-ran `python test_10.py` in `v2/regression`: 10/10 passed (Cycles Mean: 9116.0, 0 mismatches) without compiling `layer_relu.v`.
   - Re-compiled and ran `tb_mlp_head`: passed cleanly with 2,978 cycles (`ALL TESTS PASSED: 10/10 MLP Head output logits matched in 2978 cycles`).
+
+---
+
+### Entry 9: Task 9 - Synchronize Canonical Submission Report at Repo Root
+- **Canonical Architecture Decision:**
+  - Standardized `DLCD_Final_Project_Report_UE25CS251A.docx` and `DLCD_Final_Project_Report_UE25CS251A.pdf` at the repository root as the canonical submission deliverables. The copies under `docs/review/` serve as synchronized working copies.
+- **Generator Modifications:**
+  - Updated both `docs/review/build/generate_final_report.py` and root `generate_final_report.py` to copy both the final synchronized DOCX and the final PDF to `REPO_ROOT` upon successful completion.
+- **Documentation Updates:**
+  - Updated `README.md` directory tree to formally document both root DOCX and PDF as canonical submission files and `docs/review/` copies as working copies.

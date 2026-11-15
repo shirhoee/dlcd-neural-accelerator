@@ -26,6 +26,7 @@ TEMPLATE_PATH = r"C:/Users/SHREYANSH RAJ/.gemini/antigravity/brain/1546e49c-8e6a
 OUTPUT_DOCX = os.path.join(REPO_ROOT, "docs", "review", "DLCD_Final_Project_Report_UE25CS251A.docx")
 OUTPUT_PDF = os.path.join(REPO_ROOT, "docs", "review", "DLCD_Final_Project_Report_UE25CS251A.pdf")
 ROOT_DOCX = os.path.join(REPO_ROOT, "DLCD_Final_Project_Report_UE25CS251A.docx")
+ROOT_PDF = os.path.join(REPO_ROOT, "DLCD_Final_Project_Report_UE25CS251A.pdf")
 V_DIR = os.path.join(REPO_ROOT, "v2", "verilog_src")
 FIGURES_DIR = os.path.join(REPO_ROOT, "docs", "review", "figures")
 SCREENSHOTS_DIR = os.path.join(REPO_ROOT, "docs", "review", "screenshots")
@@ -1247,10 +1248,15 @@ def main():
         shutil.copyfile(OUTPUT_DOCX, ROOT_DOCX)
         convert_docx_to_pdf(OUTPUT_DOCX, out_dir)
 
+    shutil.copyfile(OUTPUT_PDF, ROOT_PDF)
+    print(f"Synchronized PDF saved to {OUTPUT_PDF} and {ROOT_PDF}")
+
     print("=" * 70)
-    print("REPORT GENERATION COMPLETE:")
-    print(f"  DOCX: {OUTPUT_DOCX}")
-    print(f"  PDF:  {OUTPUT_PDF}")
+    print("REPORT GENERATION COMPLETE (Synchronized at root & docs/review/):")
+    print(f"  Canonical Submission DOCX: {ROOT_DOCX}")
+    print(f"  Canonical Submission PDF:  {ROOT_PDF}")
+    print(f"  Working Copy DOCX:         {OUTPUT_DOCX}")
+    print(f"  Working Copy PDF:          {OUTPUT_PDF}")
     print("=" * 70)
 
 if __name__ == "__main__":

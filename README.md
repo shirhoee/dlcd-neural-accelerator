@@ -72,12 +72,13 @@ Latch      Conv1 + MaxPool1        Conv2 + MaxPool2     MLP Head (Systolic) Arg 
 DLCD_Neural_Accelerator/
 ├── run_all_tests.bat                  # Canonical automated testbench runner (13 active testbenches)
 ├── run_v2_ui.bat                      # All-in-one launcher for FastAPI backend + React frontend
-├── DLCD_Final_Project_Report_UE25CS251A.docx # Official End Semester Assessment Report (DOCX)
+├── DLCD_Final_Project_Report_UE25CS251A.docx # Canonical End Semester Assessment Submission Report (DOCX)
+├── DLCD_Final_Project_Report_UE25CS251A.pdf  # Canonical End Semester Assessment Submission Report (46 pages PDF)
 ├── docs/
 │   └── review/
 │       ├── facts.json                 # Single source of truth for all verified project numbers
-│       ├── DLCD_Final_Project_Report_UE25CS251A.docx # Synchronized final report (DOCX)
-│       ├── DLCD_Final_Project_Report_UE25CS251A.pdf  # Synchronized final report (46 pages PDF)
+│       ├── DLCD_Final_Project_Report_UE25CS251A.docx # Working copy report (DOCX)
+│       ├── DLCD_Final_Project_Report_UE25CS251A.pdf  # Working copy report (46 pages PDF)
 │       ├── confusion_matrix.png       # 10x10 confusion matrix over 10,000 MNIST test images
 │       ├── confusion_matrix.csv       # Confusion matrix raw numerical counts
 │       ├── PHASE2_LOG.md              # Engineering change log and verification protocol
