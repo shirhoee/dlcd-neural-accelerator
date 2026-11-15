@@ -49,7 +49,9 @@ if %FAIL_COUNT% equ 0 (
 )
 echo.
 
-pause
+if not "%1"=="--no-pause" (
+    pause
+)
 exit /b %FAIL_COUNT%
 
 :test_one

@@ -6,7 +6,7 @@
     "arithmetic_format": "Q7.8 Signed Fixed-Point (16-bit 2's complement)",
     "clock_frequency_mhz": 100.0,
     "clock_period_ns": 10.0,
-    "generation_timestamp": "2026-11-15T12:16:41.016083"
+    "generation_timestamp": "2026-11-15T12:28:00.284555"
   },
   "headline_metrics": {
     "v2_latency_cycles": 9116,

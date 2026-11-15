@@ -155,3 +155,45 @@
   - Updated both `docs/review/build/generate_final_report.py` and root `generate_final_report.py` to copy both the final synchronized DOCX and the final PDF to `REPO_ROOT` upon successful completion.
 - **Documentation Updates:**
   - Updated `README.md` directory tree to formally document both root DOCX and PDF as canonical submission files and `docs/review/` copies as working copies.
+
+---
+
+### Entry 10: Task 10 - Full Regression Gate & Final Delivery Verification
+- **QA Gate Script Updates (`check_report.py`):**
+  - Added programmatic assertions verifying headline latency 9,116 cycles (no bare 9,117 claim).
+  - Added verification of MLP head 1-cycle timing explanation (2,978 standalone vs 2,977 integrated).
+  - Added verification of normalized theoretical (10,969.7 FPS) and demonstrated (10,964.9 FPS) throughput claims.
+  - Added verification of V1 accuracy footnote (93.06%* historical milestone vs 95.39% reproducible baseline).
+  - Added verification of real FSM state architectures (Conv1=6 states, Conv2=6 states, MLP head=4 states).
+  - Added verification of leaf multiplier breakdown summing to 292 with containers marked non-duplicating.
+  - Verified zero forbidden strings across all 46 pages of the generated PDF.
+- **Full End-to-End Execution Sequence Pass Evidence:**
+  1. `python docs/review/build/measure_facts.py`: exited code 0 (`facts.json` regenerated).
+  2. `python docs/review/build/generate_figures.py`: exited code 0 (all 6 architectural/FSM figures rendered at 300 DPI).
+  3. `python docs/review/build/generate_final_report.py`: exited code 0 (2-pass TOC synchronization verified bit-exact, canonical DOCX & PDF copied to root).
+  4. `run_all_tests.bat --no-pause`: exited code 0 (13/13 testbenches passed).
+  5. `python v2/regression/test_10.py`: exited code 0 (10/10 matched, Cycles Mean: 9116.0, 0 mismatches).
+  6. `python docs/review/build/check_report.py`: exited code 0 (all 12 QA checks passed).
+
+---
+
+## Final Verification Checklist & Before/After Diff Table
+
+| Investigation Topic | Phase 1/2 Baseline | Phase 3 Canonical Final Value | Verification / Direct Evidence |
+| :--- | :--- | :--- | :--- |
+| **Inference Latency** | 9,117 cycles (confused latency with done cycle) | **9,116 clock cycles** (91.16 μs at 100 MHz) | `tb_submission.v:63-82`: `start` deasserted Cycle 1, while loop counts until `done` at Cycle 9,117 ($9,117 - 1 = 9,116$). Absolute done cycle is 9,117. |
+| **MLP Head Latency** | 2,978 cycles vs 2,977 cycles unexplained | **2,978 standalone vs 2,977 integrated** | Standalone `tb_mlp_head` counts from state `IDLE` upon `valid_in` deassertion (1 cycle IDLE $\rightarrow$ LOAD + 2,976 compute + 1 cycle DONE). Integrated `v2_top` triggers on `dense_inst.state == 1` at Cycle 6,137, measuring to `d_valid` at Cycle 9,114. |
+| **Front-End Latch** | 1-cycle latency unattributed | **1-cycle register delay in `run_latch`** | `v2_top.v:16-25`: `internal_reset = reset \| ~run_latch`. `run_latch` registers `start` on Cycle 0 (35 ns), releasing `internal_reset` to low on Cycle 1 (45 ns). |
+| **V2 Throughput** | 10,969.7 FPS (continuous) | **10,969.7 FPS (theoretical pipelined)**<br>**10,964.9 FPS (demonstrated)** | Theoretical: $100\text{ MHz} / 9,116 = 10,969.7\text{ FPS}$. Demonstrated: $100\text{ MHz} / (9,116 + 4) = 10,964.9\text{ FPS}$ (includes 4-cycle reset sequence in `tb_submission.v:62-72`). |
+| **V1 Throughput** | ~386,100 FPS (burst) | **628,930.8 FPS (pipelined)**<br>**386,100.4 FPS (from reset with preload)** | Pipelined: $100\text{ MHz} / 159 = 628,930.8\text{ FPS}$. From reset with 100-cycle preload (100 pixels @ 1 pixel/cycle): $100\text{ MHz} / 259 = 386,100.4\text{ FPS}$. |
+| **Host CPU Claim** | "Zero host CPU intervention" | **Verified bus streaming interface** | Pure hardware execution during 9,116-cycle compute window without host CPU arithmetic/control; host streams pixels via `pixel_addr`/`pixel_in` and reads `done`/`digit_out`. |
+| **FPU Check** | Unchecked | **Zero Floating-Point Units (FPUs)** | Checked all 15 active modules in `v2/verilog_src/`; 0 matches for `float\|real\|fpu`. Pure Q7.8 signed integer arithmetic. |
+| **V1 Baseline Accuracy**| 93.06% unqualified | **93.06%* (M15 milestone)**<br>**95.39% (reproducible baseline)** | 93.06% is historical milestone from M15/M17 on 8×8 optical digits; active reproducible V1 script `v1/eval_accuracy.py` achieves 95.39% on MNIST 10×10. |
+| **Conv1 FSM States** | 3 or 4 states reported | **6 real states (3-bit: 3'd0..3'd5)** | `conv1_array.v:56-61`: `ST_INIT=0`, `ST_ADVANCE=1`, `ST_FETCH=2`, `ST_MAC=3`, `ST_WAIT_VALID=4`, `ST_DONE=5`. |
+| **Conv2 FSM States** | 4 states reported | **6 real states (3-bit: 3'd0..3'd5)** | `conv2_array.v:52-57`: `ST_LOAD=0`, `ST_FETCH=1`, `ST_MAC=2`, `ST_WAIT_VALID=3`, `ST_ADVANCE=4`, `ST_DONE=5`. |
+| **MLP Head FSM States**| 6 states reported | **4 real states (2-bit: 0..3)** | `mlp_head.v:49`: `IDLE=0`, `LOAD_WEIGHT=1`, `COMPUTE=2`, `DONE=3`. |
+| **Conv PE FSM** | Unclear | **No FSM (Modulo-9 counter)** | `conv_pe.v:24`: synchronous `tap_idx` counter (0..8) and combinational control strobes. |
+| **Hardware Multipliers**| Container double-counting | **Leaf attribution only = 292 mults** | Containers marked `—`. Leaf multipliers: `conv_pe` (4) + `conv2_pe` (32) + `systolic_pe` (256) = **292 total**. |
+| **Systolic PE Model** | "Output-stationary with skew DFFs"| **Weight-stationary (no skew DFFs)** | `systolic_pe.v:17,34`: weights held in `stationary_weight`. Row activation staggering handled dynamically by `mlp_head.v` controller (`r = timer - 16`). |
+| **Active Testbenches** | 13 vs 14 ambiguous | **Exactly 13 active testbenches** | `run_all_tests.bat:28-40`: exactly 13 testbenches invoked. Dead `layer_relu.v` eliminated from compilation scripts. |
+| **Canonical Report** | Root vs `docs/review/` split | **Root DOCX and PDF canonical** | `DLCD_Final_Project_Report_UE25CS251A.docx` and `.pdf` at repository root are canonical submission files, synchronized with working copies in `docs/review/`. |

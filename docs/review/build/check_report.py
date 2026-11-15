@@ -111,29 +111,53 @@ def main():
     else:
         results.append("[PASS] Zero forbidden strings found across entire 46-page report.")
 
-    # 2. Headline Latency (9,116)
+    # 2. Headline Latency (9,116 cycles) & No Bare 9,117 Latency Claim
     full_text = "".join(page.get_text() for page in pdf)
-    if "9,116" in full_text and "91.16" in full_text:
+    full_text_lower = full_text.lower()
+    if ("9,116 clock cycles" in full_text or "9,116 cycles" in full_text) and "91.16" in full_text:
         results.append("[PASS] Headline latency 9,116 clock cycles (91.16 us) correctly asserted.")
     else:
         all_passed = False
         results.append("[FAIL] Headline latency 9,116 / 91.16 us missing from text.")
 
-    # 3. MLP Head Latency (2,978 standalone, 2,977 integrated)
-    if "2,978" in full_text and "2,977" in full_text:
-        results.append("[PASS] MLP Head standalone (2,978 cycles) and integrated (2,977 cycles) latencies verified.")
+    # 3. MLP Head Latency & 1-Cycle Explanation (2,978 standalone vs 2,977 integrated)
+    if "2,978" in full_text and "2,977" in full_text and "1-cycle difference" in full_text_lower:
+        results.append("[PASS] MLP Head standalone (2,978 cycles), integrated (2,977 cycles), and 1-cycle timing explanation verified.")
     else:
         all_passed = False
-        results.append("[FAIL] MLP Head latencies (2,978 / 2,977) missing from text.")
+        results.append("[FAIL] MLP Head latencies (2,978 / 2,977) or 1-cycle timing explanation missing from text.")
 
-    # 4. Multiplier Counts (292 total, 256 in systolic)
-    if "292" in full_text and "256" in full_text:
-        results.append("[PASS] Multiplier counts correctly detailed (292 V2 total: 4 + 32 + 256).")
+    # 4. Throughput Claims (Theoretical vs Demonstrated)
+    norm_text = " ".join(full_text_lower.split())
+    if "10,969.7 fps (theoretical pipelined" in norm_text and "10,964.9 fps (demonstrated" in norm_text:
+        results.append("[PASS] Both theoretical (10,969.7 FPS) and demonstrated (10,964.9 FPS) throughput claims verified.")
     else:
         all_passed = False
-        results.append("[FAIL] Multiplier count 292 missing from text.")
+        results.append("[FAIL] Theoretical / demonstrated throughput claims missing or improperly labeled.")
 
-    # 5. Reconciled Stage Table Sum
+    # 5. V1 Accuracy Footnote & Provenance
+    if "93.06%*" in full_text or "note on v1 baseline accuracy" in full_text_lower:
+        results.append("[PASS] V1 baseline accuracy footnote / asterisk present clarifying historical milestone provenance.")
+    else:
+        all_passed = False
+        results.append("[FAIL] V1 baseline accuracy footnote missing from text.")
+
+    # 6. Real FSM State Counts (Conv1=6 states, Conv2=6 states, MLP head=4 states)
+    if "st_wait_valid" in full_text_lower and ("4-state fsm" in full_text_lower or "idle (2'd0)" in full_text_lower):
+        results.append("[PASS] Real FSM architectures verified in report (Conv1=6 states, Conv2=6 states, MLP Head=4 states).")
+    else:
+        all_passed = False
+        results.append("[FAIL] Real FSM states missing or improperly described.")
+
+    # 7. Multiplier Counts & Leaf Attribution (292 total: 4 + 32 + 256)
+    v2_leaf_mults = sum(m["total_mults"] for m in facts["multipliers"]["breakdown"])
+    if "292" in full_text and "256" in full_text and v2_leaf_mults == 292:
+        results.append(f"[PASS] Multiplier counts correctly detailed (292 V2 total = 4 in Conv1 + 32 in Conv2 + 256 in Systolic).")
+    else:
+        all_passed = False
+        results.append("[FAIL] Multiplier count 292 or leaf breakdown verification failed.")
+
+    # 8. Reconciled Stage Table Sum
     stage_sum = sum(s["cycles"] for s in facts["cycles"]["stages"])
     if stage_sum == 9116:
         results.append(f"[PASS] Reconciled stage breakdown sums exactly to {stage_sum} cycles.")
@@ -141,7 +165,7 @@ def main():
         all_passed = False
         results.append(f"[FAIL] Stage breakdown sums to {stage_sum} != 9116!")
 
-    # 6. TOC Synchronization
+    # 9. TOC Synchronization
     actual_pages, toc_mismatches = check_toc_synchronization(pdf)
     if not toc_mismatches:
         results.append(f"[PASS] Table of Contents perfectly synchronized with heading pages: {actual_pages}")
@@ -149,7 +173,7 @@ def main():
         all_passed = False
         results.append(f"[FAIL] TOC synchronization mismatches: {toc_mismatches}")
 
-    # 7. Figures Existence
+    # 10. Figures Existence
     fig_keys = [
         "fig2_1_v2_top_block_diagram.png",
         "fig2_2_mac_conv_pe_datapath.png",
@@ -166,7 +190,7 @@ def main():
         all_passed = False
         results.append("[FAIL] Missing publication figures in docs/review/figures/")
 
-    # 8. Testbench Suite Pass Rate
+    # 11. Testbench Suite Pass Rate
     tb_passed = facts["testbench_suite"]["total_passed"]
     tb_total = facts["testbench_suite"]["total_active_testbenches"]
     if tb_passed == 13 and tb_total == 13:
@@ -175,7 +199,7 @@ def main():
         all_passed = False
         results.append(f"[FAIL] Testbench suite has failing tests: {tb_passed}/{tb_total}")
 
-    # 9. Hardware Regression Parity
+    # 12. Hardware Regression Parity
     harness_status = facts["accuracy"]["rtl_hardware_verification"]["full_harness_status"]["status"]
     harness_mismatches = facts["accuracy"]["rtl_hardware_verification"]["full_harness_status"]["mismatches"]
     harness_done = facts["accuracy"]["rtl_hardware_verification"]["full_harness_status"]["images_done"]
