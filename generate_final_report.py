@@ -297,7 +297,9 @@ def build_docx(facts, toc_pages=None):
         "The objective of this project is to architect, model, and verify an end-to-end, bit-exact Convolutional Neural "
         "Network (CNN) hardware accelerator in synthesizable Verilog-2001 (IEEE 1364-2001) targeting handwritten digit "
         "classification on the benchmark MNIST dataset. The accelerator operates entirely without floating-point units, "
-        "executing completely autonomously from initial start strobe to done assertion with zero host processor intervention."
+        "executing inference with no arithmetic or control involvement from a host CPU during the 9,116-cycle compute window; "
+        "input pixels are requested and supplied externally via pixel_addr/pixel_in, and an external host process (such as the "
+        "FastAPI service in the interactive UI) streams pixel memory and reads the final classification result."
     )
 
     add_heading_2(doc, "1.2 Hardware Mathematical Invariants & Constraints")

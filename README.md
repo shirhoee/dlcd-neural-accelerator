@@ -16,7 +16,7 @@ The project encompasses two complete architectural generations:
 1. **Version 1.0 (Baseline MLP):** A fully connected Multi-Layer Perceptron (100 $\rightarrow$ 16 $\rightarrow$ 6 $\rightarrow$ 10) that processes 10x10 downsampled inputs through an unrolled 16x16 systolic array in **159 clock cycles** (259 cycles from reset including 100-cycle feature preload).
 2. **Version 2.0 (Proposed CNN Accelerator):** A hierarchical 2D Convolutional Neural Network with 20x20 input resolution, streaming line-buffer sliding window generators, fused 2x2 pooling/ReLU units, and a time-multiplexed 16x16 systolic array head (200 $\rightarrow$ 64 $\rightarrow$ 32 $\rightarrow$ 10) completing classification in **exactly 9,116 clock cycles** (91.16 μs at 100 MHz).
 
-The accelerator operates with **zero host CPU intervention** during runtime and eliminates floating-point units (FPUs) through hardware-software co-designed Q7.8 fixed-point arithmetic.
+The RTL datapath performs inference with no arithmetic or control involvement from a host CPU during the 9,116-cycle compute window (pixels are supplied externally via `pixel_addr`/`pixel_in` and a host process, such as the FastAPI backend in the demo UI, streams them and reads the result), eliminating floating-point units (FPUs) through hardware-software co-designed Q7.8 fixed-point arithmetic.
 
 ---
 

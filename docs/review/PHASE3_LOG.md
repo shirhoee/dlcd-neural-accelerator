@@ -78,3 +78,13 @@
 - **Verification:**
   - Re-generated `facts.json` via `measure_facts.py`.
   - Confirmed `generate_final_report.py` at root and in `docs/review/build/` are synchronized.
+
+---
+
+### Entry 5: Task 5 - Fix Overstated Host CPU Claims & Verify FPU Absence
+- **Overstated Claim Resolution:**
+  - Replaced all occurrences of "zero host CPU intervention" and "zero host processor intervention" across `README.md`, `dlcd_presentation.md`, and `generate_final_report.py` (both root and `docs/review/build/`).
+  - Replaced with verifiably accurate phrasing: "the RTL datapath performs inference with no arithmetic or control involvement from a host CPU during the 9,116-cycle compute window; input pixels are requested and supplied externally via `pixel_addr`/`pixel_in`, and an external host process (such as the FastAPI service in the interactive UI) streams pixel memory and reads the final classification result."
+- **FPU Absence Hardware Verification:**
+  - Checked all active Verilog modules in `v2/verilog_src/` using regex pattern `float|real|fpu`.
+  - Result: 0 matches found across all modules. Confirmed zero floating-point units or real-number operations exist in the RTL; all datapath calculations execute using pure Q7.8 signed fixed-point integer arithmetic.

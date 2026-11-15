@@ -14,7 +14,7 @@
 - **Two Architectural Generations:**
   1. **Version 1 (V1):** Baseline Multi-Layer Perceptron (100 $\rightarrow$ 16 $\rightarrow$ 6 $\rightarrow$ 10).
   2. **Version 2 (V2):** Hierarchical 2D Convolutional Neural Network with time-multiplexed systolic classification head.
-- **Key Achievement:** Bridged the gap between software Machine Learning (PyTorch) and Digital Hardware Design (synthesizable Verilog-2001), achieving bit-for-bit equivalence with zero floating-point units and zero host CPU intervention during runtime.
+- **Key Achievement:** Bridged the gap between software Machine Learning (PyTorch) and Digital Hardware Design (synthesizable Verilog-2001), achieving bit-for-bit equivalence with zero floating-point units and pure hardware execution during the 9,116-cycle compute window without host CPU arithmetic or control involvement (host supplies pixels via `pixel_addr`/`pixel_in`).
 
 ---
 
