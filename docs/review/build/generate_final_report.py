@@ -649,7 +649,12 @@ def build_docx(facts, toc_pages=None):
         "4 row tiles x 2 col tiles = 8 tiles. Layer 3 (32x10) requires 2 row tiles x 1 col tile = 2 tiles. Total tiles = 62. "
         "Each tile executes in 48 cycles (16 weight load + 32 compute/drain). Total compute cycles = 62 x 48 = 2,976 cycles. "
         "Adding 2 FSM control cycles (IDLE->LOAD_WEIGHT transition + DONE output pulse) yields exactly 2,978 standalone cycles "
-        "(2,977 cycles in integrated top-level pipeline)."
+        "(2,977 cycles in integrated top-level pipeline). "
+        "The 1-cycle difference between standalone unit testbench execution (2,978 cycles in tb_mlp_head) and integrated "
+        "pipeline measurement (2,977 cycles in v2_top) arises because tb_mlp_head begins counting during state IDLE upon "
+        "valid_in deassertion (capturing the 1-cycle IDLE-to-LOAD_WEIGHT transition + 2,976 compute cycles + 1 cycle in DONE), "
+        "whereas top-level pipeline measurement triggers directly when dense_inst.state == LOAD_WEIGHT is already active at "
+        "Cycle 6,137, measuring from the first active computation cycle until d_valid assertion at Cycle 9,114."
     )
 
     # =========================================================================

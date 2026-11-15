@@ -194,6 +194,12 @@ def main():
             },
             "standalone_testbench_cycles": 2978,
             "top_level_integrated_cycles": 2977,
+            "mlp_head_cycle_note": {
+                "standalone_cycles": 2978,
+                "integrated_cycles": 2977,
+                "difference_cycles": 1,
+                "exact_cause": "In tb_mlp_head.v, cycle counting begins upon valid_in deassertion while mlp_head is still in IDLE (0), capturing the 1-cycle IDLE->LOAD_WEIGHT transition + 2,976 tile compute cycles + 1 cycle in DONE before valid_out rises (2,978 cycles). In integrated v2_top (tb_v2_top_fixed.v), dense_start triggers on dense_inst.state == 1 (LOAD_WEIGHT) at Cycle 6,137, measuring from the first active LOAD_WEIGHT cycle to d_valid at Cycle 9,114 (2,977 cycles), omitting the initial 1-cycle IDLE entry transition."
+            },
             "integration_overlap_note": "In top-level integration (v2_top), the final maxpool2 output triggers dense start concurrently with the final buffer write, saving 1 boundary cycle (2977 vs 2978)."
         },
         "multipliers": {

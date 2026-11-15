@@ -41,3 +41,12 @@
 - **Test Evidence:**
   - Re-ran `tb_submission.v`: 10/10 passed with `Latency: 9116 cycles`.
   - Re-ran `test_10.py`: 10/10 passed with `Cycles Mean: 9116.0`.
+
+### Entry 2: Task 2 - MLP Head 2,977 vs 2,978 Cycles Reconciliation
+- **Exact Root Cause:**
+  - In `tb_mlp_head.v:103-106`, cycle counting begins upon `valid_in` deassertion while `mlp_head` is still in state `IDLE` (0). It counts the 1-cycle `IDLE -> LOAD_WEIGHT` transition + 2,976 tile compute cycles (62 tiles × 48 cycles) + 1-cycle `DONE` state transition before `valid_out` rises, yielding exactly **2,978 cycles**.
+  - In integrated `v2_top` simulation (`tb_v2_top_fixed.v:217`), `dense_start` triggers when `dense_inst.state == 1` (`LOAD_WEIGHT`) on Cycle 6,137. It measures from the first active `LOAD_WEIGHT` cycle until `d_valid` assertion on Cycle 9,114, yielding exactly $9,114 - 6,137 = \mathbf{2,977\text{ cycles}}$ (omitting the initial 1-cycle IDLE entry transition).
+- **Facts & Report Updates:**
+  - Added `mlp_head_cycle_note` to `measure_facts.py` and `facts.json`.
+  - Added exact explanatory paragraph into `generate_final_report.py` (Section 3.3).
+  - Confirmed test output unchanged: `tb_mlp_head` passes with 2,978 cycles; `test_10.py` measures 2,977.0 dense cycles.
