@@ -17,7 +17,8 @@ The codebase encompasses two complete architectural generations:
    - **Math Engine:** 16×16 unrolled 2D systolic array core utilizing weight-stationary dataflow (256 multipliers).
    - **Latency:** 159 clock cycles inference latency (259 clock cycles total from reset, including 100-cycle feature preload).
    - **Throughput (100 MHz):** 628,930.8 FPS (theoretical pipelined: 100 MHz / 159 cycles); 386,100.4 FPS (derived from reset including 100-cycle preload: 100 MHz / 259 cycles).
-   - **Accuracy:** 93.06% on M15 optical digits split (95.39% on downsampled 10×10 MNIST testset).
+   - **Accuracy:** 93.06%* on M15 optical digits split (95.39% on downsampled 10×10 MNIST testset).  
+     *\*Historical milestone figure from M15/M17 project logs; the active reproducible V1 baseline in this repository is 95.39% on MNIST 10×10 (`v1/eval_accuracy.py`).*
 
 2. **Version 2 (V2) — Convolutional Neural Network (CNN) + Systolic MLP Head:**
    - **Topology:** 400-input (20×20 image) $\rightarrow$ Conv1 (1 $\rightarrow$ 4 ch, 3×3, valid) $\rightarrow$ MaxPool1 (2×2, stride 2, 4 ch, 9×9) $\rightarrow$ Conv2 (4 $\rightarrow$ 8 ch, 3×3, valid) $\rightarrow$ MaxPool2 (2×2, stride 2, 8 ch, 5×5) $\rightarrow$ MLP Head (200 $\rightarrow$ 64 $\rightarrow$ 32 $\rightarrow$ 10) $\rightarrow$ Argmax.

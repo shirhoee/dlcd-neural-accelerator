@@ -385,7 +385,7 @@ def build_docx(facts, toc_pages=None):
             "Exceeds standard real-time vision rates (>10,000 FPS)"
         ),
         ("On-Chip Memory", "Distributed Registers", f"{v2_head['v2_on_chip_memory_words']:,} words ({v2_head['v2_on_chip_memory_kb']} KB)", "Self-contained ping-pong SRAM & ROM storage"),
-        ("MNIST Testset Accuracy", f"{v1['accuracy_m15_pct']}% (M15 split)", f"{v2_head['v2_accuracy_emulator_pct']}% (Full 10,000 Testset)", "+5.77% accuracy improvement (98.83% bit-exact)")
+        ("MNIST Testset Accuracy", f"{v1['accuracy_m15_pct']}%* (M15 split)", f"{v2_head['v2_accuracy_emulator_pct']}% (Full 10,000 Testset)", "+5.77% accuracy improvement (98.83% bit-exact)")
     ]
 
     for r_idx, r_data in enumerate(rows_data):
@@ -407,6 +407,11 @@ def build_docx(facts, toc_pages=None):
                 r.font.color.rgb = RGBColor(16, 185, 129)
 
     doc.add_paragraph().paragraph_format.space_after = Pt(4)
+    add_body_p(doc, 
+        "*Note on V1 Baseline Accuracy: The 93.06% figure is a historical milestone reference preserved from M15/M17 project logs "
+        "(evaluated on an 8x8 optical digits split padded to 10x10); the active reproducible V1 baseline model script in this repository "
+        "(v1/eval_accuracy.py) achieves 95.39% accuracy on the full 10,000-image MNIST testset downsampled to 10x10."
+    )
     add_body_p(doc, 
         "Note on Physical Synthesis: Synthesis across specific FPGA and ASIC fabrication technologies is earmarked for "
         "future research and production implementation; all performance metrics, timing figures, and resource counts reported "
@@ -711,7 +716,7 @@ def build_docx(facts, toc_pages=None):
         ("Google TPU v1 [3]", "Weight-Stationary Systolic", "8-bit Integer (INT8)", "256 x 256 2D Mesh", "65,536 MACs", "Datacenter DNN / 90%+"),
         ("MIT Eyeriss [4]", "Row-Stationary Spatial", "16-bit Fixed-Point", "14 x 12 2D Mesh", "168 Multipliers", "AlexNet / 80.2% Top-5"),
         ("Kung Systolic [2]", "Rhythmic Pumping Systolic", "Word-level Custom", "1D/2D Mesh", "Variable (N x N)", "Matrix Multiplication"),
-        ("DLCD V1 Baseline", "Unrolled Matrix Feed", "16-bit Signed Q7.8", "16 x 16 Systolic", "256 Multipliers", "MNIST 10x10 / 93.06%"),
+        ("DLCD V1 Baseline", "Unrolled Matrix Feed", "16-bit Signed Q7.8", "16 x 16 Systolic", "256 Multipliers", "MNIST 10x10 / 93.06%*"),
         ("DLCD V2 (This Work)", "Fused Line-Buffer + Systolic", "16-bit Signed Q7.8 [23:8]", "16 x 16 Reused Mesh", "292 Multipliers", "MNIST 20x20 / 98.83%")
     ]
     for r_idx, r_data in enumerate(cp_data):

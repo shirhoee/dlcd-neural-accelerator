@@ -239,11 +239,17 @@ def main():
             "preload_overhead_cycles": 100,
             "total_cycles_from_reset": 259,
             "total_latency_us": 2.59,
+            "throughput_inference_only_fps": 628930.8,
+            "throughput_inference_only_derivation": "theoretical, assumes back-to-back pipelining: 100 MHz / 159 cycles",
+            "throughput_from_reset_fps": 386100.4,
+            "throughput_from_reset_derivation": "derived from reset including 100-cycle preload: 100 MHz / 259 cycles",
             "multipliers": 256,
             "accuracy_m15_pct": 93.06,
-            "accuracy_m15_provenance": "v1/batch_regression_m15.py on scikit-learn load_digits() (8x8 optical digits zero-padded to 10x10 = 100 features)",
+            "accuracy_m15_provenance": "hardcoded constant in main.py / historical milestone log (M15/M17); not reproducible from a script in this repository",
+            "accuracy_m15_reproducible": False,
             "accuracy_mnist10k_pct": 95.39,
-            "accuracy_mnist10k_provenance": "v1/eval_accuracy.py on 10,000 MNIST test images downsampled to 10x10 using Q7.8 exported weights"
+            "accuracy_mnist10k_provenance": "v1/eval_accuracy.py on 10,000 MNIST test images downsampled to 10x10 using Q7.8 exported weights",
+            "accuracy_mnist10k_reproducible": True
         },
         "accuracy": {
             "float32_pytorch": {

@@ -88,3 +88,19 @@
 - **FPU Absence Hardware Verification:**
   - Checked all active Verilog modules in `v2/verilog_src/` using regex pattern `float|real|fpu`.
   - Result: 0 matches found across all modules. Confirmed zero floating-point units or real-number operations exist in the RTL; all datapath calculations execute using pure Q7.8 signed fixed-point integer arithmetic.
+
+---
+
+### Entry 6: Task 6 - V1 Accuracy Provenance & Reproducibility Clarification
+- **Provenance Analysis:**
+  - Identified that 93.06% originated as a hardcoded constant in `main.py` / historical milestone log (M15/M17) evaluating on an 8×8 optical digits split zero-padded to 10×10. This number is not directly reproducible from an automated script in the repository.
+  - In contrast, `v1/eval_accuracy.py` tests the exported Q7.8 weights against the full 10,000-image MNIST testset downsampled to 10×10, yielding a reproducible accuracy of **95.39%**.
+- **Updates Applied:**
+  - `docs/review/build/measure_facts.py` and `docs/review/facts.json`:
+    - Updated `accuracy_m15_provenance` to `"hardcoded constant in main.py / historical milestone log (M15/M17); not reproducible from a script in this repository"` and set `accuracy_m15_reproducible: false`.
+    - Added `accuracy_mnist10k_reproducible: true`.
+  - `README.md`, `CURRENT_STATE.md`, `dlcd_presentation.md`, and `generate_final_report.py`:
+    - Added asterisk `93.06%*` and explicit footnote clarifying that 93.06% is a historical milestone figure from M15/M17 project logs, while the active reproducible V1 baseline in this repository is 95.39% on MNIST 10×10 (`v1/eval_accuracy.py`).
+- **Verification:**
+  - Re-ran `measure_facts.py` to regenerate `facts.json`.
+  - Confirmed `generate_final_report.py` at root and in `docs/review/build/` are synchronized.

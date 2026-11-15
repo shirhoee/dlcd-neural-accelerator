@@ -25,7 +25,8 @@
 - **Systolic Array:** Utilized a 16×16 2D Systolic Array core (256 multipliers) with weight-stationary dataflow. Data flows rhythmically through nearest-neighbor PEs, maximizing multiplier utilization.
 - **Inference Latency:** 159 clock cycles (1.59 μs @ 100 MHz); 259 clock cycles total from reset including 100-cycle feature preload.
 - **Quantization:** Q7.8 signed fixed-point format (16 bits: 1 sign bit, 7 integer bits, 8 fractional bits; multiplier = 256.0), eliminating costly FPUs.
-- **Accuracy Limitation:** 93.06% accuracy on M15 optical digits (95.39% on downsampled 10×10 MNIST). Spatial stroke features and topological loops (such as enclosures in 8, 0, 6, 9) collapse when severely downsampled to 10×10, forming a fundamental accuracy bottleneck for simple MLPs.
+- **Accuracy Limitation:** 93.06%* accuracy on M15 optical digits (95.39% on downsampled 10×10 MNIST). Spatial stroke features and topological loops (such as enclosures in 8, 0, 6, 9) collapse when severely downsampled to 10×10, forming a fundamental accuracy bottleneck for simple MLPs.  
+  *\*Historical milestone figure from M15/M17 project logs; the active reproducible V1 baseline in this repository is 95.39% on MNIST 10×10 (`v1/eval_accuracy.py`).*
 
 ---
 
@@ -106,8 +107,10 @@
 | **Math Units** | 256 Multipliers (16×16 Mesh) | 292 Multipliers (Conv1: 4, Conv2: 32, Systolic: 256) |
 | **On-Chip Memory** | Distributed Registers | 16,623 words (32.47 KB) ping-pong SRAM & ROM |
 | **Inference Latency** | 159 cycles (1.59 μs) | 9,116 cycles (91.16 μs) |
-| **MNIST Test Accuracy**| 93.06% | **98.83% (+5.77% accuracy improvement)** |
+| **MNIST Test Accuracy**| 93.06%* | **98.83% (+5.77% accuracy improvement)** |
 | **Hardware Parity** | 100% Bit-Exact Match | **100% Bit-Exact Match (0 mismatches on 10,000 images)**|
+
+*\*Historical milestone figure from M15/M17 project logs; the active reproducible V1 baseline in this repository is 95.39% on MNIST 10×10 (`v1/eval_accuracy.py`).*
 
 ---
 
