@@ -197,3 +197,38 @@
 | **Systolic PE Model** | "Output-stationary with skew DFFs"| **Weight-stationary (no skew DFFs)** | `systolic_pe.v:17,34`: weights held in `stationary_weight`. Row activation staggering handled dynamically by `mlp_head.v` controller (`r = timer - 16`). |
 | **Active Testbenches** | 13 vs 14 ambiguous | **Exactly 13 active testbenches** | `run_all_tests.bat:28-40`: exactly 13 testbenches invoked. Dead `layer_relu.v` eliminated from compilation scripts. |
 | **Canonical Report** | Root vs `docs/review/` split | **Root DOCX and PDF canonical** | `DLCD_Final_Project_Report_UE25CS251A.docx` and `.pdf` at repository root are canonical submission files, synchronized with working copies in `docs/review/`. |
+
+---
+
+### Entry 10: Figure Layout Defect Rectifications & Overclaim Removal (Phase 3 Final Polish)
+- **Task 1: Figure 2.1 (`v2_top` Block Diagram Spacing Fix)**
+  - Widened diagram canvas (`figsize=(12.0, 6.2)`, `ax.set_xlim(0, 125)`).
+  - Expanded inter-stage horizontal gaps between pipeline blocks from 3 units to a generous 10 units (31..41, 54..64, 77..87, 100..109).
+  - Centered inter-stage valid strobe labels (`c1_valid 4 ch`, `mp1_valid 4 ch`, `c2_valid 8 ch`, `mp2_valid 8 ch`) at `y=29.8`, `va="bottom"` — providing $\ge 1.8\times$ font height clearance above the horizontal arrow line at `y=28`.
+  - Adjusted internal block widths and text centering in `box_mp1` and `box_mp2` to provide $\ge 2.25$ units of internal clearance on both sides.
+  - Visually inspected PNG: 0 text/border intersections, 0 text overlap between adjacent stages.
+- **Task 2: Figure 2.3 (`systolic_pe` Datapath Arrow Rerouting)**
+  - Identified defect: `acc_in (From Top)` green arrow previously passed straight down through the filled `stationary_weight [15:0]` box into `core_mac`.
+  - Rerouted `acc_in` around the right side of `stationary_weight`: signal enters from top at $x=38$, runs down outside the box to $y=29$, turns horizontally left to $x=31$, and enters the top of `core_mac` at $(31, 27)$.
+  - Positioned `weight` arrow to descend straight from `stationary_weight` bottom at $(21, 31)$ into `core_mac` at $(21, 27)$.
+  - Aligned `acc_out (To Bottom)` at $x=31$ and moved label to $x=33$, `ha="left"`, eliminating intersection between vertical arrow and label text.
+  - Visually inspected PNG: clean separation between weight and accumulation dataflows, zero arrow penetration through boxes.
+- **Task 3: Figure 3.2 (`conv2_array` FSM Spacing Fix)**
+  - Identified defect: `w_done` label was drawn directly on the border of `ST_DONE`.
+  - Widened canvas (`figsize=(10.5, 4.8)`, `ax.set_xlim(0, 110)`).
+  - Expanded inter-state gaps to 10–11 units across the horizontal sequence.
+  - Set `va="bottom"` and `y=27.5` for all transition labels (`write_addr==99`, `w_valid`, `mac_cnt == 8`, `w_done`), centered in open corridors with $\ge 2.0$ units clearance to any box boundary.
+  - Visually inspected PNG: zero clipping on `w_done` or `ST_DONE`.
+- **Task 4: Figure 3.3 (`mlp_head` FSM Label / Arrowhead Clearance)**
+  - Identified defect: `layer==3 &&\nlast_tile` label overlapped the arrowhead entering `DONE (3'd3)`.
+  - Expanded gap between `COMPUTE` and `DONE` to 13 units ($x=73$ to $x=86$).
+  - Moved label to $x=79.5$, `y=28.5`, `va="bottom"` — providing 2.5 units vertical clearance above the arrow line and 3.75 units horizontal clearance to the arrowhead.
+  - Visually inspected PNG: zero collision with arrowhead or box borders.
+- **Task 5: Re-generation and QA Gate Verification**
+  - Added robust `safe_copy()` helper to `generate_final_report.py` to handle active file locks gracefully when documents are open in external viewers.
+  - Re-embedded all 6 architectural/FSM figures into DOCX and recompiled PDF via LibreOffice.
+  - Re-ran `python docs/review/build/check_report.py`: 12/12 quality assurance checks passed with 100% success rate.
+- **Task 6: Section 7.5 Overclaim Removal**
+  - Removed phrase `"confirms state-of-the-art accuracy"` from Section 7.5 of `docs/review/build/generate_final_report.py` and `generate_final_report.py`.
+  - Replaced with neutral, factual phrasing: `"confirms high classification accuracy"`.
+  - Verified across repository via regex and PyMuPDF PDF scan: zero occurrences of `"state-of-the-art"` remain.

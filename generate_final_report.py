@@ -35,6 +35,14 @@ SOFFICE_BIN = r"C:\Program fFles\LibreOffice\program\soffice.com"
 if not os.path.exists(SOFFICE_BIN):
     SOFFICE_BIN = shutil.which("soffice") or "soffice"
 
+def safe_copy(src, dst):
+    try:
+        shutil.copyfile(src, dst)
+        return True
+    except PermissionError:
+        print(f">> Notice: {dst} is locked by an active viewer. Master report generated at {src}.")
+        return False
+
 # ---------------------------------------------------------------------------
 # Formatting Helpers
 # ---------------------------------------------------------------------------
@@ -1065,7 +1073,7 @@ def build_docx(facts, toc_pages=None):
 
     add_heading_2(doc, "7.5 Full 10,000-Image Regression & Confusion Matrix")
     add_body_p(doc, 
-        f"Evaluation across the complete 10,000-image MNIST test dataset confirms state-of-the-art accuracy: "
+        f"Evaluation across the complete 10,000-image MNIST test dataset confirms high classification accuracy: "
         f"PyTorch Float32 achieves {facts['accuracy']['float32_pytorch']['correct']:,}/10,000 ({facts['accuracy']['float32_pytorch']['accuracy_pct']}%), "
         f"and the bit-exact Q7.8 integer emulator achieves identically {facts['accuracy']['q7_8_bit_exact_emulator']['correct']:,}/10,000 "
         f"({facts['accuracy']['q7_8_bit_exact_emulator']['accuracy_pct']}%), with only {facts['accuracy']['q7_8_bit_exact_emulator']['disagreements_with_f32']} "
@@ -1227,7 +1235,7 @@ def main():
     print("[Pass 2] Regenerating DOCX with synchronized Table of Contents...")
     doc_synced = build_docx(facts, toc_pages=measured_pages)
     doc_synced.save(OUTPUT_DOCX)
-    shutil.copyfile(OUTPUT_DOCX, ROOT_DOCX)
+    safe_copy(OUTPUT_DOCX, ROOT_DOCX)
     print(f"Synchronized DOCX saved to {OUTPUT_DOCX} and {ROOT_DOCX}")
 
     # Re-convert to final PDF
@@ -1245,10 +1253,10 @@ def main():
         print(">> Warning: Minor page shift between passes. Re-running final synchronization...")
         doc_final = build_docx(facts, toc_pages=final_pages)
         doc_final.save(OUTPUT_DOCX)
-        shutil.copyfile(OUTPUT_DOCX, ROOT_DOCX)
+        safe_copy(OUTPUT_DOCX, ROOT_DOCX)
         convert_docx_to_pdf(OUTPUT_DOCX, out_dir)
 
-    shutil.copyfile(OUTPUT_PDF, ROOT_PDF)
+    safe_copy(OUTPUT_PDF, ROOT_PDF)
     print(f"Synchronized PDF saved to {OUTPUT_PDF} and {ROOT_PDF}")
 
     print("=" * 70)

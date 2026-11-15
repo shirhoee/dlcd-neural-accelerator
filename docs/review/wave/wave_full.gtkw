@@ -1,7 +1,6 @@
 [*]
 [*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
 [*]
-[timestart] 0
 [size] 1600 900
 [pos] -1 -1
 *-marks-
@@ -34,3 +33,9 @@ tb_wave.dut.dense_inst.c_idx
 tb_wave.dut.dense_inst.timer
 [pattern_trace] 1
 [pattern_trace] 0
+
+[timestart] 0
+[size] 1900 1000
+[pos] -1 -1
+[zoom] 0
+[treeopen] tb_wave.
