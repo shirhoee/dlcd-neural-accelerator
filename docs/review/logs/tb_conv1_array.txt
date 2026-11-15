@@ -1,0 +1,3 @@
+VCD info: dumpfile tb_conv1_array.vcd opened for output.
+ALL TESTS PASSED: 1600/1600 outputs matched.
+v2\verilog_src\tb_conv1_array.v:89: $finish called at 48965000 (1ps)

@@ -1,0 +1,22 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*]
+[timestart] 500000
+[size] 1600 900
+[pos] -1 -1
+*-marks-
+@28
+tb_wave.clk
+tb_wave.dut.start
+@24
+tb_wave.pixel_addr
+tb_wave.dut.conv1_inst.state
+tb_wave.dut.conv1_inst.init_cnt
+tb_wave.dut.conv1_inst.mac_cnt
+tb_wave.dut.conv1_inst.pe0.tap_idx
+@28
+tb_wave.dut.conv1_inst.pe0.valid_out
+tb_wave.dut.c1_valid
+tb_wave.dut.mp1_valid
+[pattern_trace] 1
+[pattern_trace] 0

@@ -1,0 +1,29 @@
+gtkwave save file
+GWS 2026111500 0
+
+# DLCD V2 CNN Accelerator - single-inference waveform save file
+# VCD: docs/review/wave/wave.vcd (timescale 1ps)
+# Signals are listed in the review-specified order.
+# Radix: 1 = binary, 3 = unsigned decimal, 6 = signed decimal.
+
+tb_wave.clk 1
+tb_wave.reset 1
+tb_wave.dut.start 1
+tb_wave.pixel_addr 3
+tb_wave.dut.conv1_inst.pe0.valid_out 1
+tb_wave.dut.maxpool1_inst.valid_out 1
+tb_wave.dut.conv2_inst.gen_pe[0].pe.valid_out 1
+tb_wave.dut.maxpool2_inst.valid_out 1
+tb_wave.dut.dense_inst.valid_out 1
+tb_wave.dut.argmax_inst.valid_out 1
+tb_wave.dut.argmax_inst.prediction 3
+tb_wave.dut.conv1_inst.state 3
+tb_wave.dut.conv1_inst.init_cnt 3
+tb_wave.dut.conv1_inst.mac_cnt 3
+tb_wave.dut.conv1_inst.pe0.tap_idx 3
+tb_wave.dut.conv1_inst.pe0.valid_out 1
+tb_wave.dut.dense_inst.state 3
+tb_wave.dut.dense_inst.layer 3
+tb_wave.dut.dense_inst.r_idx 3
+tb_wave.dut.dense_inst.c_idx 3
+tb_wave.dut.dense_inst.timer 3

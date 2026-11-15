@@ -4,7 +4,7 @@
 *.vvp
 vvp_out
 v2/verilog_src/*_test
-build/
+/build/
 docs/review/build/*.vvp
 
 # Ephemeral testbench and runtime data

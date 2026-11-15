@@ -1,0 +1,3 @@
+VCD info: dumpfile tb_pool_window_gen.vcd opened for output.
+ALL TESTS PASSED: 100/100 windows matched.
+v2\verilog_src\tb_pool_window_gen.v:76: $finish called at 12080000 (1ps)

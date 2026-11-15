@@ -1,0 +1,4 @@
+@echo off
+:: Compile tb_wave.v (waveform artifact). Macro value must arrive QUOTED at iverilog;
+:: in a .bat, """path""" survives as "path".
+iverilog -g2001 -Wall -DTEST_IMAGE_FILE="""v2/verilog_src/test_image_tmp.txt""" -o docs/review/build/tb_wave.vvp v2/verilog_src\tb_v2_top_fixed.v docs/review/wave\tb_wave.v v2/verilog_src\v2_top.v v2/verilog_src\conv1_array.v v2/verilog_src\window_gen.v v2/verilog_src\conv_pe.v v2/verilog_src\mac_q7_8.v v2/verilog_src\maxpool_array.v v2/verilog_src\pool_window_gen.v v2/verilog_src\maxpool_pe.v v2/verilog_src\relu_q7_8.v v2/verilog_src\conv2_array.v v2/verilog_src\conv2_window_gen.v v2/verilog_src\conv2_pe.v v2/verilog_src\maxpool2_array.v v2/verilog_src\pool2_window_gen.v v2/verilog_src\mlp_head.v v2/verilog_src\systolic_array.v v2/verilog_src\systolic_pe.v v2/verilog_src\layer_relu.v v2/verilog_src\argmax.v

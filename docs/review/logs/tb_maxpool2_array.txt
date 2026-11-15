@@ -1,0 +1,2 @@
+T1 MaxPool2: 200/200 matches.
+v2\verilog_src\tb_maxpool2_array.v:69: $finish called at 5365000 (1ps)
