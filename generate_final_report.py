@@ -509,12 +509,14 @@ def build_docx(facts, toc_pages=None):
 
     add_heading_3(doc, "2.3.2 Conv2 Multi-Channel PE & Systolic PE (conv2_pe.v, systolic_pe.v)")
     add_body_p(doc, 
-        "conv2_pe instantiates 4 parallel mac_q7_8 multiplier cores to process 4 incoming feature channels simultaneously across 25 spatial taps. "
-        "systolic_pe implements an output-stationary processing element containing a 16-bit weight register, partial-sum accumulator, and activation passthrough."
+        "conv2_pe instantiates 4 parallel mac_q7_8 multiplier cores to process 4 incoming feature channels simultaneously across 9 spatial taps. "
+        "systolic_pe implements a weight-stationary processing element containing a stationary 16-bit weight latch, "
+        "partial-sum accumulator, and activation pass-through. Activations are dynamically staggered by the mlp_head controller "
+        "(via r = timer - 16) rather than explicit hardware skew registers."
     )
     add_figure(doc, 
         os.path.join(FIGURES_DIR, "fig2_3_conv2_systolic_pe.png"),
-        "Figure 2.3: conv2_pe 4-Channel Parallel PE and systolic_pe Output-Stationary Datapath Schematics.",
+        "Figure 2.3: conv2_pe 4-Channel Parallel PE and systolic_pe Weight-Stationary Datapath Schematics.",
         width_inches=5.8
     )
 
@@ -539,8 +541,11 @@ def build_docx(facts, toc_pages=None):
 
     add_heading_2(doc, "3.1 Conv1 Array Controller FSM (conv1_array.v)")
     add_body_p(doc, 
-        "The conv1_array module manages streaming 3x3 convolution across 4 filters via a 3-state synchronous controller. "
-        "It synchronizes with the streaming window generator using an initialization counter (init_cnt: 0..24) and MAC counter (mac_cnt: 0..24)."
+        "The conv1_array module coordinates 4 parallel weight-stationary convolution processing elements (conv_pe.v) "
+        "through a 6-state controller (ST_INIT=0, ST_ADVANCE=1, ST_FETCH=2, ST_MAC=3, ST_WAIT_VALID=4, ST_DONE=5). "
+        "It synchronizes with the streaming line-buffer window generator using an initialization counter (init_cnt: 0..8) "
+        "and MAC accumulation counter (mac_cnt: 0..8). The leaf conv_pe modules contain no internal state machine, "
+        "relying solely on a modulo-9 tap_idx counter driven by control strobes."
     )
     add_figure(doc, 
         os.path.join(FIGURES_DIR, "fig3_1_conv1_fsm.png"),
@@ -549,7 +554,7 @@ def build_docx(facts, toc_pages=None):
     )
 
     # Conv1 FSM Table
-    fsm1_table = doc.add_table(rows=4, cols=4)
+    fsm1_table = doc.add_table(rows=7, cols=4)
     fsm1_table.alignment = WD_TABLE_ALIGNMENT.CENTER
     fsm1_table.autofit = False
     f1_headers = ["State Name & Code", "Transition Condition", "Datapath Operations", "Control Signals"]
@@ -569,9 +574,12 @@ def build_docx(facts, toc_pages=None):
         r.font.color.rgb = RGBColor(248, 250, 252)
 
     f1_data = [
-        ("IDLE (2'd0)", "start == 1 -> INIT\nstart == 0 -> IDLE", "Reset init_cnt <= 0, mac_cnt <= 0; clear accumulators.", "busy = 0, valid = 0"),
-        ("INIT (2'd1)", "init_cnt == 24 -> COMPUTE\ninit_cnt < 24 -> INIT", "Prefetch initial 25 spatial window taps into line buffer registers.", "busy = 1, valid = 0"),
-        ("COMPUTE (2'd2)", "all_pixels_done -> IDLE\nelse -> COMPUTE", "Step mac_cnt (0..24); assert pe_valid on cycle 24; stream to MaxPool1.", "busy = 1, valid = out_valid")
+        ("ST_INIT (3'd0)", "init_cnt == 8 -> ST_ADVANCE\nelse -> ST_INIT", "Shift 9 kernel weights into 4 PEs (tap_load_idx = 8 - init_cnt).", "load_wt = 1, mac_en = 0"),
+        ("ST_ADVANCE (3'd1)", "Unconditional -> ST_FETCH", "Mandatory 1-cycle pipeline shift to advance window_gen past completed window.", "win_advance = 1"),
+        ("ST_FETCH (3'd2)", "win_valid == 1 -> ST_MAC\nelse -> ST_FETCH", "Pump advance strobe into window_gen until 3x3 receptive field is valid.", "win_advance = !win_valid"),
+        ("ST_MAC (3'd3)", "mac_cnt == 8 -> ST_WAIT_VALID\nelse -> ST_MAC", "9-cycle accumulation across all 4 PEs; clear acc on mac_cnt == 0.", "mac_en = 1, clr_acc = (mac_cnt==0)"),
+        ("ST_WAIT_VALID (3'd4)", "win_done == 1 -> ST_DONE\nelse -> ST_ADVANCE", "1-cycle pipeline delay awaiting conv_pe valid_out assertion.", "valid_out active"),
+        ("ST_DONE (3'd5)", "reset == 1 -> ST_INIT\nelse -> ST_DONE", "Terminal state; holds top-level done output asserted until reset.", "done = 1")
     ]
     for r_idx, r_data in enumerate(f1_data):
         row = fsm1_table.rows[r_idx + 1]
@@ -593,7 +601,8 @@ def build_docx(facts, toc_pages=None):
     add_heading_2(doc, "3.2 Conv2 Array Controller FSM (conv2_array.v)")
     add_body_p(doc, 
         "The conv2_array module controls 8 parallel 4-channel convolution processing elements (conv2_pe.v), executing a total of "
-        "32 parallel multipliers across 3x3 receptive fields."
+        "32 parallel multipliers across 3x3 receptive fields. The controller employs a 6-state FSM governing channel loading, "
+        "window fetching, 9-tap dot-product accumulation, and sliding window advance."
     )
     add_figure(doc, 
         os.path.join(FIGURES_DIR, "fig3_2_conv2_fsm.png"),
@@ -601,10 +610,56 @@ def build_docx(facts, toc_pages=None):
         width_inches=5.2
     )
 
+    # Conv2 FSM Table
+    fsm2_table = doc.add_table(rows=7, cols=4)
+    fsm2_table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    fsm2_table.autofit = False
+    f2_headers = ["State Name & Code", "Transition Condition", "Datapath Operations", "Control Signals"]
+    f2_widths = [Inches(1.5), Inches(1.8), Inches(2.2), Inches(1.0)]
+
+    for c_idx, h in enumerate(f2_headers):
+        cell = fsm2_table.rows[0].cells[c_idx]
+        cell.width = f2_widths[c_idx]
+        set_cell_background(cell, "0F172A")
+        set_cell_margins(cell, 80, 80, 100, 100)
+        p = cell.paragraphs[0]
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        r = p.add_run(h)
+        r.font.name = "Calibri"
+        r.font.size = Pt(9.5)
+        r.font.bold = True
+        r.font.color.rgb = RGBColor(248, 250, 252)
+
+    f2_data = [
+        ("ST_LOAD (3'd0)", "write_addr == 80 -> ST_FETCH\nelse -> ST_LOAD", "Buffer 4-channel MaxPool1 activations into internal RAMs (81 words: write_addr 0..80).", "write_addr++"),
+        ("ST_FETCH (3'd1)", "w_valid == 1 -> ST_MAC\nelse -> ST_FETCH", "Advance conv2_window_gen until valid 3x3 receptive field is formed.", "advance = !w_valid"),
+        ("ST_MAC (3'd2)", "mac_cnt == 8 -> ST_WAIT_VALID\nelse -> ST_MAC", "9-cycle dot-product accumulation across 8 parallel 4-channel PEs (mac_cnt: 0..8).", "mac_cnt++"),
+        ("ST_WAIT_VALID (3'd3)", "w_done == 1 -> ST_DONE\nelse -> ST_ADVANCE", "1-cycle strobe capturing PE outputs into MaxPool2.", "valid_out active"),
+        ("ST_ADVANCE (3'd4)", "Unconditional -> ST_FETCH", "1-cycle shift strobe advancing window generator to next spatial position.", "advance = 1"),
+        ("ST_DONE (3'd5)", "reset == 1 -> ST_LOAD\nelse -> ST_DONE", "Terminal state; asserts conv2 completion strobe until reset.", "done = 1")
+    ]
+    for r_idx, r_data in enumerate(f2_data):
+        row = fsm2_table.rows[r_idx + 1]
+        bg = "FFFFFF" if r_idx % 2 == 0 else "F8FAFC"
+        for c_idx, text in enumerate(r_data):
+            cell = row.cells[c_idx]
+            cell.width = f2_widths[c_idx]
+            set_cell_background(cell, bg)
+            set_cell_margins(cell, 60, 60, 100, 100)
+            set_cell_borders(cell, "CBD5E1", "CBD5E1", "CBD5E1", "CBD5E1", "4")
+            p = cell.paragraphs[0]
+            p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+            r = p.add_run(text)
+            r.font.name = "Calibri"
+            r.font.size = Pt(9.0)
+
+    doc.add_paragraph().paragraph_format.space_after = Pt(6)
+
     add_heading_2(doc, "3.3 MLP Head Systolic Array Controller FSM (mlp_head.v)")
     add_body_p(doc, 
         "The mlp_head module orchestrates the time-multiplexed execution of 3 fully connected dense layers (200->64->32->10) "
-        "through the single shared 16x16 systolic array in exactly 2,978 clock cycles (2,977 in integrated top-level execution)."
+        "through the single shared 16x16 systolic array in exactly 2,978 clock cycles (2,977 in integrated top-level execution). "
+        "The controller employs a 4-state FSM (IDLE=0, LOAD_WEIGHT=1, COMPUTE=2, DONE=3) governing tile weight loading and activation streaming."
     )
     add_figure(doc, 
         os.path.join(FIGURES_DIR, "fig3_3_mlp_head_fsm.png"),
@@ -613,7 +668,7 @@ def build_docx(facts, toc_pages=None):
     )
 
     # MLP Head Tile & FSM Analysis Table
-    mlp_fsm_table = doc.add_table(rows=7, cols=4)
+    mlp_fsm_table = doc.add_table(rows=5, cols=4)
     mlp_fsm_table.alignment = WD_TABLE_ALIGNMENT.CENTER
     mlp_fsm_table.autofit = False
     mf_headers = ["State Name & Code", "Duration & Counters", "Memory Ping-Pong Mapping", "Algorithmic Operation"]
@@ -633,12 +688,10 @@ def build_docx(facts, toc_pages=None):
         r.font.color.rgb = RGBColor(248, 250, 252)
 
     mf_data = [
-        ("IDLE (3'd0)", "1 cycle\nWait for start", "Inactive", "Awaits mlp_start pulse from MaxPool2 completion."),
-        ("LOAD_WEIGHT (3'd1)", "16 cycles\ntimer: 0..15", "Read weight_rom", "Preload 16x16 stationary weight tile into systolic PEs."),
-        ("FEED_INPUT (3'd2)", "32 cycles\ntimer: 0..31", "Read ram_A (L1, L3)\nRead ram_B (L2)", "Stream skewed input activations diagonally into systolic array."),
-        ("DRAIN (3'd3)", "16 cycles\ntimer: 0..15", "Internal registers", "Drain accumulated partial sums from systolic mesh."),
-        ("STORE_OUTPUT (3'd4)", "16 cycles\ntimer: 0..15", "Write ram_B (L1)\nWrite ram_A (L2)\nWrite Logits (L3)", "Store ReLU-activated layer outputs into ping-pong RAM."),
-        ("DONE (3'd5)", "1 cycle\nAssert done", "Stable Logits Bus", "Assert mlp_done strobe; transfer 10 logits to argmax tree.")
+        ("IDLE (2'd0)", "Variable\nwrite_ptr < 200", "Write ram_A", "Awaits 200 MaxPool2 features streaming into ram_A."),
+        ("LOAD_WEIGHT (2'd1)", "16 cycles\ntimer: 0..15", "Read weight_rom", "Preload 16x16 stationary weight tile from ROM into systolic PEs."),
+        ("COMPUTE (2'd2)", "32 cycles\ntimer: 0..31", "Read ram_A/ram_B\nWrite ram_B/ram_A/logits", "Stream activations into systolic array, accumulate partial sums, write activated results."),
+        ("DONE (2'd3)", "1 cycle\nAssert valid_out", "Stable Logits Bus", "Assert valid_out strobe; transfer 10 final logits to argmax comparator.")
     ]
     for r_idx, r_data in enumerate(mf_data):
         row = mlp_fsm_table.rows[r_idx + 1]

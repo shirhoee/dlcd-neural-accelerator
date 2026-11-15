@@ -51,23 +51,23 @@ All 18 active RTL modules strictly enforce `` `timescale 1ns / 1ps `` and `` `de
 
 | Module Name | File Path | Role & Architecture | Multipliers | Compiler Directives |
 | :--- | :--- | :--- | :---: | :--- |
-| `v2_top` | `v2/verilog_src/v2_top.v` | Top-level chip integration & ROM instantiation | — | `timescale, `default_nettype none |
+| `v2_top` | `v2/verilog_src/v2_top.v` | Top-level chip integration & ROM instantiation | — (top-level) | `timescale, `default_nettype none |
 | `window_gen` | `v2/verilog_src/window_gen.v` | Conv1 line buffer (SR[0:46]) & 3×3 sliding window | — | `timescale, `default_nettype none |
-| `conv_pe` | `v2/verilog_src/conv_pe.v` | Conv1 weight-stationary PE (9 taps, 1 MAC) | 1 | `timescale, `default_nettype none |
-| `mac_q7_8` | `v2/verilog_src/mac_q7_8.v` | Signed 16×16 Q7.8 MAC ALU (`product[23:8]`) | 1 | `timescale, `default_nettype none |
-| `conv1_array` | `v2/verilog_src/conv1_array.v` | Conv1 4-channel controller (IDLE, INIT, COMPUTE) | 4 | `timescale, `default_nettype none |
+| `conv_pe` | `v2/verilog_src/conv_pe.v` | Conv1 weight-stationary PE (9 taps, 1 MAC; no FSM, tap_idx 0..8 counter) | 1 (4 inst = 4) | `timescale, `default_nettype none |
+| `mac_q7_8` | `v2/verilog_src/mac_q7_8.v` | Signed 16×16 Q7.8 MAC ALU (`product[23:8]`) | 1 (leaf ALU) | `timescale, `default_nettype none |
+| `conv1_array` | `v2/verilog_src/conv1_array.v` | Conv1 4-channel controller (6 states: ST_INIT, ST_ADVANCE, ST_FETCH, ST_MAC, ST_WAIT_VALID, ST_DONE; 3-bit: 3'd0..3'd5) | — (instantiates 4x conv_pe) | `timescale, `default_nettype none |
 | `pool_window_gen` | `v2/verilog_src/pool_window_gen.v` | MaxPool1 2×2 window buffer | — | `timescale, `default_nettype none |
 | `maxpool_pe` | `v2/verilog_src/maxpool_pe.v` | Fused 2×2 maxpool + ReLU comparator tournament | — | `timescale, `default_nettype none |
 | `maxpool_array` | `v2/verilog_src/maxpool_array.v` | 4-channel MaxPool1 array | — | `timescale, `default_nettype none |
 | `relu_q7_8` | `v2/verilog_src/relu_q7_8.v` | Non-negative clipping activation | — | `timescale, `default_nettype none |
 | `conv2_window_gen`| `v2/verilog_src/conv2_window_gen.v`| Conv2 4-channel line buffers (4x SR[0:26]) | — | `timescale, `default_nettype none |
-| `conv2_pe` | `v2/verilog_src/conv2_pe.v` | Conv2 4-channel parallel PE (4 MACs) | 4 | `timescale, `default_nettype none |
-| `conv2_array` | `v2/verilog_src/conv2_array.v` | Conv2 8-filter controller (IDLE, INIT, COMPUTE) | 32 | `timescale, `default_nettype none |
+| `conv2_pe` | `v2/verilog_src/conv2_pe.v` | Conv2 4-channel parallel PE (4 MACs) | 4 (8 inst = 32) | `timescale, `default_nettype none |
+| `conv2_array` | `v2/verilog_src/conv2_array.v` | Conv2 8-filter controller (6 states: ST_LOAD, ST_FETCH, ST_MAC, ST_WAIT_VALID, ST_ADVANCE, ST_DONE; 3-bit: 3'd0..3'd5) | — (instantiates 8x conv2_pe) | `timescale, `default_nettype none |
 | `pool2_window_gen`| `v2/verilog_src/pool2_window_gen.v`| MaxPool2 2×2 window buffer | — | `timescale, `default_nettype none |
 | `maxpool2_array` | `v2/verilog_src/maxpool2_array.v` | 8-channel MaxPool2 array | — | `timescale, `default_nettype none |
-| `mlp_head` | `v2/verilog_src/mlp_head.v` | 6-state FSM controller, dual ping-pong RAMs | — | `timescale, `default_nettype none |
-| `systolic_array` | `v2/verilog_src/systolic_array.v`| 16×16 2D mesh of processing elements | 256 | `timescale, `default_nettype none |
-| `systolic_pe` | `v2/verilog_src/systolic_pe.v` | Output-stationary PE with weight latch & skew DFFs | 1 | `timescale, `default_nettype none |
+| `mlp_head` | `v2/verilog_src/mlp_head.v` | MLP head controller (4 states: IDLE=0, LOAD_WEIGHT=1, COMPUTE=2, DONE=3; 2-bit), dual ping-pong RAMs | — (instantiates systolic_array) | `timescale, `default_nettype none |
+| `systolic_array` | `v2/verilog_src/systolic_array.v`| 16×16 2D mesh of processing elements | — (mesh of 256x systolic_pe) | `timescale, `default_nettype none |
+| `systolic_pe` | `v2/verilog_src/systolic_pe.v` | Weight-stationary PE with stationary_weight latch and activation pass-through (no diagonal skew registers; row staggering handled by mlp_head controller via r = timer - 16) | 1 (256 inst = 256) | `timescale, `default_nettype none |
 | `argmax` | `v2/verilog_src/argmax.v` | 10-input tournament comparator tree | — | `timescale, `default_nettype none |
 
 *Non-instantiated legacy modules:* `dense_array.v`, `dense_pe.v`, `layer_relu.v`, and `tb_dense_array.v` remain in the directory for historical reference but are not in the active synthesis datapath.

@@ -104,3 +104,25 @@
 - **Verification:**
   - Re-ran `measure_facts.py` to regenerate `facts.json`.
   - Confirmed `generate_final_report.py` at root and in `docs/review/build/` are synchronized.
+
+---
+
+### Entry 7: Task 7 - Resolve FSM Contradictions, Multiplier Attribution & Systolic Description
+- **FSM State Verification against RTL:**
+  - `conv1_array.v:56-61`: verified 6 real states (`ST_INIT=0`, `ST_ADVANCE=1`, `ST_FETCH=2`, `ST_MAC=3`, `ST_WAIT_VALID=4`, `ST_DONE=5`). Replaced stale 3-state descriptions in `CURRENT_STATE.md` and `generate_final_report.py`.
+  - `conv2_array.v:52-57`: verified 6 real states (`ST_LOAD=0`, `ST_FETCH=1`, `ST_MAC=2`, `ST_WAIT_VALID=3`, `ST_ADVANCE=4`, `ST_DONE=5`). Added missing 6-state FSM table in `generate_final_report.py`.
+  - `mlp_head.v:49`: verified 4 real states (`IDLE=0`, `LOAD_WEIGHT=1`, `COMPUTE=2`, `DONE=3`). Corrected stale 6-state descriptions to the real 4-state architecture.
+  - `conv_pe.v`: confirmed absence of FSM; relies solely on synchronous modulo-9 `tap_idx` (0..8) up-counter and control strobes (`load_weight`, `mac_en`, `clr_acc`).
+- **Multiplier Attribution Invariant:**
+  - Updated `CURRENT_STATE.md` module table so container modules (`v2_top`, `conv1_array`, `conv2_array`, `mlp_head`, `systolic_array`) display `— (container)` to prevent double-counting.
+  - Multiplier counts are placed exclusively on leaf modules where the multiplication arithmetic is performed:
+    - `conv_pe.v`: 1 multiplier (via `mac_q7_8`) × 4 instances = 4
+    - `conv2_pe.v`: 4 multipliers (via `mac_q7_8`) × 8 instances = 32
+    - `systolic_pe.v`: 1 multiplier (via `mac_q7_8`) × 256 instances = 256
+    - Total Hardware Multipliers = $4 + 32 + 256 = \mathbf{292}$.
+- **Systolic Architecture Description Correction:**
+  - Replaced all erroneous mentions of "output-stationary" and "diagonal skew registers" in `CURRENT_STATE.md` and `generate_final_report.py`.
+  - Formally documented as: "Weight-stationary 2D systolic array; activations are dynamically staggered by the mlp_head controller (via `r = timer - 16`) rather than explicit hardware skew registers."
+- **Verification:**
+  - Confirmed `generate_figures.py` already renders the real 6 states for Conv1/Conv2, 4 states for MLP head, and weight-stationary PE datapath.
+  - Synchronized `docs/review/build/generate_final_report.py` and root `generate_final_report.py`.
