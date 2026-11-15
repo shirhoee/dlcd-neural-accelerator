@@ -32,7 +32,7 @@ class V1PredictResponse(BaseModel):
     layer1: List[float] = Field(..., description="V1 Hidden Layer 1 (16 activations)")
     layer2: List[float] = Field(..., description="V1 Hidden Layer 2 (6 activations)")
     input_10x10: List[List[float]] = Field(..., description="Downsampled 10x10 input image for V1")
-    cycles: int = Field(default=6139, description="V1 baseline simulation cycles")
+    cycles: int = Field(default=159, description="V1 baseline compute simulation cycles (259 with serial preload)")
     accuracy_baseline: float = Field(default=93.06, description="V1 testset accuracy baseline")
 
 class ComparePredictResponse(BaseModel):

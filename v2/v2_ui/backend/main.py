@@ -49,7 +49,7 @@ async def predict_v1(payload: PredictRequest) -> V1PredictResponse:
             layer1=l1,
             layer2=l2,
             input_10x10=grid_10,
-            cycles=6139,
+            cycles=159,
             accuracy_baseline=93.06
         )
     except Exception as err:
@@ -76,7 +76,7 @@ async def predict_compare(payload: PredictRequest) -> ComparePredictResponse:
             layer1=v1_l1,
             layer2=v1_l2,
             input_10x10=grid_10,
-            cycles=6139,
+            cycles=159,
             accuracy_baseline=93.06
         )
 

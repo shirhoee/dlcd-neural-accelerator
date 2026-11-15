@@ -4,13 +4,13 @@ import { FSM_DEFINITIONS } from '../../data/projectData';
 import { Play, Pause, RotateCcw, StepForward, Activity, ArrowRight } from 'lucide-react';
 
 export const FsmVisualizer: React.FC = () => {
-  const [selectedFsmId, setSelectedFsmId] = useState<'conv_pe_fsm' | 'mlp_head_fsm'>('conv_pe_fsm');
+  const [selectedFsmId, setSelectedFsmId] = useState<string>('conv1_array_fsm');
   const [activeStateIndex, setActiveStateIndex] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
 
-  const currentFsm = FSM_DEFINITIONS.find((f) => f.id === selectedFsmId)!;
+  const currentFsm = FSM_DEFINITIONS.find((f) => f.id === selectedFsmId) || FSM_DEFINITIONS[0];
 
-  const handleSelectFsm = (id: 'conv_pe_fsm' | 'mlp_head_fsm') => {
+  const handleSelectFsm = (id: string) => {
     setSelectedFsmId(id);
     setActiveStateIndex(0);
     setIsRunning(false);
@@ -54,7 +54,7 @@ export const FsmVisualizer: React.FC = () => {
             <button
               key={fsm.id}
               className={`${styles.fsmTabBtn} ${selectedFsmId === fsm.id ? styles.activeFsmTab : ''}`}
-              onClick={() => handleSelectFsm(fsm.id as 'conv_pe_fsm' | 'mlp_head_fsm')}
+              onClick={() => handleSelectFsm(fsm.id)}
             >
               {fsm.module} Control FSM
             </button>

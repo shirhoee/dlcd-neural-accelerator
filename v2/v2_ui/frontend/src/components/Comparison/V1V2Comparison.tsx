@@ -13,7 +13,7 @@ export const V1V2Comparison: React.FC = () => {
           <h2 className={styles.sectionTitle}>Architectural Comparison: Version 1 vs Version 2</h2>
           <p className={styles.sectionDesc}>
             Evolution from the baseline Multi-Layer Perceptron (V1) to the 6-layer Convolutional Neural Accelerator (V2).
-            Demonstrating how reusing the 16×16 systolic array achieved <span className={styles.highlight}>+5.77% higher accuracy</span> with zero multiplier overhead.
+            Demonstrating how reusing the 16×16 systolic array achieved <span className={styles.highlight}>+5.64% higher hardware accuracy</span> with zero dense multiplier overhead.
           </p>
         </div>
 
@@ -53,7 +53,7 @@ export const V1V2Comparison: React.FC = () => {
           <div className={styles.metricsList}>
             <div className={styles.metricRow}>
               <span className={styles.metricLabel}>MNIST Testset Accuracy</span>
-              <span className={styles.metricValV1}>93.06%</span>
+              <span className={styles.metricValV1}>93.06% (10k test set)</span>
             </div>
             <div className={styles.metricRow}>
               <span className={styles.metricLabel}>Input Resolution</span>
@@ -65,7 +65,7 @@ export const V1V2Comparison: React.FC = () => {
             </div>
             <div className={styles.metricRow}>
               <span className={styles.metricLabel}>Inference Latency</span>
-              <span className={styles.metricVal}>6,139 clock cycles (61.4 µs)</span>
+              <span className={styles.metricVal}>159 compute cycles (259 preload, 2.59 µs)</span>
             </div>
             <div className={styles.metricRow}>
               <span className={styles.metricLabel}>Spatial Feature Extraction</span>
@@ -83,7 +83,7 @@ export const V1V2Comparison: React.FC = () => {
           <div className={styles.cardHeader}>
             <div className={styles.v2HeaderTop}>
               <span className={`${styles.versionTag} ${styles.v2Tag}`}>V2 ACCELERATOR (SUBMITTED)</span>
-              <span className={styles.gainBadge}>+5.77% ACCURACY BOOST</span>
+              <span className={styles.gainBadge}>+5.64% ACCURACY BOOST</span>
             </div>
             <h3 className={styles.versionTitle}>CNN + Time-Multiplexed Systolic Head</h3>
             <p className={styles.cardSub}>20×20 Input → Conv1 → MP1 → Conv2 → MP2 → 200→64→32→10</p>
@@ -92,7 +92,7 @@ export const V1V2Comparison: React.FC = () => {
           <div className={styles.metricsList}>
             <div className={styles.metricRow}>
               <span className={styles.metricLabel}>MNIST Testset Accuracy</span>
-              <span className={styles.metricValV2}>98.83%</span>
+              <span className={styles.metricValV2}>98.70% (Q7.8 RTL) / 98.83% (FP32)</span>
             </div>
             <div className={styles.metricRow}>
               <span className={styles.metricLabel}>Input Resolution</span>
@@ -100,11 +100,11 @@ export const V1V2Comparison: React.FC = () => {
             </div>
             <div className={styles.metricRow}>
               <span className={styles.metricLabel}>Multiplier Allocation</span>
-              <span className={styles.metricValV2}>256 Reused MACs (Zero added area)</span>
+              <span className={styles.metricValV2}>292 Leaf Multipliers (256 Systolic + 32 Conv2 + 4 Conv1)</span>
             </div>
             <div className={styles.metricRow}>
               <span className={styles.metricLabel}>Inference Latency</span>
-              <span className={styles.metricVal}>9,116 clock cycles (91.2 µs)</span>
+              <span className={styles.metricVal}>9,116 clock cycles (91.16 µs @ 100 MHz)</span>
             </div>
             <div className={styles.metricRow}>
               <span className={styles.metricLabel}>Spatial Feature Extraction</span>
@@ -132,7 +132,7 @@ export const V1V2Comparison: React.FC = () => {
           <div className={styles.insightIcon}><Cpu size={20} /></div>
           <h4 className={styles.insightTitle}>2. Time-Multiplexing the 16×16 Systolic Array</h4>
           <p className={styles.insightDesc}>
-            A naïve unrolled implementation of the 200→64→32→10 dense head requires 15,168 parallel hardware multipliers, making FPGA placement impossible. Instead, V2 imports V1’s verified 16×16 systolic array (256 MACs) and time-multiplexes it across all 3 layers in 2,978 cycles using dual ping-pong RAMs.
+            A naïve unrolled implementation of the 200→64→32→10 dense head requires 15,168 parallel hardware multipliers, making FPGA placement impossible. Instead, V2 imports V1’s verified 16×16 systolic array (256 MACs) and time-multiplexes it across all 3 layers in 2,977 cycles using dual ping-pong RAMs.
           </p>
         </div>
 

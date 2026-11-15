@@ -70,7 +70,7 @@ export const ProjectReportSection: React.FC = () => {
             The accelerator operates entirely within a signed 16-bit Q7.8 fixed-point arithmetic domain (1 sign bit, 7 integer bits, 8 fractional bits; scale factor of 256.0). The datapath incorporates 2D spatial line buffers for continuous streaming 3×3 convolutions, fused MaxPool+ReLU logic eliminating 75% of non-linear activation operations, and a time-multiplexed 16×16 systolic array core with dual ping-pong SRAMs (<code>ram_A</code> and <code>ram_B</code>) computing the dense classification head (200 &rarr; 64 &rarr; 32 &rarr; 10). 
           </p>
           <p>
-            Evaluated on the full 10,000-image MNIST test dataset, the accelerator achieves <strong>98.83% accuracy</strong> (9,883 / 10,000 correct) with an invariant, deterministic latency of exactly <strong>9,116 clock cycles</strong> (91.16 µs at 100 MHz). Compared to the Version 1 baseline Multi-Layer Perceptron (93.06%), the proposed Version 2 architecture achieves a <strong>+5.77% accuracy gain</strong> while reusing the 256-multiplier systolic array, incurring zero multiplier silicon overhead.
+            Evaluated on the full 10,000-image MNIST test dataset, the accelerator achieves <strong>98.70% hardware accuracy</strong> (9,870 / 10,000 correct in bit-exact RTL simulation; 98.83% in PyTorch Float32) with an invariant, deterministic latency of exactly <strong>9,116 clock cycles</strong> (91.16 µs at 100 MHz, yielding 10,969.7 FPS). Compared to the Version 1 baseline Multi-Layer Perceptron (93.06%), the proposed Version 2 architecture achieves a <strong>+5.64% accuracy gain</strong> while reusing the 256-multiplier systolic array, incurring zero multiplier overhead for the dense head.
           </p>
         </section>
 
@@ -121,17 +121,17 @@ export const ProjectReportSection: React.FC = () => {
                 <tr>
                   <td><strong>Hardware Multipliers</strong></td>
                   <td>256 (16×16 Systolic Mesh)</td>
-                  <td>256 (Reused via Time-Multiplexing with Dual Ping-Pong RAMs)</td>
+                  <td>292 Total (256 Systolic Array + 32 Conv2 + 4 Conv1)</td>
                 </tr>
                 <tr>
                   <td><strong>Execution Latency</strong></td>
-                  <td>6,139 clock cycles (61.39 µs @ 100 MHz)</td>
-                  <td>9,116 clock cycles (91.16 µs @ 100 MHz)</td>
+                  <td>159 compute cycles (259 preload, 2.59 µs @ 100 MHz)</td>
+                  <td>9,116 clock cycles (91.16 µs @ 100 MHz; 10,969.7 FPS)</td>
                 </tr>
                 <tr>
                   <td><strong>Full Testset Accuracy</strong></td>
-                  <td>93.06%</td>
-                  <td><strong>98.83% (+5.77% boost)</strong></td>
+                  <td>93.06% (10k test set)</td>
+                  <td><strong>98.70% Q7.8 RTL (98.83% FP32, +5.64% boost)</strong></td>
                 </tr>
               </tbody>
             </table>
@@ -146,19 +146,19 @@ export const ProjectReportSection: React.FC = () => {
           </p>
           <ol className={styles.numberedList}>
             <li>
-              <strong>2D Spatial Window Generator (<code>window_gen.v</code>):</strong> Uses two 20-word SRAM FIFO line buffers and a 3×3 matrix of 9 D-Flip-Flops to stream 9 spatial pixels simultaneously without redundant memory fetches.
+              <strong>2D Spatial Window Generator (<code>window_gen.v</code>):</strong> Uses a 47-element shift-register line buffer (<code>sr[0..46]</code>) with 9 parallel wire taps to stream 3×3 receptive fields continuously across the 20×20 image without redundant memory fetches.
             </li>
             <li>
-              <strong>Conv1 Array (<code>conv1_array.v</code>):</strong> Houses 4 parallel <code>conv_pe</code> processing elements, each equipped with dedicated 3×3 weight registers and a sequential Q7.8 MAC accumulator.
+              <strong>Conv1 Array (<code>conv1_array.v</code>):</strong> Houses 4 parallel <code>conv_pe</code> processing elements, each equipped with dedicated 3×3 stationary weight registers and a sequential Q7.8 MAC accumulator driven by a 6-state FSM.
             </li>
             <li>
               <strong>Fused MaxPool1 &amp; ReLU (<code>maxpool_array.v</code>):</strong> Implements a 2×2 tournament comparator tree (three 16-bit signed comparators) followed by an inverter-and-mask ReLU gate, downsampling to 4 channels of 10×10 feature maps.
             </li>
             <li>
-              <strong>Conv2 &amp; MaxPool2 Subsystem (<code>conv2_array.v</code>):</strong> Broadcasts 4 channels across 8 filter groups with multi-channel adder trees, followed by 2×2 pooling into 8 channels of 5×5 feature maps (200 activations).
+              <strong>Conv2 &amp; MaxPool2 Subsystem (<code>conv2_array.v</code>):</strong> Broadcasts 4 channels across 8 filter groups with multi-channel adder trees (32 multipliers total), followed by 2×2 pooling into 8 channels of 5×5 feature maps (200 activations).
             </li>
             <li>
-              <strong>Time-Multiplexed Systolic Head (<code>mlp_head.v</code>):</strong> Manages dual ping-pong RAMs (<code>ram_A</code> and <code>ram_B</code>) to execute Layer 1 (200&rarr;64 in 4,800 cycles), Layer 2 (64&rarr;32 in 1,824 cycles), and Layer 3 (32&rarr;10 in 1,050 cycles).
+              <strong>Time-Multiplexed Systolic Head (<code>mlp_head.v</code>):</strong> Manages dual ping-pong RAMs (<code>ram_A</code> with 208 words and <code>ram_B</code> with 64 words) to execute Layer 1 (200&rarr;64, 52 tiles = 2,496 cycles), Layer 2 (64&rarr;32, 8 tiles = 384 cycles), and Layer 3 (32&rarr;10, 2 tiles = 96 cycles) in 2,977 integrated cycles (62 tiles @ 48 cycles/tile + 1 idle cycle).
             </li>
             <li>
               <strong>Tournament Argmax Classifier (<code>argmax.v</code>):</strong> A pipelined 4-level tournament comparator tree that identifies the maximum logit and latches the 4-bit winning digit index <code>[0..9]</code> in a single cycle.
@@ -170,24 +170,33 @@ export const ProjectReportSection: React.FC = () => {
         <section className={styles.reportSection}>
           <h2 className={styles.secHeading}>4. FINITE STATE MACHINE (FSM) SPECIFICATIONS</h2>
           <p>
-            Control across all processing elements is governed by synchronous Mealy and Moore state machines:
+            Control across all processing elements is governed by synchronous Moore and Mealy state machines:
           </p>
           <div className={styles.fsmCard}>
             <div className={styles.fsmHeader}>
               <Cpu size={16} />
-              <strong>conv_pe 4-State Cycle Controller</strong>
+              <strong>conv1_array 6-State Master Sequencer</strong>
             </div>
             <p>
-              States: <code>IDLE</code> (awaits <code>in_valid</code> strobe) &rarr; <code>ACCUM</code> (cycles counter 0..8, executing MAC operations on 9 spatial taps) &rarr; <code>ROUND</code> (applies Q7.8 fixed-point rounding and saturation guard) &rarr; <code>DONE</code> (asserts <code>out_valid</code>, resets accumulator to zero).
+              States: <code>ST_INIT</code> (preload 36 weights) &rarr; <code>ST_ADVANCE</code> &rarr; <code>ST_FETCH</code> (wait for <code>win_valid</code>) &rarr; <code>ST_MAC</code> (9-cycle sequential accumulation) &rarr; <code>ST_WAIT_VALID</code> &rarr; <code>ST_DONE</code>. (The underlying <code>conv_pe</code> uses a modulo-9 counter <code>tap_idx</code> without an internal FSM).
+            </p>
+          </div>
+          <div className={styles.fsmCard}>
+            <div className={styles.fsmHeader}>
+              <Cpu size={16} />
+              <strong>conv2_array 6-State Multichannel Controller</strong>
+            </div>
+            <p>
+              States: <code>ST_LOAD</code> (buffer 100 features across 4 channels) &rarr; <code>ST_FETCH</code> &rarr; <code>ST_MAC</code> (9-cycle parallel accumulation across 8 filters) &rarr; <code>ST_WAIT_VALID</code> (adder tree summation) &rarr; <code>ST_ADVANCE</code> &rarr; <code>ST_DONE</code>.
             </p>
           </div>
           <div className={styles.fsmCard}>
             <div className={styles.fsmHeader}>
               <ShieldCheck size={16} />
-              <strong>mlp_head 8-State Layer Sequencer</strong>
+              <strong>mlp_head 4-State Time-Multiplexed Controller</strong>
             </div>
             <p>
-              States: <code>IDLE</code> &rarr; <code>FLATTEN_IN</code> &rarr; <code>L1_RUN</code> (computes 200&rarr;64, writes <code>ram_B</code>) &rarr; <code>L1_DRAIN</code> &rarr; <code>L2_RUN</code> (computes 64&rarr;32, writes <code>ram_A</code>) &rarr; <code>L2_DRAIN</code> &rarr; <code>L3_RUN</code> (computes 32&rarr;10, writes logits) &rarr; <code>HEAD_DONE</code>.
+              States: <code>IDLE</code> (buffer 200 input features into <code>ram_A</code>) &rarr; <code>LOAD_WEIGHT</code> (16 cycles shift-loading 16×16 tile into systolic array) &rarr; <code>COMPUTE</code> (32 cycles streaming activations, fused ReLU, ping-pong RAM write) &rarr; <code>DONE</code> (asserts <code>valid_out</code>).
             </p>
           </div>
         </section>
@@ -217,7 +226,7 @@ export const ProjectReportSection: React.FC = () => {
               <CheckCircle2 size={20} className={styles.checkIcon} />
               <div>
                 <strong>Full 10,000-Image Regression:</strong>
-                <span>98.83% test accuracy (9,883 / 10,000 correct) on unseen MNIST test vectors.</span>
+                <span>98.70% bit-exact hardware accuracy (9,870 / 10,000 correct) in RTL simulation; 98.83% PyTorch FP32.</span>
               </div>
             </div>
           </div>

@@ -26,7 +26,7 @@ The codebase encompasses two complete architectural generations:
    - **Execution Latency:** Exactly **9,116 clock cycles** (91.16 μs at 100 MHz clock frequency).
    - **Throughput (100 MHz):** 10,969.7 FPS (theoretical pipelined: 100 MHz / 9,116 cycles); 10,964.9 FPS (demonstrated with 4-cycle reset sequence: 100 MHz / 9,120 cycles).
    - **On-Chip Memory:** 16,623 words × 16-bit (265,968 bits / 32.47 KB) across weight ROMs, ping-pong RAMs, and line buffers.
-   - **Classification Accuracy:** **98.83%** on the full 10,000 MNIST test images (9,883 / 10,000 correct in both PyTorch Float32 and Q7.8 integer emulator).
+   - **Classification Accuracy:** **98.70%** on the full 10,000 MNIST test images (9,870 / 10,000 correct in bit-exact RTL simulation and Q7.8 integer emulator; 98.83% in PyTorch Float32).
    - **Hardware Parity:** **100% bit-exact equivalence (0 mismatches)** across all 10,000 test images in Icarus Verilog simulation (`harness.py`).
 
 ---
@@ -92,7 +92,7 @@ All 18 active RTL modules strictly enforce `` `timescale 1ns / 1ps `` and `` `de
    cd v2\regression
    python harness.py --workers 16
    ```
-   *Status:* 10,000/10,000 MATCH (0 mismatches), Accuracy = 98.83%.
+   *Status:* 10,000/10,000 MATCH (0 mismatches), Hardware Accuracy = 98.70% (98.83% Float32).
 4. **Report QA Gate:**
    ```cmd
    python docs\review\build\check_report.py

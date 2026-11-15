@@ -1,0 +1,9 @@
+[dumpfile] "docs/review/wave/wave.vcd"
+[timestart] 86000000
+[size] 1900 1000
+[treeopen] tb_wave.
+[end] 91205000
+tb_wave.clk
+tb_wave.done
+tb_wave.d_valid
+tb_wave.prediction[3:0]
