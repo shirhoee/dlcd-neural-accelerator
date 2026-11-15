@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`default_nettype none
 
 module conv2_window_gen (
     input wire clk,
@@ -85,3 +86,4 @@ module conv2_window_gen (
     end
 
 endmodule
+`default_nettype wire

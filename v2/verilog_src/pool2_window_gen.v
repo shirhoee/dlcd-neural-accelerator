@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`default_nettype none
 
 module pool2_window_gen (
     input wire clk,
@@ -51,3 +52,4 @@ module pool2_window_gen (
         end
     end
 endmodule
+`default_nettype wire

@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`default_nettype none
 
 module systolic_pe (
     input wire clk,
@@ -40,3 +41,4 @@ module systolic_pe (
         end
     end
 endmodule
+`default_nettype wire

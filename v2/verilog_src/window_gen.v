@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`default_nettype none
 
 module window_gen (
     input wire clk,
@@ -99,3 +100,4 @@ module window_gen (
     end
 
 endmodule
+`default_nettype wire

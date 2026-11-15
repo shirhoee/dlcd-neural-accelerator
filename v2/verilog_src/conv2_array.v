@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`default_nettype none
 
 /*
  * V2 - N5: Conv2 Array
@@ -188,3 +189,4 @@ module conv2_array (
     end
 
 endmodule
+`default_nettype wire

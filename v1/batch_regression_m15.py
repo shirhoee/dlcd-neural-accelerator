@@ -13,11 +13,12 @@ from sklearn.model_selection import train_test_split
 import subprocess
 import os
 import sys
+import shutil
 
 SEED = 42
 N_IMAGES = 20
-IVERILOG_PATH = r"C:\iverilog\bin\iverilog.exe"
-VVP_PATH = r"C:\iverilog\bin\vvp.exe"
+IVERILOG_PATH = shutil.which("iverilog") or r"C:\iverilog\bin\iverilog.exe"
+VVP_PATH = shutil.which("vvp") or r"C:\iverilog\bin\vvp.exe"
 VERILOG_SRC = "verilog_src"
 
 torch.manual_seed(SEED)

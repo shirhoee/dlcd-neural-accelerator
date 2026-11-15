@@ -1,3 +1,6 @@
+`timescale 1ns / 1ps
+`default_nettype none
+
 module relu_q7_8 (
     input wire signed [15:0] in_val,
     output reg signed [15:0] out_val
@@ -8,3 +11,4 @@ module relu_q7_8 (
     end
 
 endmodule
+`default_nettype wire

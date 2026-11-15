@@ -18,8 +18,11 @@ from int_emulator_v2 import IntEmulatorV2
 print("Starting sanity regression over 10 images...")
 start_time = time.time()
 
+iverilog_path = shutil.which("iverilog") or r"C:\iverilog\bin\iverilog.exe"
+vvp_path = shutil.which("vvp") or r"C:\iverilog\bin\vvp.exe"
+
 compile_cmd = [
-    r"C:\iverilog\bin\iverilog.exe", 
+    iverilog_path, 
     "-o", "v2_top_fixed_test", 
     "-s", "tb_v2_top_fixed",
     "-DTEST_IMAGE_FILE=\"test_image_tmp.txt\"",
@@ -108,7 +111,7 @@ def run_one(i):
     shutil.copy(os.path.join(cwd_v, "../python_golden_model/conv2_weights_q7_8.txt"), tmp_pgm)
     shutil.copy(os.path.join(cwd_v, "../python_golden_model/mlp_rom.txt"), tmp_pgm)
     
-    run_cmd = [r"C:\iverilog\bin\vvp.exe", "v2_top_fixed_test"]
+    run_cmd = [vvp_path, "v2_top_fixed_test"]
     res = subprocess.run(run_cmd, cwd=tmp_vsrc, capture_output=True, text=True)
     
     rtl_pred = -1

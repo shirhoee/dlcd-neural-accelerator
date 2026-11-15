@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`default_nettype none
 
 /*
  * V2 - N3b: Conv1 Array
@@ -192,3 +193,4 @@ module conv1_array (
     end
 
 endmodule
+`default_nettype wire

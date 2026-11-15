@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`default_nettype none
 
 module conv_pe (
     input wire clk,
@@ -71,3 +72,4 @@ module conv_pe (
     end
 
 endmodule
+`default_nettype wire

@@ -9,17 +9,26 @@ import torchvision.transforms as transforms
 import tempfile
 import shutil
 import subprocess
+import argparse
 
 sys.path.append(os.path.abspath('../python_golden_model'))
 from train_mlp3 import ConvMLP_V2_TrueSpec
 from fixed_point_math import to_q7_8, to_signed_16
 from int_emulator_v2 import IntEmulatorV2
 
-print("Starting regression harness over 10,000 images...")
+parser = argparse.ArgumentParser(description="Full RTL regression harness over MNIST test set")
+parser.add_argument("--workers", type=int, default=os.cpu_count() or 16, help="Worker threads for simulation")
+parser.add_argument("--limit", type=int, default=10000, help="Number of images to evaluate")
+args = parser.parse_args()
+
+print(f"Starting regression harness over {args.limit} images with {args.workers} workers...")
 start_time = time.time()
 
+iverilog_exe = shutil.which("iverilog") or r"C:\iverilog\bin\iverilog.exe"
+vvp_exe = shutil.which("vvp") or r"C:\iverilog\bin\vvp.exe"
+
 compile_cmd = [
-    r"C:\iverilog\bin\iverilog.exe", 
+    iverilog_exe, 
     "-o", "v2_top_fixed_test", 
     "-s", "tb_v2_top_fixed",
     "-DTEST_IMAGE_FILE=\"test_image_tmp.txt\"",
@@ -117,7 +126,7 @@ def run_one(i):
     shutil.copy(os.path.join(cwd_v, "../python_golden_model/conv2_weights_q7_8.txt"), tmp_pgm)
     shutil.copy(os.path.join(cwd_v, "../python_golden_model/mlp_rom.txt"), tmp_pgm)
     
-    run_cmd = [r"C:\iverilog\bin\vvp.exe", "v2_top_fixed_test"]
+    run_cmd = [vvp_exe, "v2_top_fixed_test"]
     res = subprocess.run(run_cmd, cwd=tmp_vsrc, capture_output=True, text=True)
     
     rtl_pred = -1
@@ -161,9 +170,10 @@ def run_one(i):
 # To save immense time during agent execution, let's process 10,000 images using threadpool.
 futures = []
 results_db = []
-print("Dispatching 10,000 simulations...")
-with ThreadPoolExecutor(max_workers=16) as executor:
-    for i in range(10000):
+progress_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../docs/review/logs/harness_progress.json"))
+print(f"Dispatching {args.limit} simulations across {args.workers} workers...")
+with ThreadPoolExecutor(max_workers=args.workers) as executor:
+    for i in range(args.limit):
         futures.append(executor.submit(run_one, i))
     
     for i, future in enumerate(futures):
@@ -183,8 +193,21 @@ with ThreadPoolExecutor(max_workers=16) as executor:
         mp2_cycles_list.append(res["mp2_cyc"])
         dense_cycles_list.append(res["den_cyc"])
         
-        if (i+1) % 1000 == 0:
-            print(f"Processed {i+1}/10000...")
+        if (i+1) % 100 == 0 or (i+1) == args.limit:
+            p_data = {
+                "status": "complete" if (i+1) == args.limit else "running",
+                "images_done": i + 1,
+                "total_images": args.limit,
+                "mismatches": mismatches_rtl_emu,
+                "wall_time_s": round(time.time() - start_time, 2)
+            }
+            try:
+                with open(progress_path, "w") as pf:
+                    json.dump(p_data, pf, indent=2)
+            except Exception:
+                pass
+            if (i+1) % 500 == 0 or (i+1) == args.limit:
+                print(f"Processed {i+1}/{args.limit} in {time.time()-start_time:.1f}s...")
 
 end_time = time.time()
 print(f"Wall time: {end_time - start_time:.2f} seconds (iverilog backend)")
@@ -193,9 +216,9 @@ rtl_correct = sum(1 for r in results_db if r["rtl_pred"] == r["label"])
 pt_correct = sum(1 for r in results_db if r["pt_pred"] == r["label"])
 
 summary = {
-    "Total Images": 10000,
-    "RTL Accuracy": rtl_correct / 10000.0,
-    "Float32 Accuracy": pt_correct / 10000.0,
+    "Total Images": args.limit,
+    "RTL Accuracy": rtl_correct / float(args.limit),
+    "Float32 Accuracy": pt_correct / float(args.limit),
     "F32 vs Q7.8 Disagreements": disagreements_f32_q78,
     "Max Logit Error": float(max_logit_error),
     "RTL vs Emu Mismatches": mismatches_rtl_emu,

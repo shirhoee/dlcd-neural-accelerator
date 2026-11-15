@@ -29,7 +29,7 @@ module tb_v2_top_fixed;
         if (dut.mp2_valid && mp2_start == 0) mp2_start = cycle_count;
         if (dut.mp2_valid) mp2_end = cycle_count;
         
-        if (dut.d_valid && dense_start == 0) dense_start = cycle_count;
+        if (dut.dense_inst.state == 1 && dense_start == 0) dense_start = cycle_count;
         if (dut.d_valid) dense_end = cycle_count;
     end
     
@@ -46,6 +46,9 @@ module tb_v2_top_fixed;
     reg signed [15:0] image_rom [0:399];
     
     // File path injected via macro
+`ifndef TEST_IMAGE_FILE
+`define TEST_IMAGE_FILE "test_image_tmp.txt"
+`endif
     initial begin
         $readmemh(`TEST_IMAGE_FILE, image_rom);
     end

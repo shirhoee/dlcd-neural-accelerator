@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`default_nettype none
 
 /*
  * V2 - N4a: MaxPool Window Generator
@@ -82,3 +83,4 @@ module pool_window_gen (
     assign window_valid = valid_in && (col[0] == 1'b1) && (row[0] == 1'b1);
 
 endmodule
+`default_nettype wire

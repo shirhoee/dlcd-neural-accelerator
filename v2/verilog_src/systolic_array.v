@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`default_nettype none
 
 module systolic_array #(
     parameter ROWS = 16,  // Number of Neurons
@@ -45,3 +46,4 @@ module systolic_array #(
     endgenerate
 
 endmodule
+`default_nettype wire
