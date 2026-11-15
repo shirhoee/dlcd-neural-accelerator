@@ -32,7 +32,7 @@ All metrics reported below are programmatically verified from the single source 
 | **Hardware Multipliers** | **256 multipliers** (16x16 array) | **292 multipliers** | 4 in Conv1 + 32 in Conv2 + 256 in Systolic |
 | **Inference Latency** | **159 clock cycles** (1.59 μs @ 100 MHz) | **9,116 clock cycles** (91.16 μs @ 100 MHz) | Verified via `test_10.py` and `wave.vcd` |
 | **Total Latency from Reset** | **259 clock cycles** (2.59 μs) | **9,116 clock cycles** (91.16 μs) | Reported latency; absolute done cycle = 9,117 (not latency) |
-| **Throughput (100 MHz)** | ~386,100 FPS (burst) | **10,969.7 FPS** (continuous) | Exceeds real-time vision rates (>10,000 FPS) |
+| **Throughput (100 MHz)** | **628,930.8 FPS** (theoretical pipelined: 100 MHz / 159 cycles)<br>**386,100.4 FPS** (from reset with 100-cycle preload: 100 MHz / 259 cycles) | **10,969.7 FPS** (theoretical pipelined: 100 MHz / 9,116 cycles)<br>**10,964.9 FPS** (demonstrated with 4-cycle reset sequence: 100 MHz / 9,120 cycles) | Exceeds real-time vision rates (>10,000 FPS) |
 | **On-Chip Memory** | Distributed Registers | **16,623 words (32.47 KB / 265,968 bits)** | Verified structural depth x width |
 | **PyTorch Float32 Accuracy** | 95.39% (10x10 MNIST testset) | **98.83%** (9,883 / 10,000 on MNIST testset) | PyTorch 2.6.0 on full 10k test set |
 | **Q7.8 Emulator Accuracy** | 93.06% (M15 test split) | **98.83%** (9,883 / 10,000 on MNIST testset) | Bit-exact integer emulator (`int_emulator_v2.py`) |

@@ -6,12 +6,16 @@
     "arithmetic_format": "Q7.8 Signed Fixed-Point (16-bit 2's complement)",
     "clock_frequency_mhz": 100.0,
     "clock_period_ns": 10.0,
-    "generation_timestamp": "2026-11-15T12:09:59.093049"
+    "generation_timestamp": "2026-11-15T12:13:21.367296"
   },
   "headline_metrics": {
     "v2_latency_cycles": 9116,
     "v2_latency_us": 91.16,
     "v2_throughput_fps": 10969.7,
+    "v2_throughput_theoretical_fps": 10969.7,
+    "v2_throughput_theoretical_label": "theoretical, assumes back-to-back pipelining: 100 MHz / 9,116 cycles",
+    "v2_throughput_demonstrated_fps": 10964.9,
+    "v2_throughput_demonstrated_label": "measured demonstrated rate: 100 MHz / 9,120 cycles, including 4-cycle reset-to-start sequence in tb_submission.v",
     "v2_multipliers": 292,
     "v2_on_chip_memory_words": 16623,
     "v2_on_chip_memory_kb": 32.47,
@@ -21,9 +25,23 @@
     "v1_latency_inference_cycles": 159,
     "v1_latency_total_cycles": 259,
     "v1_latency_total_us": 2.59,
+    "v1_throughput_inference_only_fps": 628930.8,
+    "v1_throughput_inference_only_label": "theoretical, assumes back-to-back pipelining: 100 MHz / 159 cycles",
+    "v1_throughput_from_reset_fps": 386100.4,
+    "v1_throughput_from_reset_label": "derived from reset including 100-cycle preload: 100 MHz / 259 cycles",
     "v1_multipliers": 256,
     "v1_accuracy_m15_pct": 93.06,
     "v1_accuracy_mnist10k_pct": 95.39
+  },
+  "throughput": {
+    "v2_throughput_theoretical_fps": 10969.7,
+    "v2_throughput_theoretical_note": "theoretical, assumes back-to-back pipelining: 100 MHz / 9,116 cycles",
+    "v2_throughput_demonstrated_fps": 10964.9,
+    "v2_throughput_demonstrated_note": "measured demonstrated rate: 100 MHz / 9,120 cycles, including 4-cycle reset-to-start sequence in tb_submission.v",
+    "v1_throughput_inference_only_fps": 628930.8,
+    "v1_throughput_inference_only_note": "theoretical, assumes back-to-back pipelining: 100 MHz / 159 cycles",
+    "v1_throughput_from_reset_fps": 386100.4,
+    "v1_throughput_from_reset_note": "derived from reset including 100-cycle preload: 100 MHz / 259 cycles"
   },
   "cycles": {
     "headline_latency_cycles": 9116,

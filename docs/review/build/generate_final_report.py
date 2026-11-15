@@ -376,7 +376,12 @@ def build_docx(facts, toc_pages=None):
         ("Spatial Input Size", v1["input_dimensions"], "20x20 pixels (400 words)", "4x higher spatial resolution; loop preservation"),
         ("Hardware Multipliers", f"{v1['multipliers']} (16x16 array)", f"{v2_head['v2_multipliers']} (4 in C1 + 32 in C2 + 256 in Systolic)", "Optimal balance of streaming and matrix compute"),
         ("Execution Latency", f"{v1['inference_cycles']} cycles ({v1['total_cycles_from_reset']} from reset)", f"{v2_head['v2_latency_cycles']:,} clock cycles ({v2_head['v2_latency_us']} us)", "Deterministic pipeline timing at 100 MHz"),
-        ("Throughput (100 MHz)", "~386,100 FPS (burst)", f"{v2_head['v2_throughput_fps']:,} FPS (continuous)", "Exceeds standard real-time vision rates (>10,000 FPS)"),
+        (
+            "Throughput (100 MHz)", 
+            f"{facts['throughput']['v1_throughput_inference_only_fps']:,} FPS (pipelined: 100M/159)\n{facts['throughput']['v1_throughput_from_reset_fps']:,} FPS (with preload: 100M/259)", 
+            f"{facts['throughput']['v2_throughput_theoretical_fps']:,} FPS (theoretical pipelined)\n{facts['throughput']['v2_throughput_demonstrated_fps']:,} FPS (demonstrated with 4-cyc reset)", 
+            "Exceeds standard real-time vision rates (>10,000 FPS)"
+        ),
         ("On-Chip Memory", "Distributed Registers", f"{v2_head['v2_on_chip_memory_words']:,} words ({v2_head['v2_on_chip_memory_kb']} KB)", "Self-contained ping-pong SRAM & ROM storage"),
         ("MNIST Testset Accuracy", f"{v1['accuracy_m15_pct']}% (M15 split)", f"{v2_head['v2_accuracy_emulator_pct']}% (Full 10,000 Testset)", "+5.77% accuracy improvement (98.83% bit-exact)")
     ]

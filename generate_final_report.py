@@ -376,7 +376,12 @@ def build_docx(facts, toc_pages=None):
         ("Spatial Input Size", v1["input_dimensions"], "20x20 pixels (400 words)", "4x higher spatial resolution; loop preservation"),
         ("Hardware Multipliers", f"{v1['multipliers']} (16x16 array)", f"{v2_head['v2_multipliers']} (4 in C1 + 32 in C2 + 256 in Systolic)", "Optimal balance of streaming and matrix compute"),
         ("Execution Latency", f"{v1['inference_cycles']} cycles ({v1['total_cycles_from_reset']} from reset)", f"{v2_head['v2_latency_cycles']:,} clock cycles ({v2_head['v2_latency_us']} us)", "Deterministic pipeline timing at 100 MHz"),
-        ("Throughput (100 MHz)", "~386,100 FPS (burst)", f"{v2_head['v2_throughput_fps']:,} FPS (continuous)", "Exceeds standard real-time vision rates (>10,000 FPS)"),
+        (
+            "Throughput (100 MHz)", 
+            f"{facts['throughput']['v1_throughput_inference_only_fps']:,} FPS (pipelined: 100M/159)\n{facts['throughput']['v1_throughput_from_reset_fps']:,} FPS (with preload: 100M/259)", 
+            f"{facts['throughput']['v2_throughput_theoretical_fps']:,} FPS (theoretical pipelined)\n{facts['throughput']['v2_throughput_demonstrated_fps']:,} FPS (demonstrated with 4-cyc reset)", 
+            "Exceeds standard real-time vision rates (>10,000 FPS)"
+        ),
         ("On-Chip Memory", "Distributed Registers", f"{v2_head['v2_on_chip_memory_words']:,} words ({v2_head['v2_on_chip_memory_kb']} KB)", "Self-contained ping-pong SRAM & ROM storage"),
         ("MNIST Testset Accuracy", f"{v1['accuracy_m15_pct']}% (M15 split)", f"{v2_head['v2_accuracy_emulator_pct']}% (Full 10,000 Testset)", "+5.77% accuracy improvement (98.83% bit-exact)")
     ]
@@ -649,7 +654,12 @@ def build_docx(facts, toc_pages=None):
         "4 row tiles x 2 col tiles = 8 tiles. Layer 3 (32x10) requires 2 row tiles x 1 col tile = 2 tiles. Total tiles = 62. "
         "Each tile executes in 48 cycles (16 weight load + 32 compute/drain). Total compute cycles = 62 x 48 = 2,976 cycles. "
         "Adding 2 FSM control cycles (IDLE->LOAD_WEIGHT transition + DONE output pulse) yields exactly 2,978 standalone cycles "
-        "(2,977 cycles in integrated top-level pipeline)."
+        "(2,977 cycles in integrated top-level pipeline). "
+        "The 1-cycle difference between standalone unit testbench execution (2,978 cycles in tb_mlp_head) and integrated "
+        "pipeline measurement (2,977 cycles in v2_top) arises because tb_mlp_head begins counting during state IDLE upon "
+        "valid_in deassertion (capturing the 1-cycle IDLE-to-LOAD_WEIGHT transition + 2,976 compute cycles + 1 cycle in DONE), "
+        "whereas top-level pipeline measurement triggers directly when dense_inst.state == LOAD_WEIGHT is already active at "
+        "Cycle 6,137, measuring from the first active computation cycle until d_valid assertion at Cycle 9,114."
     )
 
     # =========================================================================

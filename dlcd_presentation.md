@@ -70,7 +70,7 @@
 ---
 
 ## Slide 6: Execution Latency Breakdown (9,116 Cycles)
-**Deterministic Latency:** Exactly **9,116 clock cycles** (91.16 μs at 100 MHz, continuous throughput of 10,969.7 FPS).
+**Deterministic Latency:** Exactly **9,116 clock cycles** (91.16 μs at 100 MHz; 10,969.7 FPS theoretical pipelined, 10,964.9 FPS demonstrated with 4-cycle reset sequence).
 
 | Stage | Cycles | Time (100 MHz) | Share (%) | Description |
 | :--- | :---: | :---: | :---: | :--- |

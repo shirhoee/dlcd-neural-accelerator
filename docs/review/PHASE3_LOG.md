@@ -61,3 +61,20 @@
   - Thus, this 1-cycle latency is a physical register delay caused by `run_latch` (`v2_top.v:16-23`) and `internal_reset` (`v2_top.v:25`).
 - **Documentation Updates:**
   - Updated stage row description across `measure_facts.py`, `facts.json`, `README.md`, and `CURRENT_STATE.md` to explicitly cite `run_latch` (`v2_top.v:16-23`) and `internal_reset` (`v2_top.v:25`).
+
+---
+
+### Entry 4: Task 4 - Fix Throughput Claims & Formulas
+- **V2 Throughput Derivation & Separation:**
+  - `tb_submission.v:62-72` executes a 4-cycle reset-to-start sequence: 3 cycles of synchronous reset assertion (`reset <= 1'b1`) followed by 1 idle cycle before asserting `start <= 1'b1`.
+  - Theoretical throughput (hypothetical continuous back-to-back pipelining without reset overhead): $100\text{ MHz} / 9,116\text{ cycles} = \mathbf{10,969.7\text{ FPS}}$.
+  - Demonstrated throughput (measured rate including 4-cycle reset sequence): $100\text{ MHz} / (9,116 + 4)\text{ cycles} = 100\text{ MHz} / 9,120\text{ cycles} = \mathbf{10,964.9\text{ FPS}}$.
+- **V1 Throughput Derivation & Separation:**
+  - V1 inference compute: 159 cycles $\rightarrow 100\text{ MHz} / 159 = \mathbf{628,930.8\text{ FPS}}$ (theoretical pipelined).
+  - V1 from reset including 100-cycle feature preload (100 pixels @ 1 pixel/cycle via `pixel_in`): $100\text{ MHz} / (100 + 159) = 100\text{ MHz} / 259 = \mathbf{386,100.4\text{ FPS}}$.
+- **Updates Applied:**
+  - `docs/review/build/measure_facts.py` and `docs/review/facts.json`: added structured `throughput` object and explicit metrics (`v2_throughput_theoretical_fps`, `v2_throughput_demonstrated_fps`, `v1_throughput_inference_only_fps`, `v1_throughput_from_reset_fps`).
+  - `README.md`, `CURRENT_STATE.md`, `dlcd_presentation.md`, and `generate_final_report.py`: updated throughput tables and text to report both theoretical and demonstrated numbers with clear derivations.
+- **Verification:**
+  - Re-generated `facts.json` via `measure_facts.py`.
+  - Confirmed `generate_final_report.py` at root and in `docs/review/build/` are synchronized.

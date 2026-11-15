@@ -16,12 +16,14 @@ The codebase encompasses two complete architectural generations:
    - **Topology:** 100-input (10×10 image) $\rightarrow$ 16 (Hidden 1) $\rightarrow$ 6 (Hidden 2) $\rightarrow$ 10 (Output logits) $\rightarrow$ Argmax.
    - **Math Engine:** 16×16 unrolled 2D systolic array core utilizing weight-stationary dataflow (256 multipliers).
    - **Latency:** 159 clock cycles inference latency (259 clock cycles total from reset, including 100-cycle feature preload).
+   - **Throughput (100 MHz):** 628,930.8 FPS (theoretical pipelined: 100 MHz / 159 cycles); 386,100.4 FPS (derived from reset including 100-cycle preload: 100 MHz / 259 cycles).
    - **Accuracy:** 93.06% on M15 optical digits split (95.39% on downsampled 10×10 MNIST testset).
 
 2. **Version 2 (V2) — Convolutional Neural Network (CNN) + Systolic MLP Head:**
    - **Topology:** 400-input (20×20 image) $\rightarrow$ Conv1 (1 $\rightarrow$ 4 ch, 3×3, valid) $\rightarrow$ MaxPool1 (2×2, stride 2, 4 ch, 9×9) $\rightarrow$ Conv2 (4 $\rightarrow$ 8 ch, 3×3, valid) $\rightarrow$ MaxPool2 (2×2, stride 2, 8 ch, 5×5) $\rightarrow$ MLP Head (200 $\rightarrow$ 64 $\rightarrow$ 32 $\rightarrow$ 10) $\rightarrow$ Argmax.
    - **Hardware Multipliers:** Total = 292 (4 in Conv1 + 32 in Conv2 + 256 in Systolic Head).
    - **Execution Latency:** Exactly **9,116 clock cycles** (91.16 μs at 100 MHz clock frequency).
+   - **Throughput (100 MHz):** 10,969.7 FPS (theoretical pipelined: 100 MHz / 9,116 cycles); 10,964.9 FPS (demonstrated with 4-cycle reset sequence: 100 MHz / 9,120 cycles).
    - **On-Chip Memory:** 16,623 words × 16-bit (265,968 bits / 32.47 KB) across weight ROMs, ping-pong RAMs, and line buffers.
    - **Classification Accuracy:** **98.83%** on the full 10,000 MNIST test images (9,883 / 10,000 correct in both PyTorch Float32 and Q7.8 integer emulator).
    - **Hardware Parity:** **100% bit-exact equivalence (0 mismatches)** across all 10,000 test images in Icarus Verilog simulation (`harness.py`).
