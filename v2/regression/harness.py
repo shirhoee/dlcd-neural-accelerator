@@ -35,7 +35,7 @@ compile_cmd = [
     "tb_v2_top_fixed.v", "v2_top.v", "conv1_array.v", "window_gen.v", "conv_pe.v", 
     "mac_q7_8.v", "maxpool_array.v", "pool_window_gen.v", "maxpool_pe.v", 
     "relu_q7_8.v", "conv2_array.v", "conv2_window_gen.v", "conv2_pe.v", 
-    "maxpool2_array.v", "pool2_window_gen.v", "mlp_head.v", "systolic_array.v", "systolic_pe.v", "layer_relu.v", "argmax.v"
+    "maxpool2_array.v", "pool2_window_gen.v", "mlp_head.v", "systolic_array.v", "systolic_pe.v", "argmax.v"
 ]
 print("Compiling RTL...")
 cwd_v = os.path.abspath('../verilog_src')

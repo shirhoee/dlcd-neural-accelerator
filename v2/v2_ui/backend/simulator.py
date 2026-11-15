@@ -30,7 +30,7 @@ def _run_verilog_simulation_sync(grid_20: List[List[float]]) -> PredictResponse:
             "mac_q7_8.v", "maxpool_array.v", "pool_window_gen.v", "maxpool_pe.v",
             "relu_q7_8.v", "conv2_array.v", "conv2_window_gen.v", "conv2_pe.v",
             "maxpool2_array.v", "pool2_window_gen.v", "mlp_head.v", "systolic_array.v",
-            "systolic_pe.v", "layer_relu.v", "argmax.v"
+            "systolic_pe.v", "argmax.v"
         ]
 
         comp_res = subprocess.run(

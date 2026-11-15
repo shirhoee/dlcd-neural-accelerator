@@ -126,3 +126,22 @@
 - **Verification:**
   - Confirmed `generate_figures.py` already renders the real 6 states for Conv1/Conv2, 4 states for MLP head, and weight-stationary PE datapath.
   - Synchronized `docs/review/build/generate_final_report.py` and root `generate_final_report.py`.
+
+---
+
+### Entry 8: Task 8 - Testbench Count Verification & Elimination of Dead layer_relu.v
+- **Active Testbench Count Verification:**
+  - Inspected `run_all_tests.bat`: verified exactly 13 active testbenches invoked (`tb_conv_pe`, `tb_window_gen`, `tb_pool_window_gen`, `tb_maxpool_pe`, `tb_maxpool_array`, `tb_maxpool2_array`, `tb_conv1_array`, `tb_conv1_maxpool_chain`, `tb_conv2_array`, `tb_mlp_head`, `tb_argmax`, `tb_v2_top_fixed`, `tb_submission`).
+  - Confirmed all active documentation and reports state 13 active testbenches.
+- **Dead `layer_relu.v` Removal from Compilation Commands:**
+  - Removed `layer_relu.v` from:
+    - `v2/regression/test_10.py:32`
+    - `v2/regression/harness.py:38`
+    - `v2/v2_ui/backend/simulator.py:33`
+    - `v2/verilog_src/run_all_tests.bat:22,24,25`
+    - `docs/review/build/compile_fixed_img.bat:4`
+    - `docs/review/build/compile_wave.bat:4`
+    - `docs/review/build/_compile_and_run.ps1:21,34`
+- **Verification Evidence:**
+  - Re-ran `python test_10.py` in `v2/regression`: 10/10 passed (Cycles Mean: 9116.0, 0 mismatches) without compiling `layer_relu.v`.
+  - Re-compiled and ran `tb_mlp_head`: passed cleanly with 2,978 cycles (`ALL TESTS PASSED: 10/10 MLP Head output logits matched in 2978 cycles`).

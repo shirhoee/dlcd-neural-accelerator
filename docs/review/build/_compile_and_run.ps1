@@ -18,7 +18,7 @@ $common18 = @(
     "maxpool_array.v", "pool_window_gen.v", "maxpool_pe.v", "relu_q7_8.v",
     "conv2_array.v", "conv2_window_gen.v", "conv2_pe.v",
     "maxpool2_array.v", "pool2_window_gen.v", "mlp_head.v",
-    "systolic_array.v", "systolic_pe.v", "layer_relu.v", "argmax.v"
+    "systolic_array.v", "systolic_pe.v", "argmax.v"
 )
 
 $tests = @{
@@ -31,7 +31,7 @@ $tests = @{
     "tb_conv1_array"         = @("tb_conv1_array.v", "conv1_array.v", "window_gen.v", "conv_pe.v", "mac_q7_8.v");
     "tb_conv1_maxpool_chain" = @("tb_conv1_maxpool_chain.v", "conv1_array.v", "window_gen.v", "conv_pe.v", "mac_q7_8.v", "maxpool_array.v", "pool_window_gen.v", "maxpool_pe.v", "relu_q7_8.v");
     "tb_conv2_array"         = @("tb_conv2_array.v", "conv2_array.v", "conv2_window_gen.v", "conv2_pe.v", "mac_q7_8.v");
-    "tb_mlp_head"            = @("tb_mlp_head.v", "mlp_head.v", "systolic_array.v", "systolic_pe.v", "mac_q7_8.v", "relu_q7_8.v", "layer_relu.v");
+    "tb_mlp_head"            = @("tb_mlp_head.v", "mlp_head.v", "systolic_array.v", "systolic_pe.v", "mac_q7_8.v", "relu_q7_8.v");
     "tb_argmax"              = @("tb_argmax.v", "argmax.v");
     "tb_dense_array"         = @("tb_dense_array.v", "dense_array.v", "dense_pe.v", "mac_q7_8.v");
     "tb_v2_top"              = $common18 + @("tb_v2_top.v");
