@@ -31,7 +31,7 @@ All metrics reported below are programmatically verified from the single source 
 | **Arithmetic Format** | Signed 16-bit Q7.8 | Signed 16-bit Q7.8 (`product[23:8]`) | Bit-exact per-step truncation |
 | **Hardware Multipliers** | **256 multipliers** (16x16 array) | **292 multipliers** | 4 in Conv1 + 32 in Conv2 + 256 in Systolic |
 | **Inference Latency** | **159 clock cycles** (1.59 μs @ 100 MHz) | **9,116 clock cycles** (91.16 μs @ 100 MHz) | Verified via `test_10.py` and `wave.vcd` |
-| **Total Latency from Reset** | **259 clock cycles** (2.59 μs) | **9,117 clock cycles** (91.17 μs) | Cycle from `start` assertion to `done` |
+| **Total Latency from Reset** | **259 clock cycles** (2.59 μs) | **9,116 clock cycles** (91.16 μs) | Reported latency; absolute done cycle = 9,117 (not latency) |
 | **Throughput (100 MHz)** | ~386,100 FPS (burst) | **10,969.7 FPS** (continuous) | Exceeds real-time vision rates (>10,000 FPS) |
 | **On-Chip Memory** | Distributed Registers | **16,623 words (32.47 KB / 265,968 bits)** | Verified structural depth x width |
 | **PyTorch Float32 Accuracy** | 95.39% (10x10 MNIST testset) | **98.83%** (9,883 / 10,000 on MNIST testset) | PyTorch 2.6.0 on full 10k test set |
@@ -60,7 +60,7 @@ Latch      Conv1 + MaxPool1        Conv2 + MaxPool2     MLP Head (Systolic) Arg 
 6. **Inter-Stage Pipeline Alignment Gap:** 1 cycle (Cycle 9115 $\rightarrow$ 9116, 91,185 ns $\rightarrow$ 91,195 ns)
 - **Total Stage Cycles Sum:** $1 + 4892 + 1244 + 2977 + 1 + 1 = \mathbf{9,116\text{ cycles}}$ ($91.16\ \mu\text{s}$ at 100 MHz).
 
-*Timing Note:* Cycle 0 is when `start` is asserted. At Cycle 1, `start` is sampled into `run_latch`. The testbench counting loop increments while `run_latch` is high until `done` rises at 91,175 ns (Cycle 9117), yielding 9,116 elapsed cycles.
+*Timing Note:* Cycle 0 is when `start` is asserted. At Cycle 1, `start` is sampled into `run_latch`. The testbench counting loop increments while `run_latch` is high until `done` rises at 91,175 ns (Cycle 9117: absolute done cycle, not latency), yielding 9,116 elapsed cycles reported latency.
 
 ---
 

@@ -172,6 +172,12 @@ def main():
             "headline_latency_us": 91.16,
             "absolute_done_cycle": 9117,
             "absolute_done_time_ns": 91175.0,
+            "latency_definition": {
+                "start_cycle": 0,
+                "done_cycle": 9117,
+                "reported_latency": 9116,
+                "note": "Cycle 0 is the clock posedge where tb_submission asserts start. At Cycle 1, start is sampled into run_latch and deasserted. The testbench while(!done) loop increments latency_cycles on each subsequent posedge until done rises at absolute Cycle 9,117. Reported inference latency = 9,117 - 1 = 9,116 clock cycles (91.16 us at 100 MHz)."
+            },
             "timing_offset_note": "Cycle 0 is when start is asserted (35 ns). At Cycle 1 (45 ns), start is sampled into run_latch. The testbench latency counter increments every clock edge while run_latch is active until done is asserted at 91,175 ns (Cycle 9117), yielding 9,116 elapsed cycles.",
             "stages": stage_breakdown,
             "stages_sum_cycles": total_stage_cycles
