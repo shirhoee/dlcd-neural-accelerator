@@ -180,7 +180,6 @@ export const App: React.FC = () => {
       <footer className={styles.footer}>
         <div className={styles.footerContent}>
           <div className={styles.footerLeft}>
-            <strong>PES UNIVERSITY &bull; RING ROAD CAMPUS</strong>
             <span>Department of Computer Science &amp; Engineering &bull; UE25CS251A DLCD Laboratory (2026)</span>
           </div>
           <div className={styles.footerRight}>
