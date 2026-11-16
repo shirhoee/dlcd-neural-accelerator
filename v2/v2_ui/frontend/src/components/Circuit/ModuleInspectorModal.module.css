@@ -20,15 +20,15 @@
 }
 
 .modal {
-  background: #0f172a;
-  border: 1px solid rgba(99, 102, 241, 0.4);
+  background: #1c0b12;
+  border: 1px solid rgba(225, 29, 72, 0.45);
   border-radius: 14px;
   width: 100%;
   max-width: 52rem;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(190, 18, 60, 0.25);
   animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
 }
@@ -40,8 +40,8 @@
 
 .modalHeader {
   padding: 1.25rem 1.5rem;
-  background: #090d16;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: #12070b;
+  border-bottom: 1px solid rgba(225, 29, 72, 0.15);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -62,8 +62,8 @@
   font-size: 0.65rem;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
-  background: rgba(56, 189, 248, 0.15);
-  color: #38bdf8;
+  background: rgba(225, 29, 72, 0.2);
+  color: #fb7185;
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
 }
@@ -71,22 +71,22 @@
 .modTitle {
   font-size: 1.35rem;
   font-weight: 800;
-  color: #f8fafc;
+  color: #fdfbf7;
   font-family: 'JetBrains Mono', monospace;
   margin: 0;
 }
 
 .modDesc {
   font-size: 0.85rem;
-  color: #94a3b8;
+  color: #dfd2c0;
   margin: 0;
   line-height: 1.4;
 }
 
 .closeBtn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #94a3b8;
+  background: rgba(225, 29, 72, 0.1);
+  border: 1px solid rgba(225, 29, 72, 0.2);
+  color: #dfd2c0;
   width: 2rem;
   height: 2rem;
   border-radius: 6px;
@@ -98,14 +98,14 @@
 }
 
 .closeBtn:hover {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: #ef4444;
-  color: #f8fafc;
+  background: rgba(225, 29, 72, 0.3);
+  border-color: #be123c;
+  color: #fdfbf7;
 }
 
 .specsStrip {
-  background: #0a0f1d;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: #15080e;
+  border-bottom: 1px solid rgba(225, 29, 72, 0.15);
   padding: 0.75rem 1.5rem;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -119,34 +119,34 @@
 }
 
 .specIcon {
-  color: #818cf8;
+  color: #d4af37;
 }
 
 .specLabel {
   font-size: 0.65rem;
-  color: #64748b;
+  color: #dfd2c0;
   display: block;
   text-transform: uppercase;
 }
 
 .specVal {
   font-size: 0.78rem;
-  color: #cbd5e1;
+  color: #fdfbf7;
   font-weight: 600;
   font-family: 'JetBrains Mono', monospace;
 }
 
 .tabRow {
   display: flex;
-  background: #090d16;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: #12070b;
+  border-bottom: 1px solid rgba(225, 29, 72, 0.15);
   padding: 0 1.5rem;
 }
 
 .tabBtn {
   background: none;
   border: none;
-  color: #94a3b8;
+  color: #dfd2c0;
   padding: 0.75rem 1.25rem;
   font-size: 0.82rem;
   font-weight: 600;
@@ -156,12 +156,12 @@
 }
 
 .tabBtn:hover {
-  color: #f8fafc;
+  color: #fdfbf7;
 }
 
 .activeTab {
-  color: #38bdf8;
-  border-bottom-color: #38bdf8;
+  color: #fb7185;
+  border-bottom-color: #be123c;
 }
 
 .modalBody {
@@ -172,7 +172,7 @@
 
 .subHeading {
   font-size: 0.95rem;
-  color: #f1f5f9;
+  color: #fdfbf7;
   margin: 0 0 1rem 0;
 }
 
@@ -184,8 +184,8 @@
 }
 
 .blockCard {
-  background: rgba(30, 41, 59, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(41, 16, 26, 0.6);
+  border: 1px solid rgba(225, 29, 72, 0.18);
   padding: 0.65rem 1rem;
   border-radius: 6px;
   display: flex;
@@ -197,17 +197,17 @@
   font-size: 0.75rem;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
-  color: #818cf8;
+  color: #d4af37;
 }
 
 .blockText {
   font-size: 0.85rem;
-  color: #cbd5e1;
+  color: #f5eedc;
 }
 
 .fsmBanner {
-  background: rgba(99, 102, 241, 0.1);
-  border: 1px solid rgba(99, 102, 241, 0.3);
+  background: rgba(190, 18, 60, 0.15);
+  border: 1px solid rgba(225, 29, 72, 0.35);
   padding: 0.85rem 1.25rem;
   border-radius: 8px;
   display: flex;
@@ -217,11 +217,11 @@
 
 .fsmInfo {
   font-size: 0.82rem;
-  color: #cbd5e1;
+  color: #f5eedc;
 }
 
 .fsmLink {
-  color: #38bdf8;
+  color: #fb7185;
   font-weight: 600;
   font-size: 0.82rem;
   text-decoration: none;
@@ -241,23 +241,23 @@
 .portTable th {
   text-align: left;
   padding: 0.5rem 0.75rem;
-  background: rgba(15, 23, 42, 0.8);
-  color: #94a3b8;
+  background: rgba(28, 11, 18, 0.8);
+  color: #dfd2c0;
   font-size: 0.72rem;
   text-transform: uppercase;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(225, 29, 72, 0.2);
 }
 
 .portTable td {
   padding: 0.6rem 0.75rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-  color: #cbd5e1;
+  border-bottom: 1px solid rgba(225, 29, 72, 0.1);
+  color: #f5eedc;
 }
 
 .portName {
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
-  color: #f8fafc;
+  color: #fdfbf7;
 }
 
 .dirBadge {
@@ -267,35 +267,35 @@
   border-radius: 4px;
 }
 
-.dirIn { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
-.dirOut { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+.dirIn { background: rgba(212, 175, 55, 0.15); color: #e5c07b; }
+.dirOut { background: rgba(225, 29, 72, 0.2); color: #fb7185; }
 
 .portWidth {
   font-family: 'JetBrains Mono', monospace;
-  color: #a5b4fc;
+  color: #d4af37;
 }
 
 .codeTopBar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #0a0e17;
+  background: #15080e;
   padding: 0.5rem 1rem;
   border-radius: 6px 6px 0 0;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(225, 29, 72, 0.18);
   border-bottom: none;
 }
 
 .codeLang {
   font-size: 0.72rem;
-  color: #94a3b8;
+  color: #dfd2c0;
   font-family: 'JetBrains Mono', monospace;
 }
 
 .copyBtn {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #cbd5e1;
+  background: rgba(225, 29, 72, 0.15);
+  border: 1px solid rgba(225, 29, 72, 0.25);
+  color: #fdfbf7;
   padding: 0.25rem 0.6rem;
   border-radius: 4px;
   font-size: 0.72rem;
@@ -306,19 +306,19 @@
 }
 
 .copyBtn:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(225, 29, 72, 0.3);
   color: #ffffff;
 }
 
 .codeBlock {
   margin: 0;
-  background: #030712;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0d0407;
+  border: 1px solid rgba(225, 29, 72, 0.18);
   border-radius: 0 0 6px 6px;
   padding: 1rem;
   overflow-x: auto;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.78rem;
-  color: #38bdf8;
+  color: #fdfbf7;
   line-height: 1.5;
 }

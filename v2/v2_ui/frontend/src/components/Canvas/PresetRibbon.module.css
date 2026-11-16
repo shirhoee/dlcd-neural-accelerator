@@ -13,12 +13,12 @@
   font-size: 0.7rem;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
-  color: #38bdf8;
+  color: #fb7185;
   letter-spacing: 0.05em;
 }
 
 .sparkleIcon {
-  color: #38bdf8;
+  color: #d4af37;
 }
 
 .btnRow {
@@ -28,9 +28,9 @@
 }
 
 .digitBtn {
-  background: rgba(30, 41, 59, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #f1f5f9;
+  background: rgba(28, 11, 18, 0.75);
+  border: 1px solid rgba(255, 248, 240, 0.08);
+  color: #fdfbf7;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.88rem;
   font-weight: 700;
@@ -44,11 +44,11 @@
 }
 
 .digitBtn:hover:not(:disabled) {
-  background: rgba(56, 189, 248, 0.25);
-  border-color: #38bdf8;
-  color: #ffffff;
+  background: rgba(190, 18, 60, 0.25);
+  border-color: #be123c;
+  color: #fdfbf7;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
+  box-shadow: 0 4px 12px rgba(190, 18, 60, 0.35);
 }
 
 .digitBtn:active:not(:disabled) {

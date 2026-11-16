@@ -1,7 +1,7 @@
 .section {
   padding: 3rem 2rem;
-  background: #090d16;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: #12070b;
+  border-bottom: 1px solid rgba(225, 29, 72, 0.15);
 }
 
 .sectionHeader {
@@ -23,7 +23,7 @@
   font-size: 0.75rem;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
-  color: #38bdf8;
+  color: #d4af37;
   letter-spacing: 0.1em;
   margin-bottom: 0.4rem;
 }
@@ -31,21 +31,21 @@
 .sectionTitle {
   font-size: 1.85rem;
   font-weight: 800;
-  color: #f8fafc;
+  color: #fdfbf7;
   margin: 0 0 0.5rem 0;
   letter-spacing: -0.01em;
 }
 
 .sectionDesc {
   font-size: 0.95rem;
-  color: #94a3b8;
+  color: #dfd2c0;
   margin: 0;
   max-width: 50rem;
   line-height: 1.5;
 }
 
 .highlight {
-  color: #38bdf8;
+  color: #d4af37;
   font-weight: 600;
 }
 
@@ -53,12 +53,12 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  background: rgba(15, 23, 42, 0.6);
+  background: rgba(28, 11, 18, 0.7);
   padding: 0.6rem 1rem;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(225, 29, 72, 0.18);
   font-size: 0.75rem;
-  color: #cbd5e1;
+  color: #dfd2c0;
 }
 
 .legendItem {
@@ -73,10 +73,10 @@
   border-radius: 50%;
 }
 
-.dotInput { background: #38bdf8; box-shadow: 0 0 6px #38bdf8; }
-.dotConv { background: #10b981; box-shadow: 0 0 6px #10b981; }
-.dotPool { background: #f59e0b; box-shadow: 0 0 6px #f59e0b; }
-.dotSystolic { background: #6366f1; box-shadow: 0 0 6px #6366f1; }
+.dotInput { background: #be123c; box-shadow: 0 0 6px #be123c; }
+.dotConv { background: #e11d48; box-shadow: 0 0 6px #e11d48; }
+.dotPool { background: #d4af37; box-shadow: 0 0 6px #d4af37; }
+.dotSystolic { background: #9f1239; box-shadow: 0 0 6px #9f1239; }
 
 .datapathContainer {
   overflow-x: auto;
@@ -91,8 +91,8 @@
 }
 
 .stageCard {
-  background: rgba(15, 23, 42, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(28, 11, 18, 0.75);
+  border: 1px solid rgba(225, 29, 72, 0.18);
   border-radius: 12px;
   padding: 1.25rem;
   width: 20rem;
@@ -103,13 +103,13 @@
 }
 
 .stageCard:hover {
-  border-color: rgba(99, 102, 241, 0.4);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  border-color: rgba(225, 29, 72, 0.45);
+  box-shadow: 0 8px 30px rgba(190, 18, 60, 0.25);
 }
 
 .stageHeader {
   margin-bottom: 1.25rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(225, 29, 72, 0.15);
   padding-bottom: 0.75rem;
 }
 
@@ -117,8 +117,8 @@
   font-size: 0.65rem;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
-  background: rgba(99, 102, 241, 0.15);
-  color: #818cf8;
+  background: rgba(190, 18, 60, 0.2);
+  color: #fb7185;
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   display: inline-block;
@@ -128,13 +128,13 @@
 .stageTitle {
   font-size: 1.05rem;
   font-weight: 700;
-  color: #f1f5f9;
+  color: #fdfbf7;
   margin: 0 0 0.2rem 0;
 }
 
 .stageDesc {
   font-size: 0.75rem;
-  color: #64748b;
+  color: #dfd2c0;
   margin: 0;
 }
 
@@ -146,8 +146,8 @@
 }
 
 .moduleCard {
-  background: rgba(30, 41, 59, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(41, 16, 26, 0.6);
+  border: 1px solid rgba(225, 29, 72, 0.18);
   border-radius: 8px;
   padding: 0.85rem;
   cursor: pointer;
@@ -159,15 +159,15 @@
 
 .moduleCard:hover {
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-  border-color: #38bdf8;
+  box-shadow: 0 6px 20px rgba(190, 18, 60, 0.35);
+  border-color: #be123c;
 }
 
-.cat_input { border-left: 3px solid #38bdf8; }
-.cat_conv1, .cat_conv2 { border-left: 3px solid #10b981; }
-.cat_pool1, .cat_pool2 { border-left: 3px solid #f59e0b; }
-.cat_mlp { border-left: 3px solid #6366f1; }
-.cat_output { border-left: 3px solid #ec4899; }
+.cat_input { border-left: 3px solid #be123c; }
+.cat_conv1, .cat_conv2 { border-left: 3px solid #e11d48; }
+.cat_pool1, .cat_pool2 { border-left: 3px solid #d4af37; }
+.cat_mlp { border-left: 3px solid #9f1239; }
+.cat_output { border-left: 3px solid #fb7185; }
 
 .modTopRow {
   display: flex;
@@ -179,21 +179,21 @@
   font-size: 0.88rem;
   font-weight: 700;
   font-family: 'JetBrains Mono', monospace;
-  color: #f8fafc;
+  color: #fdfbf7;
 }
 
 .viewBadge {
   font-size: 0.65rem;
   font-weight: 600;
-  color: #38bdf8;
-  background: rgba(56, 189, 248, 0.1);
+  color: #fb7185;
+  background: rgba(225, 29, 72, 0.15);
   padding: 0.15rem 0.4rem;
   border-radius: 4px;
 }
 
 .modDesc {
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: #dfd2c0;
   line-height: 1.35;
   margin: 0;
 }
@@ -203,19 +203,19 @@
   justify-content: space-between;
   align-items: center;
   font-size: 0.7rem;
-  color: #64748b;
+  color: #dfd2c0;
   font-family: 'JetBrains Mono', monospace;
   margin-top: 0.25rem;
   padding-top: 0.4rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  border-top: 1px solid rgba(225, 29, 72, 0.1);
 }
 
 .latencyTag {
-  color: #e2e8f0;
+  color: #f5eedc;
 }
 
 .portCount {
-  color: #38bdf8;
+  color: #d4af37;
 }
 
 .flowConnector {
@@ -233,18 +233,18 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, #6366f1, #38bdf8);
-  box-shadow: 0 0 10px #38bdf8;
+  background: linear-gradient(90deg, #be123c, #fb7185);
+  box-shadow: 0 0 10px rgba(225, 29, 72, 0.6);
   z-index: 1;
 }
 
 .flowArrow {
-  color: #38bdf8;
+  color: #fb7185;
   z-index: 2;
-  background: #090d16;
+  background: #12070b;
   border-radius: 50%;
   padding: 2px;
-  filter: drop-shadow(0 0 8px #38bdf8);
+  filter: drop-shadow(0 0 8px rgba(225, 29, 72, 0.6));
   animation: bounceRight 1.5s infinite;
 }
 
@@ -256,12 +256,12 @@
 .busLabel {
   font-size: 0.65rem;
   font-family: 'JetBrains Mono', monospace;
-  color: #94a3b8;
+  color: #dfd2c0;
   margin-top: 0.5rem;
-  background: #0f172a;
+  background: #1c0b12;
   padding: 0.1rem 0.4rem;
   border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(225, 29, 72, 0.2);
   z-index: 2;
 }
 
@@ -271,8 +271,8 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(28, 11, 18, 0.7);
+  border: 1px solid rgba(225, 29, 72, 0.18);
   border-radius: 14px;
   padding: 1.5rem;
 }
@@ -292,14 +292,14 @@
 }
 
 .inlineIcon {
-  color: #06b6d4;
+  color: #d4af37;
 }
 
 .inlineHeading {
   margin: 0;
   font-size: 1.15rem;
   font-weight: 700;
-  color: #f8fafc;
+  color: #fdfbf7;
 }
 
 .schematicPills {
@@ -309,9 +309,9 @@
 }
 
 .schematicPillBtn {
-  background: rgba(30, 41, 59, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #94a3b8;
+  background: rgba(41, 16, 26, 0.7);
+  border: 1px solid rgba(225, 29, 72, 0.18);
+  color: #dfd2c0;
   font-size: 0.72rem;
   font-family: 'JetBrains Mono', monospace;
   padding: 0.35rem 0.65rem;
@@ -321,14 +321,14 @@
 }
 
 .schematicPillBtn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #f1f5f9;
+  background: rgba(190, 18, 60, 0.2);
+  color: #fdfbf7;
 }
 
 .activeSchematicPill {
-  background: rgba(6, 182, 212, 0.15) !important;
-  border-color: rgba(6, 182, 212, 0.4) !important;
-  color: #38bdf8 !important;
+  background: rgba(190, 18, 60, 0.25) !important;
+  border-color: rgba(225, 29, 72, 0.6) !important;
+  color: #fb7185 !important;
   font-weight: 700;
-  box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+  box-shadow: 0 0 10px rgba(190, 18, 60, 0.3);
 }

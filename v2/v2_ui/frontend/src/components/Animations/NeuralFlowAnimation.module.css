@@ -1,6 +1,6 @@
 .flowCard {
-  background: rgba(15, 23, 42, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(28, 11, 18, 0.75);
+  border: 1px solid rgba(225, 29, 72, 0.18);
   border-radius: 12px;
   padding: 1.15rem 1.35rem;
   display: flex;
@@ -25,14 +25,14 @@
 }
 
 .headerIcon {
-  color: #06b6d4;
+  color: #d4af37;
 }
 
 .headerTitle {
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.08em;
-  color: #f1f5f9;
+  color: #fdfbf7;
   text-transform: uppercase;
 }
 
@@ -42,20 +42,20 @@
   gap: 0.4rem;
   font-size: 0.68rem;
   font-family: 'JetBrains Mono', monospace;
-  color: #94a3b8;
-  background: rgba(0, 0, 0, 0.35);
+  color: #dfd2c0;
+  background: rgba(14, 5, 9, 0.5);
   padding: 0.25rem 0.6rem;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(225, 29, 72, 0.15);
 }
 
 .pulseIcon {
-  color: #64748b;
+  color: #a89f91;
   transition: color 0.3s ease;
 }
 
 .pulseActive {
-  color: #10b981;
+  color: #fb7185;
   animation: radarPulse 1s infinite alternate;
 }
 
@@ -75,8 +75,8 @@
 
 .stageBox {
   position: relative;
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(14, 5, 9, 0.55);
+  border: 1px solid rgba(225, 29, 72, 0.18);
   border-radius: 8px;
   padding: 0.6rem 0.75rem;
   display: flex;
@@ -88,7 +88,7 @@
 }
 
 .stageActive {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(225, 29, 72, 0.08);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
@@ -121,19 +121,19 @@
 .stageStep {
   font-size: 0.55rem;
   font-weight: 800;
-  color: #64748b;
+  color: #dfd2c0;
   letter-spacing: 0.06em;
 }
 
 .stageName {
   font-size: 0.8rem;
   font-weight: 700;
-  color: #f8fafc;
+  color: #fdfbf7;
 }
 
 .stageSub {
   font-size: 0.65rem;
-  color: #94a3b8;
+  color: #dfd2c0;
   font-family: 'JetBrains Mono', monospace;
 }
 
@@ -147,15 +147,15 @@
 .wireSegment {
   width: 20px;
   height: 2px;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(225, 29, 72, 0.2);
   border-radius: 1px;
 }
 
 .wireFlowing {
-  background: linear-gradient(90deg, #38bdf8 0%, #10b981 100%);
+  background: linear-gradient(90deg, #be123c 0%, #fb7185 50%, #d4af37 100%);
   background-size: 200% 100%;
   animation: wireStream 0.6s linear infinite;
-  box-shadow: 0 0 8px #38bdf8;
+  box-shadow: 0 0 8px rgba(225, 29, 72, 0.6);
 }
 
 @keyframes wireStream {
@@ -164,6 +164,6 @@
 }
 
 .wireArrow {
-  color: #64748b;
+  color: #dfd2c0;
   font-size: 0.85rem;
 }

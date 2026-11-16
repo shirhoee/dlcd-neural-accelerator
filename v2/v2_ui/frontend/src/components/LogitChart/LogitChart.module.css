@@ -2,8 +2,8 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(28, 11, 18, 0.7);
+  border: 1px solid rgba(225, 29, 72, 0.18);
   border-radius: 8px;
   padding: 0.85rem;
 }
@@ -13,7 +13,7 @@
   justify-content: space-between;
   font-size: 0.65rem;
   font-family: 'JetBrains Mono', monospace;
-  color: #64748b;
+  color: #dfd2c0;
   margin-bottom: 0.5rem;
   padding: 0 0.5rem;
 }
@@ -38,20 +38,20 @@
 }
 
 .barRow:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(225, 29, 72, 0.08);
 }
 
 .winnerRow {
-  background: rgba(16, 185, 129, 0.08);
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: rgba(225, 29, 72, 0.15);
+  border: 1px solid rgba(225, 29, 72, 0.45);
 }
 
 .digitBadge {
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.06);
-  color: #94a3b8;
+  background: rgba(41, 16, 26, 0.7);
+  color: #dfd2c0;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.78rem;
   font-weight: 700;
@@ -62,33 +62,33 @@
 }
 
 .winnerBadge {
-  background: #10b981;
-  color: #022c22;
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+  background: linear-gradient(135deg, #be123c, #e11d48);
+  color: #fdfbf7;
+  box-shadow: 0 0 12px rgba(225, 29, 72, 0.6);
 }
 
 .track {
   position: relative;
   flex-grow: 1;
   height: 1.25rem;
-  background: rgba(2, 6, 23, 0.6);
+  background: rgba(14, 5, 9, 0.75);
   border-radius: 4px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(225, 29, 72, 0.12);
   display: flex;
   align-items: center;
 }
 
 .fill {
   height: 100%;
-  background: linear-gradient(90deg, #38bdf8, #6366f1);
+  background: linear-gradient(90deg, #881337, #be123c);
   border-radius: 3px;
   transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .winnerFill {
-  background: linear-gradient(90deg, #10b981, #34d399);
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
+  background: linear-gradient(90deg, #be123c, #fb7185, #d4af37);
+  box-shadow: 0 0 14px rgba(225, 29, 72, 0.6);
 }
 
 .pctText {
@@ -97,7 +97,7 @@
   font-size: 0.68rem;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
-  color: #cbd5e1;
+  color: #fdfbf7;
 }
 
 .logitVal {
@@ -105,6 +105,6 @@
   text-align: right;
   font-size: 0.72rem;
   font-family: 'JetBrains Mono', monospace;
-  color: #64748b;
+  color: #dfd2c0;
   flex-shrink: 0;
 }

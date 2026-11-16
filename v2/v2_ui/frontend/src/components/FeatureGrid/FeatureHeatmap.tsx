@@ -10,7 +10,7 @@ interface FeatureHeatmapProps {
 
 export const FeatureHeatmap: React.FC<FeatureHeatmapProps> = ({
   data,
-  colorHex = "56, 189, 248",
+  colorHex = "225, 29, 72",
   label,
   cellSize = 12
 }) => {

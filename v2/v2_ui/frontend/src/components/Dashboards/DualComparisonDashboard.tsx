@@ -210,7 +210,7 @@ export const DualComparisonDashboard: React.FC<DualComparisonDashboardProps> = (
                   <span>20×20 Preserved Input Matrix</span>
                 </div>
                 <div className={styles.centerHeatmap}>
-                  <FeatureHeatmap data={result.v2.input} colorHex="6, 182, 212" label="V2 20×20 Input" cellSize={11} />
+                  <FeatureHeatmap data={result.v2.input} colorHex="225, 29, 72" label="V2 20×20 Input" cellSize={11} />
                 </div>
                 <p className={styles.gainNote}>
                   ✨ 4× pixel density: preserved loops, diagonals, and junction features without loss.
@@ -227,7 +227,7 @@ export const DualComparisonDashboard: React.FC<DualComparisonDashboardProps> = (
                   {result.v2.mp2.map((fmap, ch) => (
                     <div key={ch} className={styles.miniFmapBox}>
                       <span className={styles.fmapLabel}>C{ch}</span>
-                      <FeatureHeatmap data={fmap} colorHex="168, 85, 247" cellSize={7} />
+                      <FeatureHeatmap data={fmap} colorHex="190, 18, 60" cellSize={7} />
                     </div>
                   ))}
                 </div>

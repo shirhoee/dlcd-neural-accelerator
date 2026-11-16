@@ -14,11 +14,11 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(10, 15, 29, 0.9);
+  background: rgba(18, 7, 11, 0.94);
   backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 248, 240, 0.08);
   width: 100%;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 .navInner {
@@ -41,10 +41,10 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.95rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 248, 240, 0.03);
+  border: 1px solid rgba(255, 248, 240, 0.07);
   border-radius: 8px;
-  color: #94a3b8;
+  color: var(--ivory-muted);
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
@@ -53,41 +53,41 @@
 }
 
 .navBtn:hover {
-  background: rgba(56, 189, 248, 0.12);
-  border-color: rgba(56, 189, 248, 0.3);
-  color: #38bdf8;
+  background: rgba(190, 18, 60, 0.16);
+  border-color: rgba(225, 29, 72, 0.35);
+  color: var(--ivory-pure);
   transform: translateY(-1px);
 }
 
 .activeNavBtn {
-  background: rgba(6, 182, 212, 0.15) !important;
-  border-color: rgba(6, 182, 212, 0.45) !important;
-  color: #38bdf8 !important;
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.25);
+  background: rgba(190, 18, 60, 0.22) !important;
+  border-color: rgba(225, 29, 72, 0.5) !important;
+  color: var(--ivory-pure) !important;
+  box-shadow: 0 0 16px rgba(190, 18, 60, 0.35);
   font-weight: 700 !important;
 }
 
 .navIcon {
-  color: #64748b;
+  color: var(--ivory-dim);
   transition: color 0.2s ease;
 }
 
 .activeIcon {
-  color: #06b6d4;
+  color: var(--rose-highlight);
 }
 
 .navBadge {
   font-size: 0.65rem;
   font-family: 'JetBrains Mono', monospace;
-  background: rgba(255, 255, 255, 0.05);
-  color: #94a3b8;
+  background: rgba(255, 248, 240, 0.06);
+  color: var(--ivory-muted);
   padding: 0.1rem 0.4rem;
   border-radius: 4px;
 }
 
 .activeBadge {
-  background: rgba(6, 182, 212, 0.25);
-  color: #38bdf8;
+  background: rgba(190, 18, 60, 0.3);
+  color: var(--ivory-pure);
   font-weight: 700;
 }
 
@@ -143,7 +143,7 @@
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.1em;
-  color: #38bdf8;
+  color: var(--gold-accent);
   text-transform: uppercase;
 }
 
@@ -151,13 +151,13 @@
   margin: 0;
   font-size: 1.6rem;
   font-weight: 800;
-  color: #f8fafc;
+  color: var(--ivory-pure);
 }
 
 .sectionDescription {
   margin: 0;
   font-size: 0.92rem;
-  color: #94a3b8;
+  color: var(--ivory-muted);
   max-width: 850px;
   line-height: 1.5;
 }
@@ -165,8 +165,8 @@
 /* Footer */
 .footer {
   margin-top: 4rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(10, 15, 29, 0.95);
+  border-top: 1px solid rgba(255, 248, 240, 0.08);
+  background: rgba(18, 7, 11, 0.96);
   padding: 2rem 1.5rem;
   width: 100%;
 }
@@ -178,7 +178,7 @@
   justify-content: space-between;
   align-items: center;
   font-size: 0.8rem;
-  color: #64748b;
+  color: var(--ivory-dim);
   flex-wrap: wrap;
   gap: 1rem;
 }
@@ -190,7 +190,7 @@
 }
 
 .footerLeft strong {
-  color: #cbd5e1;
+  color: var(--ivory-warm);
   letter-spacing: 0.05em;
   font-size: 0.85rem;
 }
@@ -198,6 +198,7 @@
 .footerRight {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.75rem;
+  color: var(--ivory-muted);
 }
 
 /* Scroll To Top */
@@ -209,19 +210,19 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: #0284c7;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, #881337, #be123c);
+  border: 1px solid rgba(255, 248, 240, 0.2);
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.45);
+  box-shadow: 0 8px 24px rgba(190, 18, 60, 0.45);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .scrollTopBtn:hover {
-  background: #0369a1;
+  background: linear-gradient(135deg, #9f1239, #e11d48);
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(2, 132, 199, 0.6);
+  box-shadow: 0 12px 30px rgba(225, 29, 72, 0.6);
 }

@@ -114,12 +114,12 @@ export const V2StudioDashboard: React.FC<V2StudioDashboardProps> = ({ onPredict 
 
               <div className={styles.mapsRow}>
                 <div>
-                  <FeatureHeatmap data={result.input} colorHex="56, 189, 248" label="Input 20×20" cellSize={7} />
+                  <FeatureHeatmap data={result.input} colorHex="225, 29, 72" label="Input 20×20" cellSize={7} />
                 </div>
                 <ArrowRight size={20} className={styles.pipelineArrow} />
                 <div className={styles.channelGrid}>
                   {result.mp1.map((ch, i) => (
-                    <FeatureHeatmap key={i} data={ch} colorHex="16, 185, 129" label={`MP1 Ch ${i}`} cellSize={9} />
+                    <FeatureHeatmap key={i} data={ch} colorHex="212, 175, 55" label={`MP1 Ch ${i}`} cellSize={9} />
                   ))}
                 </div>
               </div>
@@ -156,7 +156,7 @@ export const V2StudioDashboard: React.FC<V2StudioDashboardProps> = ({ onPredict 
                       for (let c = 0; c < 8; c++) row.push(result.dense1[r * 8 + c] || 0);
                       grid.push(row);
                     }
-                    return <FeatureHeatmap data={grid} colorHex="99, 102, 241" label="Dense 1 (64 Neurons)" cellSize={13} />;
+                    return <FeatureHeatmap data={grid} colorHex="190, 18, 60" label="Dense 1 (64 Neurons)" cellSize={13} />;
                   })()}
                 </div>
 
@@ -169,7 +169,7 @@ export const V2StudioDashboard: React.FC<V2StudioDashboardProps> = ({ onPredict 
                       for (let c = 0; c < 8; c++) row.push(result.dense2[r * 8 + c] || 0);
                       grid.push(row);
                     }
-                    return <FeatureHeatmap data={grid} colorHex="168, 85, 247" label="Dense 2 (32 Neurons)" cellSize={13} />;
+                    return <FeatureHeatmap data={grid} colorHex="159, 18, 57" label="Dense 2 (32 Neurons)" cellSize={13} />;
                   })()}
                 </div>
 

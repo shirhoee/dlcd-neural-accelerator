@@ -12,13 +12,13 @@ export const NeuralFlowAnimation: React.FC<NeuralFlowAnimationProps> = ({
   isSimulating = false,
 }) => {
   const stages = [
-    { id: 1, name: 'Input 20×20', sub: '400 Pixels', color: '#38bdf8' },
-    { id: 2, name: 'Conv1 (4ch)', sub: '3×3 Windows', color: '#10b981' },
-    { id: 3, name: 'MaxPool 1', sub: '4×10×10', color: '#10b981' },
-    { id: 4, name: 'Conv2 (8ch)', sub: '3×3 Filters', color: '#f59e0b' },
-    { id: 5, name: 'MaxPool 2', sub: '8×5×5 (200)', color: '#f59e0b' },
-    { id: 6, name: 'Systolic Core', sub: '200→64→32→10', color: '#a855f7' },
-    { id: 7, name: 'Argmax', sub: 'Digit [0..9]', color: '#ec4899' },
+    { id: 1, name: 'Input 20×20', sub: '400 Pixels', color: '#e11d48' },
+    { id: 2, name: 'Conv1 (4ch)', sub: '3×3 Windows', color: '#be123c' },
+    { id: 3, name: 'MaxPool 1', sub: '4×10×10', color: '#9f1239' },
+    { id: 4, name: 'Conv2 (8ch)', sub: '3×3 Filters', color: '#be123c' },
+    { id: 5, name: 'MaxPool 2', sub: '8×5×5 (200)', color: '#9f1239' },
+    { id: 6, name: 'Systolic Core', sub: '200→64→32→10', color: '#d4af37' },
+    { id: 7, name: 'Argmax', sub: 'Digit [0..9]', color: '#fb7185' },
   ];
 
   return (

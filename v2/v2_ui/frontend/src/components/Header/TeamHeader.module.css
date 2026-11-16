@@ -1,8 +1,8 @@
 .header {
   width: 100%;
-  background: rgba(11, 15, 25, 0.95);
+  background: rgba(20, 8, 14, 0.96);
   backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+  border-bottom: 1px solid rgba(225, 29, 72, 0.25);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -10,15 +10,15 @@
 }
 
 .universityBanner {
-  background: #060911;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0f0407;
+  border-bottom: 1px solid rgba(255, 248, 240, 0.08);
   padding: 0.4rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 0.75rem;
   letter-spacing: 0.05em;
-  color: #94a3b8;
+  color: #dfd2c0;
 }
 
 .badgeLeft {
@@ -29,19 +29,19 @@
 
 .univName {
   font-weight: 700;
-  color: #38bdf8;
+  color: #fb7185;
 }
 
 .courseCode {
-  color: #cbd5e1;
+  color: #f5eedc;
 }
 
 .divider {
-  color: #475569;
+  color: #63404c;
 }
 
 .term {
-  color: #64748b;
+  color: #a89988;
 }
 
 .hardwareBadge {
@@ -95,7 +95,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #6366f1;
+  color: #d4af37;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -104,24 +104,24 @@
 }
 
 .chipIcon {
-  color: #6366f1;
+  color: #d4af37;
 }
 
 .projectTitle {
   font-size: 1.35rem;
   font-weight: 800;
-  color: #f8fafc;
+  color: #fdfbf7;
   line-height: 1.3;
   margin: 0 0 0.35rem 0;
   letter-spacing: -0.01em;
-  background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
+  background: linear-gradient(135deg, #fdfbf7 40%, #dfd2c0 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .subtitle {
   font-size: 0.85rem;
-  color: #94a3b8;
+  color: #dfd2c0;
   margin: 0;
   line-height: 1.4;
 }
@@ -139,8 +139,8 @@
 }
 
 .memberCard {
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(28, 11, 18, 0.75);
+  border: 1px solid rgba(255, 248, 240, 0.08);
   padding: 0.6rem 0.8rem;
   border-radius: 8px;
   display: flex;
@@ -150,25 +150,25 @@
 }
 
 .memberCard:hover {
-  background: rgba(30, 41, 59, 0.8);
-  border-color: rgba(99, 102, 241, 0.4);
+  background: rgba(45, 16, 28, 0.85);
+  border-color: rgba(225, 29, 72, 0.5);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 4px 14px rgba(190, 18, 60, 0.25);
 }
 
 .avatar {
   width: 2.2rem;
   height: 2.2rem;
   border-radius: 6px;
-  background: linear-gradient(135deg, #3b82f6, #6366f1);
-  color: #ffffff;
+  background: linear-gradient(135deg, #881337, #be123c);
+  color: #fdfbf7;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.75rem;
   font-weight: 700;
   flex-shrink: 0;
-  box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 0 10px rgba(190, 18, 60, 0.35);
 }
 
 .memberInfo {
@@ -179,25 +179,25 @@
 .memberName {
   font-size: 0.82rem;
   font-weight: 700;
-  color: #f1f5f9;
+  color: #fdfbf7;
 }
 
 .memberSrn {
   font-size: 0.72rem;
   font-family: 'JetBrains Mono', monospace;
-  color: #38bdf8;
+  color: #e5c07b;
   font-weight: 600;
 }
 
 .memberRole {
   font-size: 0.65rem;
-  color: #64748b;
+  color: #a89988;
   margin-top: 1px;
 }
 
 .navBar {
-  background: #070a12;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  background: #12070b;
+  border-top: 1px solid rgba(255, 248, 240, 0.06);
   padding: 0 2rem;
   overflow-x: auto;
 }

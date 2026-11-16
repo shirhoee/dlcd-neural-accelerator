@@ -1,7 +1,7 @@
 .section {
   padding: 3rem 2rem;
-  background: #090d16;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: #12070b;
+  border-bottom: 1px solid rgba(225, 29, 72, 0.15);
 }
 
 .sectionHeader {
@@ -23,7 +23,7 @@
   font-size: 0.75rem;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
-  color: #818cf8;
+  color: #d4af37;
   letter-spacing: 0.1em;
   margin-bottom: 0.4rem;
 }
@@ -31,21 +31,21 @@
 .sectionTitle {
   font-size: 1.85rem;
   font-weight: 800;
-  color: #f8fafc;
+  color: #fdfbf7;
   margin: 0 0 0.5rem 0;
   letter-spacing: -0.01em;
 }
 
 .sectionDesc {
   font-size: 0.95rem;
-  color: #94a3b8;
+  color: #dfd2c0;
   margin: 0;
   max-width: 48rem;
   line-height: 1.5;
 }
 
 .highlight {
-  color: #10b981;
+  color: #d4af37;
   font-weight: 700;
 }
 
@@ -55,9 +55,9 @@
 }
 
 .tabBtn {
-  background: rgba(15, 23, 42, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #94a3b8;
+  background: rgba(28, 11, 18, 0.8);
+  border: 1px solid rgba(225, 29, 72, 0.18);
+  color: #dfd2c0;
   padding: 0.55rem 0.9rem;
   border-radius: 8px;
   font-size: 0.8rem;
@@ -67,14 +67,15 @@
 }
 
 .tabBtn:hover {
-  background: rgba(30, 41, 59, 0.9);
-  color: #ffffff;
+  background: rgba(41, 16, 26, 0.9);
+  color: #fdfbf7;
+  border-color: rgba(225, 29, 72, 0.4);
 }
 
 .activeTab {
-  background: rgba(99, 102, 241, 0.15);
-  border-color: #6366f1;
-  color: #818cf8;
+  background: rgba(190, 18, 60, 0.2);
+  border-color: #be123c;
+  color: #fb7185;
 }
 
 .scorecardGrid {
@@ -91,8 +92,8 @@
 }
 
 .versionCard {
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(28, 11, 18, 0.75);
+  border: 1px solid rgba(225, 29, 72, 0.18);
   border-radius: 12px;
   padding: 1.5rem;
   display: flex;
@@ -100,13 +101,13 @@
 }
 
 .v2HighlightCard {
-  background: rgba(15, 23, 42, 0.9);
-  border: 1.5px solid rgba(16, 185, 129, 0.4);
-  box-shadow: 0 0 30px rgba(16, 185, 129, 0.15);
+  background: rgba(28, 11, 18, 0.9);
+  border: 1.5px solid rgba(225, 29, 72, 0.5);
+  box-shadow: 0 0 30px rgba(190, 18, 60, 0.25);
 }
 
 .cardHeader {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(225, 29, 72, 0.15);
   padding-bottom: 1rem;
   margin-bottom: 1.25rem;
 }
@@ -122,38 +123,38 @@
   font-size: 0.68rem;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
-  background: rgba(148, 163, 184, 0.15);
-  color: #94a3b8;
+  background: rgba(212, 175, 55, 0.15);
+  color: #e5c07b;
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
 }
 
 .v2Tag {
-  background: rgba(16, 185, 129, 0.15);
-  color: #10b981;
+  background: rgba(225, 29, 72, 0.2);
+  color: #fb7185;
 }
 
 .gainBadge {
   font-size: 0.7rem;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 800;
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: #ffffff;
+  background: linear-gradient(135deg, #be123c, #e11d48);
+  color: #fdfbf7;
   padding: 0.2rem 0.6rem;
   border-radius: 9999px;
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 0 12px rgba(225, 29, 72, 0.4);
 }
 
 .versionTitle {
   font-size: 1.25rem;
   font-weight: 800;
-  color: #f8fafc;
+  color: #fdfbf7;
   margin: 0.35rem 0 0.2rem 0;
 }
 
 .cardSub {
   font-size: 0.8rem;
-  color: #64748b;
+  color: #dfd2c0;
   margin: 0;
   font-family: 'JetBrains Mono', monospace;
 }
@@ -169,38 +170,38 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.4rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(225, 29, 72, 0.1);
 }
 
 .metricLabel {
   font-size: 0.82rem;
-  color: #94a3b8;
+  color: #dfd2c0;
 }
 
 .metricVal {
   font-size: 0.85rem;
   font-family: 'JetBrains Mono', monospace;
-  color: #cbd5e1;
+  color: #f5eedc;
   font-weight: 600;
 }
 
 .metricValV1 {
   font-size: 1.15rem;
   font-family: 'JetBrains Mono', monospace;
-  color: #f59e0b;
+  color: #d4af37;
   font-weight: 800;
 }
 
 .metricValV2 {
   font-size: 1.15rem;
   font-family: 'JetBrains Mono', monospace;
-  color: #10b981;
+  color: #fb7185;
   font-weight: 800;
 }
 
 .metricValDim {
   font-size: 0.8rem;
-  color: #64748b;
+  color: #a89f91;
   font-family: 'JetBrains Mono', monospace;
 }
 
@@ -217,8 +218,8 @@
 }
 
 .insightCard {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(28, 11, 18, 0.75);
+  border: 1px solid rgba(225, 29, 72, 0.18);
   border-radius: 10px;
   padding: 1.25rem;
   display: flex;
@@ -227,20 +228,20 @@
 }
 
 .insightIcon {
-  color: #38bdf8;
+  color: #d4af37;
   margin-bottom: 0.25rem;
 }
 
 .insightTitle {
   font-size: 0.92rem;
   font-weight: 700;
-  color: #f1f5f9;
+  color: #fdfbf7;
   margin: 0;
 }
 
 .insightDesc {
   font-size: 0.8rem;
-  color: #94a3b8;
+  color: #dfd2c0;
   line-height: 1.45;
   margin: 0;
 }

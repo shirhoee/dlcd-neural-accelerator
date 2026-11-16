@@ -1,7 +1,7 @@
 .section {
   padding: 3rem 2rem;
-  background: #080c14;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: #12070b;
+  border-bottom: 1px solid rgba(225, 29, 72, 0.15);
 }
 
 .sectionHeader {
@@ -12,7 +12,7 @@
   font-size: 0.75rem;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
-  color: #38bdf8;
+  color: #d4af37;
   letter-spacing: 0.1em;
   margin-bottom: 0.4rem;
 }
@@ -20,14 +20,14 @@
 .sectionTitle {
   font-size: 1.85rem;
   font-weight: 800;
-  color: #f8fafc;
+  color: #fdfbf7;
   margin: 0 0 0.5rem 0;
   letter-spacing: -0.01em;
 }
 
 .sectionDesc {
   font-size: 0.95rem;
-  color: #94a3b8;
+  color: #dfd2c0;
   margin: 0;
   max-width: 48rem;
   line-height: 1.5;
@@ -36,8 +36,8 @@
 .browserContainer {
   display: flex;
   flex-direction: column;
-  background: #090d16;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #1c0b12;
+  border: 1px solid rgba(225, 29, 72, 0.2);
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
@@ -52,8 +52,8 @@
 
 .sidebar {
   width: 100%;
-  background: #060911;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: #15080e;
+  border-bottom: 1px solid rgba(225, 29, 72, 0.15);
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -63,7 +63,7 @@
   .sidebar {
     width: 17rem;
     border-bottom: none;
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    border-right: 1px solid rgba(225, 29, 72, 0.15);
     flex-shrink: 0;
   }
 }
@@ -72,7 +72,7 @@
   font-size: 0.68rem;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
-  color: #64748b;
+  color: #dfd2c0;
   letter-spacing: 0.08em;
   margin-bottom: 0.75rem;
   padding-left: 0.5rem;
@@ -91,7 +91,7 @@
   gap: 0.6rem;
   background: none;
   border: none;
-  color: #94a3b8;
+  color: #dfd2c0;
   padding: 0.6rem 0.75rem;
   border-radius: 6px;
   font-size: 0.8rem;
@@ -102,29 +102,29 @@
 }
 
 .moduleTab:hover {
-  background: rgba(255, 255, 255, 0.04);
-  color: #f1f5f9;
+  background: rgba(225, 29, 72, 0.1);
+  color: #fdfbf7;
 }
 
 .activeModuleTab {
-  background: rgba(56, 189, 248, 0.15);
-  color: #38bdf8;
+  background: rgba(190, 18, 60, 0.25);
+  color: #fb7185;
   font-weight: 700;
 }
 
 .tabIcon {
-  color: #64748b;
+  color: #dfd2c0;
 }
 
 .activeModuleTab .tabIcon {
-  color: #38bdf8;
+  color: #fb7185;
 }
 
 .codePane {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  background: #030712;
+  background: #0d0407;
   overflow: hidden;
 }
 
@@ -132,8 +132,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #090d16;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: #15080e;
+  border-bottom: 1px solid rgba(225, 29, 72, 0.15);
   padding: 0.75rem 1.25rem;
 }
 
@@ -147,22 +147,22 @@
   font-size: 0.92rem;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
-  color: #f8fafc;
+  color: #fdfbf7;
 }
 
 .compPill {
   font-size: 0.65rem;
   font-family: 'JetBrains Mono', monospace;
-  background: rgba(255, 255, 255, 0.06);
-  color: #94a3b8;
+  background: rgba(225, 29, 72, 0.15);
+  color: #fb7185;
   padding: 0.15rem 0.45rem;
   border-radius: 4px;
 }
 
 .copyBtn {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #cbd5e1;
+  background: rgba(225, 29, 72, 0.15);
+  border: 1px solid rgba(225, 29, 72, 0.25);
+  color: #fdfbf7;
   padding: 0.35rem 0.75rem;
   border-radius: 6px;
   font-size: 0.75rem;
@@ -174,7 +174,7 @@
 }
 
 .copyBtn:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(225, 29, 72, 0.3);
   color: #ffffff;
 }
 
@@ -186,17 +186,17 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.8rem;
   line-height: 1.6;
-  color: #38bdf8;
+  color: #fdfbf7;
 }
 
 .paneFooter {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #090d16;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: #15080e;
+  border-top: 1px solid rgba(225, 29, 72, 0.15);
   padding: 0.5rem 1.25rem;
   font-size: 0.72rem;
-  color: #64748b;
+  color: #dfd2c0;
   font-family: 'JetBrains Mono', monospace;
 }

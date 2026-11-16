@@ -32,12 +32,12 @@ const SIGNALS: SignalTrace[] = [
 ];
 
 const CYCLE_BREAKDOWN = [
-  { stage: 'Conv1 + MaxPool1 (4 channels)', cycles: 425, pct: 4.7, color: '#38bdf8' },
-  { stage: 'Conv2 + MaxPool2 (8 channels)', cycles: 1005, pct: 11.0, color: '#818cf8' },
-  { stage: 'Systolic Layer 1 (200 → 64)', cycles: 4800, pct: 52.7, color: '#c084fc' },
-  { stage: 'Systolic Layer 2 (64 → 32)', cycles: 1824, pct: 20.0, color: '#f472b6' },
-  { stage: 'Systolic Layer 3 (32 → 10)', cycles: 1050, pct: 11.5, color: '#fb923c' },
-  { stage: 'Argmax Latency & Handshake', cycles: 12, pct: 0.1, color: '#34d399' },
+  { stage: 'Conv1 + MaxPool1 (4 channels)', cycles: 425, pct: 4.7, color: '#be123c' },
+  { stage: 'Conv2 + MaxPool2 (8 channels)', cycles: 1005, pct: 11.0, color: '#e11d48' },
+  { stage: 'Systolic Layer 1 (200 → 64)', cycles: 4800, pct: 52.7, color: '#9f1239' },
+  { stage: 'Systolic Layer 2 (64 → 32)', cycles: 1824, pct: 20.0, color: '#881337' },
+  { stage: 'Systolic Layer 3 (32 → 10)', cycles: 1050, pct: 11.5, color: '#d4af37' },
+  { stage: 'Argmax Latency & Handshake', cycles: 12, pct: 0.1, color: '#e5c07b' },
 ];
 
 // 10x10 Confusion Matrix data for 10,000 test set (98.83% accuracy)
@@ -108,7 +108,7 @@ export const WaveformsSection: React.FC = () => {
                       <path
                         d="M0,22 L20,22 L20,6 L40,6 L40,22 L60,22 L60,6 L80,6 L80,22 L100,22 L100,6 L120,6 L120,22 L140,22 L140,6 L160,6 L160,22 L180,22 L180,6 L200,6 L200,22 L220,22 L220,6 L240,6 L240,22 L260,22 L260,6 L280,6 L280,22 L300,22 L300,6 L320,6 L320,22 L340,22 L340,6 L360,6 L360,22 L380,22 L380,6 L400,6 L400,22 L420,22 L420,6 L440,6 L440,22 L460,22 L460,6 L480,6 L480,22 L500,22 L500,6 L520,6 L520,22 L540,22 L540,6 L560,6 L560,22 L580,22 L580,6 L600,6 L600,22 L620,22 L620,6 L640,6"
                         fill="none"
-                        stroke="#38bdf8"
+                        stroke="#fb7185"
                         strokeWidth="2"
                       />
                     )}
@@ -123,7 +123,7 @@ export const WaveformsSection: React.FC = () => {
                           })
                           .join(' ')}
                         fill="none"
-                        stroke={sig.name === 'done' ? '#10b981' : '#a855f7'}
+                        stroke={sig.name === 'done' ? '#d4af37' : '#be123c'}
                         strokeWidth="2"
                       />
                     )}
@@ -137,14 +137,14 @@ export const WaveformsSection: React.FC = () => {
                             <g key={idx}>
                               <polygon
                                 points={`${x1 + 2},14 ${x1 + 6},6 ${x2 - 6},6 ${x2 - 2},14 ${x2 - 6},22 ${x1 + 6},22`}
-                                fill={isKnown ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.1)'}
-                                stroke={isKnown ? '#10b981' : '#ef4444'}
+                                fill={isKnown ? 'rgba(212, 175, 55, 0.2)' : 'rgba(225, 29, 72, 0.15)'}
+                                stroke={isKnown ? '#d4af37' : '#be123c'}
                                 strokeWidth="1"
                               />
                               <text
                                 x={x1 + 20}
                                 y={18}
-                                fill={isKnown ? '#34d399' : '#f87171'}
+                                fill={isKnown ? '#e5c07b' : '#fb7185'}
                                 fontSize="10"
                                 textAnchor="middle"
                                 fontFamily="monospace"

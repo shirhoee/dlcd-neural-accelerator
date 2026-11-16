@@ -103,10 +103,10 @@ export const SmoothCanvas: React.FC<SmoothCanvasProps> = ({
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
 
-    // Anti-aliased stroke with soft cyan glow
+    // Anti-aliased stroke with rich burgundy-crimson glow
     ctx.shadowBlur = 10;
-    ctx.shadowColor = 'rgba(6, 182, 212, 0.6)';
-    ctx.strokeStyle = '#ffffff';
+    ctx.shadowColor = 'rgba(225, 29, 72, 0.65)';
+    ctx.strokeStyle = '#fdfbf7';
     ctx.lineWidth = brushSize;
 
     ctx.beginPath();
@@ -203,7 +203,7 @@ export const SmoothCanvas: React.FC<SmoothCanvasProps> = ({
                     key={`${r}-${c}`}
                     className={styles.previewCell}
                     style={{
-                      backgroundColor: `rgba(6, 182, 212, ${Math.min(1, val * 1.2)})`,
+                      backgroundColor: `rgba(225, 29, 72, ${Math.min(1, val * 1.2)})`,
                     }}
                   />
                 ))
